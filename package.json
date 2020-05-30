@@ -3,6 +3,7 @@
 	"displayName": "Helm-Intellisense",
 	"description": "This extension provides intellisense for helm templates",
 	"version": "0.0.1",
+	"publisher": "tim-koehler",
 	"engines": {
 		"vscode": "^1.45.0"
 	},
