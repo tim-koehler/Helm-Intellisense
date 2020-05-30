@@ -1,6 +1,6 @@
 # Helm-Intellisense README
 
-This is the README for your extension "Helm-Intellisense". After writing up a brief description, we recommend including the following sections.
+This extension is still in testing phase!
 
 ## Features
 
