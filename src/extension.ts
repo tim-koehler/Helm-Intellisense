@@ -38,6 +38,11 @@ export function deactivate() {}
 
 function getProvideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
 	var currentLine = document.lineAt(position).text;
+
+	if(!isInsideBrackets(currentLine, position.character)) {
+		return undefined;
+	}
+
 	if (!currentLine.includes('.Values')) {
 		return [new vscode.CompletionItem('.Values', vscode.CompletionItemKind.Method)];
 	}
@@ -60,6 +65,13 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 		}
 	}
 	return getKeyList(currentKey);;
+}
+
+function isInsideBrackets(currentLine: string, position: number) {
+	if(currentLine.substring(0, position).includes('{{') && currentLine.substring(position, currentLine.length).includes('}}')) {
+		return true;
+	}
+	return false;
 }
 
 function getValuesFromFile(document: vscode.TextDocument) {
