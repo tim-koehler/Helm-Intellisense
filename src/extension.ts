@@ -56,7 +56,6 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 	var currentKey = doc;
 	if(current !== 'Values') {
 		var allKeys = current.replace('Values.', '').split('.');
-		
 		for (let key in allKeys) {		
 			if(typeof currentKey[allKeys[key]] === typeof 'string') {
 				return undefined;
@@ -68,23 +67,22 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 		var item;
 		switch (typeof currentKey[key]) {
 			case 'string':
-				item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Field);
+				keys.push(new vscode.CompletionItem(key, vscode.CompletionItemKind.Field));
 				break;
 			case 'object':
-				item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Method);
+				keys.push(new vscode.CompletionItem(key, vscode.CompletionItemKind.Method));
 				break;
 			case 'boolean':
-				item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Variable);
+				keys.push(new vscode.CompletionItem(key, vscode.CompletionItemKind.Variable));
 				break;
 			case 'number':
-				item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Value);
+				keys.push(new vscode.CompletionItem(key, vscode.CompletionItemKind.Value));
 				break;
 			default:
 				console.log("Unknown type: " + typeof currentKey[key]);
-				item = new vscode.CompletionItem(key, vscode.CompletionItemKind.Issue);
+				keys.push(new vscode.CompletionItem(key, vscode.CompletionItemKind.Issue));
 				break;
 		}
-		item.commitCharacters = ['.'];
 		keys.push(item);
 	}
 	return keys;
