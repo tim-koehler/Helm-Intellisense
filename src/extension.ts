@@ -43,21 +43,27 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 		return undefined;
 	}
 
-	if (!currentLine.includes('.Values')) {
-		return [new vscode.CompletionItem('.Values', vscode.CompletionItemKind.Method)];
-	}
-	if (!currentLine.includes('.Values')) {
+	if (!isInValuesString(currentLine, position.character)) {
+		if(currentLine.charAt(position.character - 1) === '.') {
+			return [new vscode.CompletionItem('Values', vscode.CompletionItemKind.Method)];
+		}
+		else if(currentLine.charAt(position.character - 1) === ' ') {
+			return [new vscode.CompletionItem('.Values', vscode.CompletionItemKind.Method)];
+		}
 		return undefined;
 	}
 	
 	var doc = getValuesFromFile(document);
+	var currentString = getWordAt(currentLine, position.character - 1).replace('.', '', ).slice(0, -1);
 
-	var currentString = currentLine.substring(currentLine.indexOf('.Values') + 1, currentLine.lastIndexOf(currentLine.charAt(position.character - 1)));
-	
 	var currentKey = doc;
 	if(currentString !== 'Values') {
 		var allKeys = currentString.replace('Values.', '').split('.');
 		for (let key in allKeys) {		
+			if(currentKey[allKeys[key]].toString().includes(',')) {
+				return undefined;
+			}
+			
 			if(typeof currentKey[allKeys[key]] === typeof 'string') {
 				return undefined;
 			}
@@ -72,6 +78,24 @@ function isInsideBrackets(currentLine: string, position: number) {
 		return true;
 	}
 	return false;
+}
+
+function isInValuesString(currentLine: string, position: number) {
+	if(getWordAt(currentLine, position - 1).includes('.Values')) {
+		return true;
+	}
+	return false;
+}
+
+function getWordAt (str: string, pos: number) {
+    var left = str.slice(0, pos + 1).search(/\S+$/),
+        right = str.slice(pos).search(/\s/);
+
+    if (right < 0) {
+        return str.slice(left);
+    }
+
+    return str.slice(left, right + pos);
 }
 
 function getValuesFromFile(document: vscode.TextDocument) {
