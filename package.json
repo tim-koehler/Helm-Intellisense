@@ -3,7 +3,7 @@
 	"displayName": "Helm-Intellisense",
 	"description": "This extension provides intellisense for helm templates",
 	"version": "0.0.1",
-	"publisher": "tim-koehler",
+	"publisher": "github.com/tim-koehler",
 	"engines": {
 		"vscode": "^1.45.0"
 	},
@@ -11,7 +11,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"*"
+		"onLanguage:yaml",
+    	"onLanguage:helm"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
