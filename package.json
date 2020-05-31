@@ -2,8 +2,11 @@
 	"name": "helm-intellisense",
 	"displayName": "Helm-Intellisense",
 	"description": "This extension provides intellisense for helm templates",
-	"version": "0.0.1",
-	"publisher": "github.com/tim-koehler",
+	"version": "0.0.2",
+	"publisher": "tim-koehler",
+	"repository": {
+		"url": "https://github.com/tim-koehler/Helm-Intellisense"
+	},
 	"engines": {
 		"vscode": "^1.45.0"
 	},
