@@ -2,8 +2,13 @@
 	"name": "helm-intellisense",
 	"displayName": "Helm-Intellisense",
 	"description": "This extension provides intellisense for helm templates",
-	"version": "0.0.2",
-	"publisher": "tim-koehler",
+	"version": "0.0.3",
+	"publisher": "Tim Koehler",
+	"author": {
+		"name": "tim-koehler",
+		"url": "https://github.com/tim-koehler"
+	},
+	"icon": "images/icon.png",
 	"repository": {
 		"url": "https://github.com/tim-koehler/Helm-Intellisense"
 	},
@@ -11,7 +16,9 @@
 		"vscode": "^1.45.0"
 	},
 	"categories": [
-		"Other"
+		"Other",
+		"Programming Languages",
+		"Linters"
 	],
 	"activationEvents": [
 		"onLanguage:yaml",
@@ -28,6 +35,9 @@
 		"pretest": "npm run compile && npm run lint",
 		"test": "node ./out/test/runTest.js"
 	},
+	"dependencies": {
+		"js-yaml": "^3.13.1"
+	},
 	"devDependencies": {
 		"@types/vscode": "^1.45.0",
 		"@types/glob": "^7.1.1",
@@ -39,6 +49,7 @@
 		"glob": "^7.1.6",
 		"mocha": "^7.1.2",
 		"typescript": "^3.8.3",
-		"vscode-test": "^1.3.0"
+		"vscode-test": "^1.3.0",
+		"js-yaml": "^3.13.1"
 	}
 }
