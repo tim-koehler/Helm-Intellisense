@@ -1,6 +1,6 @@
 {
 	"name": "helm-intellisense",
-	"displayName": "Helm-Intellisense",
+	"displayName": "Helm Intellisense",
 	"description": "This extension provides intellisense for helm templates",
 	"version": "0.0.3",
 	"publisher": "Tim-Koehler",
@@ -19,6 +19,14 @@
 		"Other",
 		"Programming Languages",
 		"Linters"
+	],
+	"keywords": [
+		"helm",
+		"templates",
+		"helm-templates",
+		"kubernetes",
+		"intellisense",
+		"yaml"
 	],
 	"activationEvents": [
 		"onLanguage:yaml",
