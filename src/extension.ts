@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "Helm-Intellisense" is now active!');
 
-	const providerHelm = vscode.languages.registerCompletionItemProvider('helm',
+	vscode.languages.registerCompletionItemProvider('yaml',
 	{
 		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
 			return getProvideCompletionItems(document, position);
@@ -21,7 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
 	'.' // triggered whenever a '.' is being typed
 	);
 
-	const providerYaml = vscode.languages.registerCompletionItemProvider('yaml',
+	vscode.languages.registerCompletionItemProvider('helm',
 	{
 		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
 			return getProvideCompletionItems(document, position);
@@ -30,7 +30,7 @@ export function activate(context: vscode.ExtensionContext) {
 	'.' // triggered whenever a '.' is being typed
 	);
 
-	context.subscriptions.push(providerHelm, providerYaml);
+	//context.subscriptions.push(providerYaml);
 }
 
 // this method is called when your extension is deactivated
@@ -38,7 +38,7 @@ export function deactivate() {}
 
 function getProvideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
 	var currentLine = document.lineAt(position).text;
-
+	
 	if(!isInsideBrackets(currentLine, position.character)) {
 		return undefined;
 	}
@@ -54,23 +54,34 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 	}
 	
 	var doc = getValuesFromFile(document);
-	var currentString = getWordAt(currentLine, position.character - 1).replace('.', '', ).slice(0, -1);
+	var currentString = getWordAt(currentLine, position.character - 1).replace('.', '', );
 
 	var currentKey = doc;
-	if(currentString !== 'Values') {
-		var allKeys = currentString.replace('Values.', '').split('.');
-		for (let key in allKeys) {		
-			if(currentKey[allKeys[key]].toString().includes(',')) {
-				return undefined;
-			}
-			
-			if(typeof currentKey[allKeys[key]] === typeof 'string') {
-				return undefined;
-			}
-			currentKey = currentKey[allKeys[key]];
+	if(currentString.charAt(currentString.length-1) === '.'){
+		// Removing the dot at the end
+		currentString = currentString.slice(0, -1);
+		
+		if(currentString === 'Values') {
+			return getCompletionItemList(currentKey);
 		}
+
+		// Removing prefix 'Values.'
+		var allKeys = currentString.replace('Values.', '').split('.');
+
+		currentKey = updateCurrentKey(currentKey, allKeys);
 	}
-	return getKeyList(currentKey);;
+	else {
+		if(!currentString.includes('Values.')) {
+			return undefined;
+		}
+
+		// Removing prefix 'Values.'
+		var allKeys = currentString.replace('Values.', '').split('.');
+		allKeys.pop();
+
+		currentKey = updateCurrentKey(currentKey, allKeys);
+	}
+	return getCompletionItemList(currentKey);
 }
 
 function isInsideBrackets(currentLine: string, position: number) {
@@ -103,7 +114,17 @@ function getValuesFromFile(document: vscode.TextDocument) {
 	return yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
 }
 
-function getKeyList(currentKey: any) {
+function updateCurrentKey(currentKey: any, allKeys: any) {
+	for (let key in allKeys) {					
+		if(typeof currentKey[allKeys[key]] === typeof 'string') {
+			return undefined;
+		}
+		currentKey = currentKey[allKeys[key]];
+	}
+	return currentKey;
+}
+
+function getCompletionItemList(currentKey: any) {
 	var keys = [];
 	for (let key in currentKey) {
 		switch (typeof currentKey[key]) {
