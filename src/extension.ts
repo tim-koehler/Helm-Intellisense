@@ -2,6 +2,9 @@ import * as vscode from 'vscode';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 
+/**
+ * Activates the extension. Adds completion item providers.
+ */
 export function activate(context: vscode.ExtensionContext): void {
 	console.log('Congratulations, your extension "Helm-Intellisense" is now active!');
 
@@ -15,9 +18,16 @@ export function activate(context: vscode.ExtensionContext): void {
 	}
 }
 
+/**
+ * Deactivates the extension.
+ */
 export function deactivate(): void {
 }
 
+/**
+ * Generates a list of completion items based on the current position in the
+ * document.
+ */
 function getProvideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] | undefined {
 	const currentLine = document.lineAt(position).text;
 
@@ -64,17 +74,27 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 	return getCompletionItemList(currentKey);
 }
 
+/**
+ * Checks whether the position in the line is in between curly brackets.
+ */
 function isInsideBrackets(currentLine: string, position: number): boolean {
-	return currentLine.substring(0, position).includes('{{') 
+	return currentLine.substring(0, position).includes('{{')
 		&& currentLine.substring(position, currentLine.length).includes('}}');
-	
+
 }
 
+/**
+ * Checks whether the position is part of a values reference.
+ */
 function isInValuesString(currentLine: string, position: number): boolean {
 	return getWordAt(currentLine, position - 1).includes('.Values');
-	
+
 }
 
+/**
+ * Retrieves the word at and around the position. A word is considered to be
+ * the sequence of characters from the last and to the next whitespace.
+ */
 function getWordAt(str: string, pos: number): string {
 	const left = str.slice(0, pos + 1).search(/\S+$/);
 	const right = str.slice(pos).search(/\s/);
@@ -86,11 +106,17 @@ function getWordAt(str: string, pos: number): string {
 	return str.slice(left, right + pos);
 }
 
+/**
+ * Retrieves the values from the `values.yaml`.
+ */
 function getValuesFromFile(document: vscode.TextDocument): any {
 	const pathToValuesFile = document.fileName.substr(0, document.fileName.indexOf('/templates')) + "/values.yaml";
 	return yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
 }
 
+/**
+ * Updates the currently active key.
+ */
 function updateCurrentKey(currentKey: any, allKeys: any): any {
 	for (let key in allKeys) {
 		if (typeof currentKey[allKeys[key]] === typeof 'string') {
@@ -101,6 +127,9 @@ function updateCurrentKey(currentKey: any, allKeys: any): any {
 	return currentKey;
 }
 
+/**
+ * Generates a list of possible completions for the current key.
+ */
 function getCompletionItemList(currentKey: any): vscode.CompletionItem[] {
 	const keys = [];
 	for (let key in currentKey) {
