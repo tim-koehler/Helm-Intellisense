@@ -1,15 +1,8 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "Helm-Intellisense" is now active!');
 
 	vscode.languages.registerCompletionItemProvider('yaml',
@@ -18,7 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
 				return getProvideCompletionItems(document, position);
 			}
 		},
-		'.' // triggered whenever a '.' is being typed
+		'.'
 	);
 
 	vscode.languages.registerCompletionItemProvider('helm',
@@ -27,13 +20,12 @@ export function activate(context: vscode.ExtensionContext) {
 				return getProvideCompletionItems(document, position);
 			}
 		},
-		'.' // triggered whenever a '.' is being typed
+		'.'
 	);
 
 	//context.subscriptions.push(providerYaml);
 }
 
-// this method is called when your extension is deactivated
 export function deactivate() {
 }
 
