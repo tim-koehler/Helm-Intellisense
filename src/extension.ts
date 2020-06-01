@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: vscode.ExtensionContext): void {
 	console.log('Congratulations, your extension "Helm-Intellisense" is now active!');
 
 	vscode.languages.registerCompletionItemProvider('yaml',
@@ -26,10 +26,10 @@ export function activate(context: vscode.ExtensionContext) {
 	//context.subscriptions.push(providerYaml);
 }
 
-export function deactivate() {
+export function deactivate(): void {
 }
 
-function getProvideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+function getProvideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] | undefined {
 	var currentLine = document.lineAt(position).text;
 
 	if (!isInsideBrackets(currentLine, position.character)) {
@@ -75,21 +75,21 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 	return getCompletionItemList(currentKey);
 }
 
-function isInsideBrackets(currentLine: string, position: number) {
+function isInsideBrackets(currentLine: string, position: number): boolean {
 	if (currentLine.substring(0, position).includes('{{') && currentLine.substring(position, currentLine.length).includes('}}')) {
 		return true;
 	}
 	return false;
 }
 
-function isInValuesString(currentLine: string, position: number) {
+function isInValuesString(currentLine: string, position: number): boolean {
 	if (getWordAt(currentLine, position - 1).includes('.Values')) {
 		return true;
 	}
 	return false;
 }
 
-function getWordAt(str: string, pos: number) {
+function getWordAt(str: string, pos: number): string {
 	var left = str.slice(0, pos + 1).search(/\S+$/),
 		right = str.slice(pos).search(/\s/);
 
@@ -100,12 +100,12 @@ function getWordAt(str: string, pos: number) {
 	return str.slice(left, right + pos);
 }
 
-function getValuesFromFile(document: vscode.TextDocument) {
+function getValuesFromFile(document: vscode.TextDocument): any {
 	var pathToValuesFile = document.fileName.substr(0, document.fileName.indexOf('/templates')) + "/values.yaml";
 	return yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
 }
 
-function updateCurrentKey(currentKey: any, allKeys: any) {
+function updateCurrentKey(currentKey: any, allKeys: any): any {
 	for (let key in allKeys) {
 		if (typeof currentKey[allKeys[key]] === typeof 'string') {
 			return undefined;
@@ -115,7 +115,7 @@ function updateCurrentKey(currentKey: any, allKeys: any) {
 	return currentKey;
 }
 
-function getCompletionItemList(currentKey: any) {
+function getCompletionItemList(currentKey: any): vscode.CompletionItem[] {
 	var keys = [];
 	for (let key in currentKey) {
 		switch (typeof currentKey[key]) {
