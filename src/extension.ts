@@ -140,11 +140,15 @@ function getCompletionItemList(currentKey: any): vscode.CompletionItem[] {
 			case 'string':
 			case 'boolean':
 			case 'number':
-				keys.push(new vscode.CompletionItem(key, vscode.CompletionItemKind.Field));
+				let valueItem = new vscode.CompletionItem(key, vscode.CompletionItemKind.Field);	
+				valueItem.documentation = "Value: " + currentKey[key];
+				keys.push(valueItem);
 				break;
 			default:
 				console.log("Unknown type: " + typeof currentKey[key]);
-				keys.push(new vscode.CompletionItem(key, vscode.CompletionItemKind.Issue));
+				let unknownItem = new vscode.CompletionItem(key, vscode.CompletionItemKind.Issue);
+				unknownItem.documentation = "Helm-Intellisense could not find type";
+				keys.push(unknownItem);
 				break;
 		}
 	}
