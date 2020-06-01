@@ -30,7 +30,7 @@ export function deactivate(): void {
 }
 
 function getProvideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] | undefined {
-	var currentLine = document.lineAt(position).text;
+	const currentLine = document.lineAt(position).text;
 
 	if (!isInsideBrackets(currentLine, position.character)) {
 		return undefined;
@@ -45,10 +45,10 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 		return undefined;
 	}
 
-	var doc = getValuesFromFile(document);
-	var currentString = getWordAt(currentLine, position.character - 1).replace('.', '',);
+	const doc = getValuesFromFile(document);
+	let currentString = getWordAt(currentLine, position.character - 1).replace('.', '',);
 
-	var currentKey = doc;
+	let currentKey = doc;
 	if (currentString.charAt(currentString.length - 1) === '.') {
 		// Removing the dot at the end
 		currentString = currentString.slice(0, -1);
@@ -58,7 +58,7 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 		}
 
 		// Removing prefix 'Values.'
-		var allKeys = currentString.replace('Values.', '').split('.');
+		const allKeys = currentString.replace('Values.', '').split('.');
 
 		currentKey = updateCurrentKey(currentKey, allKeys);
 	} else {
@@ -67,7 +67,7 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 		}
 
 		// Removing prefix 'Values.'
-		var allKeys = currentString.replace('Values.', '').split('.');
+		const allKeys = currentString.replace('Values.', '').split('.');
 		allKeys.pop();
 
 		currentKey = updateCurrentKey(currentKey, allKeys);
@@ -90,8 +90,8 @@ function isInValuesString(currentLine: string, position: number): boolean {
 }
 
 function getWordAt(str: string, pos: number): string {
-	var left = str.slice(0, pos + 1).search(/\S+$/),
-		right = str.slice(pos).search(/\s/);
+	const left = str.slice(0, pos + 1).search(/\S+$/);
+	const right = str.slice(pos).search(/\s/);
 
 	if (right < 0) {
 		return str.slice(left);
@@ -101,7 +101,7 @@ function getWordAt(str: string, pos: number): string {
 }
 
 function getValuesFromFile(document: vscode.TextDocument): any {
-	var pathToValuesFile = document.fileName.substr(0, document.fileName.indexOf('/templates')) + "/values.yaml";
+	const pathToValuesFile = document.fileName.substr(0, document.fileName.indexOf('/templates')) + "/values.yaml";
 	return yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
 }
 
@@ -116,7 +116,7 @@ function updateCurrentKey(currentKey: any, allKeys: any): any {
 }
 
 function getCompletionItemList(currentKey: any): vscode.CompletionItem[] {
-	var keys = [];
+	const keys = [];
 	for (let key in currentKey) {
 		switch (typeof currentKey[key]) {
 			case 'object':
