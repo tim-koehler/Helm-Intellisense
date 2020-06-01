@@ -110,7 +110,7 @@ function getWordAt(str: string, pos: number): string {
  * Retrieves the values from the `values.yaml`.
  */
 function getValuesFromFile(document: vscode.TextDocument): any {
-	const pathToValuesFile = document.fileName.substr(0, document.fileName.indexOf('/templates')) + "/values.yaml";
+	const pathToValuesFile = document.fileName.substr(0, document.fileName.lastIndexOf('/templates')) + "/values.yaml";
 	return yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
 }
 
