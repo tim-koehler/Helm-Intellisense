@@ -5,25 +5,14 @@ import * as fs from 'fs';
 export function activate(context: vscode.ExtensionContext): void {
 	console.log('Congratulations, your extension "Helm-Intellisense" is now active!');
 
-	vscode.languages.registerCompletionItemProvider('yaml',
-		{
-			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
-				return getProvideCompletionItems(document, position);
-			}
-		},
-		'.'
-	);
-
-	vscode.languages.registerCompletionItemProvider('helm',
-		{
-			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
-				return getProvideCompletionItems(document, position);
-			}
-		},
-		'.'
-	);
-
-	//context.subscriptions.push(providerYaml);
+	for (let lang of ['yaml', 'helm']) {
+		vscode.languages.registerCompletionItemProvider(lang, {
+				provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+					return getProvideCompletionItems(document, position);
+				}
+			}, '.'
+		);
+	}
 }
 
 export function deactivate(): void {
