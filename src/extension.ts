@@ -76,17 +76,14 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 }
 
 function isInsideBrackets(currentLine: string, position: number): boolean {
-	if (currentLine.substring(0, position).includes('{{') && currentLine.substring(position, currentLine.length).includes('}}')) {
-		return true;
-	}
-	return false;
+	return currentLine.substring(0, position).includes('{{') 
+		&& currentLine.substring(position, currentLine.length).includes('}}');
+	
 }
 
 function isInValuesString(currentLine: string, position: number): boolean {
-	if (getWordAt(currentLine, position - 1).includes('.Values')) {
-		return true;
-	}
-	return false;
+	return getWordAt(currentLine, position - 1).includes('.Values');
+	
 }
 
 function getWordAt(str: string, pos: number): string {
