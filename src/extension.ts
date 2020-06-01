@@ -13,55 +13,55 @@ export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "Helm-Intellisense" is now active!');
 
 	vscode.languages.registerCompletionItemProvider('yaml',
-	{
-		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
-			return getProvideCompletionItems(document, position);
-		}
-	},
-	'.' // triggered whenever a '.' is being typed
+		{
+			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+				return getProvideCompletionItems(document, position);
+			}
+		},
+		'.' // triggered whenever a '.' is being typed
 	);
 
 	vscode.languages.registerCompletionItemProvider('helm',
-	{
-		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
-			return getProvideCompletionItems(document, position);
-		}
-	},
-	'.' // triggered whenever a '.' is being typed
+		{
+			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+				return getProvideCompletionItems(document, position);
+			}
+		},
+		'.' // triggered whenever a '.' is being typed
 	);
 
 	//context.subscriptions.push(providerYaml);
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+}
 
 function getProvideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
 	var currentLine = document.lineAt(position).text;
-	
-	if(!isInsideBrackets(currentLine, position.character)) {
+
+	if (!isInsideBrackets(currentLine, position.character)) {
 		return undefined;
 	}
 
 	if (!isInValuesString(currentLine, position.character)) {
-		if(currentLine.charAt(position.character - 1) === '.') {
+		if (currentLine.charAt(position.character - 1) === '.') {
 			return [new vscode.CompletionItem('Values', vscode.CompletionItemKind.Method)];
-		}
-		else if(currentLine.charAt(position.character - 1) === ' ') {
+		} else if (currentLine.charAt(position.character - 1) === ' ') {
 			return [new vscode.CompletionItem('.Values', vscode.CompletionItemKind.Method)];
 		}
 		return undefined;
 	}
-	
+
 	var doc = getValuesFromFile(document);
-	var currentString = getWordAt(currentLine, position.character - 1).replace('.', '', );
+	var currentString = getWordAt(currentLine, position.character - 1).replace('.', '',);
 
 	var currentKey = doc;
-	if(currentString.charAt(currentString.length-1) === '.'){
+	if (currentString.charAt(currentString.length - 1) === '.') {
 		// Removing the dot at the end
 		currentString = currentString.slice(0, -1);
-		
-		if(currentString === 'Values') {
+
+		if (currentString === 'Values') {
 			return getCompletionItemList(currentKey);
 		}
 
@@ -69,9 +69,8 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 		var allKeys = currentString.replace('Values.', '').split('.');
 
 		currentKey = updateCurrentKey(currentKey, allKeys);
-	}
-	else {
-		if(!currentString.includes('Values.')) {
+	} else {
+		if (!currentString.includes('Values.')) {
 			return undefined;
 		}
 
@@ -85,28 +84,28 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 }
 
 function isInsideBrackets(currentLine: string, position: number) {
-	if(currentLine.substring(0, position).includes('{{') && currentLine.substring(position, currentLine.length).includes('}}')) {
+	if (currentLine.substring(0, position).includes('{{') && currentLine.substring(position, currentLine.length).includes('}}')) {
 		return true;
 	}
 	return false;
 }
 
 function isInValuesString(currentLine: string, position: number) {
-	if(getWordAt(currentLine, position - 1).includes('.Values')) {
+	if (getWordAt(currentLine, position - 1).includes('.Values')) {
 		return true;
 	}
 	return false;
 }
 
-function getWordAt (str: string, pos: number) {
-    var left = str.slice(0, pos + 1).search(/\S+$/),
-        right = str.slice(pos).search(/\s/);
+function getWordAt(str: string, pos: number) {
+	var left = str.slice(0, pos + 1).search(/\S+$/),
+		right = str.slice(pos).search(/\s/);
 
-    if (right < 0) {
-        return str.slice(left);
-    }
+	if (right < 0) {
+		return str.slice(left);
+	}
 
-    return str.slice(left, right + pos);
+	return str.slice(left, right + pos);
 }
 
 function getValuesFromFile(document: vscode.TextDocument) {
@@ -115,8 +114,8 @@ function getValuesFromFile(document: vscode.TextDocument) {
 }
 
 function updateCurrentKey(currentKey: any, allKeys: any) {
-	for (let key in allKeys) {					
-		if(typeof currentKey[allKeys[key]] === typeof 'string') {
+	for (let key in allKeys) {
+		if (typeof currentKey[allKeys[key]] === typeof 'string') {
 			return undefined;
 		}
 		currentKey = currentKey[allKeys[key]];
