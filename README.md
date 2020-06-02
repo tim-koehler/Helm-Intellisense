@@ -5,3 +5,9 @@
 - Working with language type  `yaml` and `helm-template`
 
 ![feature X](images/demo.gif)
+
+## Extension Settings
+
+This extension contributes the following settings:
+
+* `helm-intellisense.customValueFileNames`: Defines list of possible files containing values(default: `values.yaml`)
