@@ -46,9 +46,6 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 
 	const doc = getValuesFromFile(document);
 	let currentString = getWordAt(currentLine, position.character - 1).replace('.', '',).replace('$', '');
-	console.log(currentString);
-	
-
 
 	let currentKey = doc;
 	if (currentString.charAt(currentString.length - 1) === '.') {
@@ -112,8 +109,27 @@ function getWordAt(str: string, pos: number): string {
  * Retrieves the values from the `values.yaml`.
  */
 function getValuesFromFile(document: vscode.TextDocument): any {
-	const pathToValuesFile = document.fileName.substr(0, document.fileName.lastIndexOf('/templates')) + "/values.yaml";
-	return yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
+	const filenames = getValueFileNamesFromConfig();
+	for (const filename of filenames) {
+		const pathToValuesFile = document.fileName.substr(0, document.fileName.lastIndexOf('/templates')) + "/" + filename;	
+		if(fs.existsSync(pathToValuesFile)){
+			return yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
+		}
+	}
+	vscode.window.showErrorMessage('Could not locate any values.yaml. Is your values file named differently? Configure correct file name in your settings using \'helm-intellisense.customValueFileNames\'');
+	return undefined;
+}
+
+/**
+ * Pulls list of possible values filenames from config.
+ */
+function getValueFileNamesFromConfig():Array<string> {
+	const customValueFileNames:any = vscode.workspace.getConfiguration('helm-intellisense').get('customValueFileNames');
+	let filenames = [];
+	for (const filename of customValueFileNames) {
+		filenames.push(filename);
+	}
+	return filenames;	
 }
 
 /**

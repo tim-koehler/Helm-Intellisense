@@ -33,7 +33,20 @@
 		"onLanguage:helm"
 	],
 	"main": "./out/extension.js",
-	"contributes": {},
+	"contributes": {
+		"configuration": {
+			"title": "Helm-Intellisense",
+			"properties": {
+			  "helm-intellisense.customValueFileNames": {
+				"type": "array",
+				"default": [
+					"values.yaml"
+				],
+				"description": "List of alternative value file names"
+			  }
+			}
+		}
+	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
