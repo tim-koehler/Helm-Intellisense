@@ -45,7 +45,10 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
 	}
 
 	const doc = getValuesFromFile(document);
-	let currentString = getWordAt(currentLine, position.character - 1).replace('.', '',);
+	let currentString = getWordAt(currentLine, position.character - 1).replace('.', '',).replace('$', '');
+	console.log(currentString);
+	
+
 
 	let currentKey = doc;
 	if (currentString.charAt(currentString.length - 1) === '.') {
@@ -88,7 +91,6 @@ function isInsideBrackets(currentLine: string, position: number): boolean {
  */
 function isInValuesString(currentLine: string, position: number): boolean {
 	return getWordAt(currentLine, position - 1).includes('.Values');
-
 }
 
 /**
