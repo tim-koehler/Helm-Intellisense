@@ -86,6 +86,9 @@ function isInsideBrackets(currentLine: string, position: number): boolean {
 	return true;
 }
 
+/**
+ * Checks whether string before cursor contains'{{' or not
+ */
 function isBracketsInPrefix(prefix: string) {
 	let prevChar = '';
 	for (let index = prefix.length - 1; index >= 0; index--) {
