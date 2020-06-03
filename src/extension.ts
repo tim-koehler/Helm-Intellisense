@@ -78,9 +78,26 @@ function getProvideCompletionItems(document: vscode.TextDocument, position: vsco
  * Checks whether the position in the line is in between curly brackets.
  */
 function isInsideBrackets(currentLine: string, position: number): boolean {
-	return currentLine.substring(0, position).includes('{{')
-		&& currentLine.substring(position, currentLine.length).includes('}}');
+	const prefix = currentLine.substring(0, position);
 
+	if(!isBracketsInPrefix(prefix)) {
+		return false;
+	}
+	return true;
+}
+
+function isBracketsInPrefix(prefix: string) {
+	let prevChar = '';
+	for (let index = prefix.length - 1; index >= 0; index--) {
+		if (prefix.charAt(index) === '}') {
+			return false;
+		}
+		if (prefix.charAt(index) === '{' && prevChar === '{') {
+			return true;
+		}
+		prevChar = prefix.charAt(index);
+	}
+	return false;
 }
 
 /**
