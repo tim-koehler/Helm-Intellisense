@@ -6,6 +6,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.3.1] - 2020-06-04
+### Changed
+- Improved check to decide if cursor is in go-template.
+
 ## [0.3.0] - 2020-06-02
 ### Added
 - Support of custom named value files.
