@@ -5,6 +5,11 @@ All notable changes to the "Helm-Intellisense" extension will be documented in t
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
+- Autocomplete for build in Object `Release`
+- Autocomplete for build in Object `Chart` 
+- Autocomplete for build in Object `Files` 
+- Autocomplete for build in Object `Capabilities` 
+- Autocomplete for build in Object `Template` 
 
 ## [0.3.1] - 2020-06-04
 ### Changed
