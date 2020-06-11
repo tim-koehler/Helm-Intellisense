@@ -14,13 +14,13 @@ export class ReleaseCompletionItemProvider implements vscode.CompletionItemProvi
             return undefined;
         }
 
-        let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$', '.').trim();
+        let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
 
         if(currentString.length === 0) {
             return [new vscode.CompletionItem(".Release", vscode.CompletionItemKind.Method)];
         }
 
-        if (currentString.startsWith('.') && !currentString.includes('.Release.')) {
+        if (currentString.startsWith('.') && !currentString.includes('.Release.') && currentString.split('.').length < 3) {
             return [new vscode.CompletionItem('Release', vscode.CompletionItemKind.Method)];
         }
 
