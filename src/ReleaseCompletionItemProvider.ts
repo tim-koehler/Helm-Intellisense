@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
-import * as utils from "./utils"; 
+import * as utils from "./utils";
 
 export class ReleaseCompletionItemProvider implements vscode.CompletionItemProvider {
+
     /**
      * Generates a list of completion items based on the current position in the
      * document.
@@ -13,30 +14,26 @@ export class ReleaseCompletionItemProvider implements vscode.CompletionItemProvi
             return undefined;
         }
 
-        if (!this.isInReleaseString(currentLine, position.character)) {
-            if (currentLine.charAt(position.character - 1) === '.') {
-                return [new vscode.CompletionItem('Release', vscode.CompletionItemKind.Method)];
-            } else if (currentLine.charAt(position.character - 1) === ' ') {
-                return [new vscode.CompletionItem('.Release', vscode.CompletionItemKind.Method)];
-            }
-            return undefined;
-        }
- 
-        if (utils.getWordAt(currentLine, position.character - 1).replace('.', '',).replace('$', '') !== 'Release.') {
-            return undefined;
+        let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$', '.').trim();
+
+        if(currentString.length === 0) {
+            return [new vscode.CompletionItem(".Release", vscode.CompletionItemKind.Method)];
         }
 
-        return this.getCompletionItems();
+        if (currentString.startsWith('.') && !currentString.includes('.Release.')) {
+            return [new vscode.CompletionItem('Release', vscode.CompletionItemKind.Method)];
+        }
+
+        if (/^\.Release\.\w*$/.test(currentString)) {
+            return this.getCompletionItemList();
+        }
+
+        return [];
     }
-
     /**
-    * Checks whether the position is part of a release reference.
-    */
-    isInReleaseString(currentLine: string, position: number): boolean {
-        return utils.getWordAt(currentLine, position - 1).includes('.Release');
-    }
-
-    getCompletionItems(): vscode.CompletionItem[] {
+     * Put together list of items with the information from the official Helm website.
+     */
+    getCompletionItemList(): vscode.CompletionItem[] {
         let name = new vscode.CompletionItem("Name", vscode.CompletionItemKind.Field);
         name.documentation = "The release name";
 
@@ -54,14 +51,14 @@ export class ReleaseCompletionItemProvider implements vscode.CompletionItemProvi
 
         let service = new vscode.CompletionItem("Service", vscode.CompletionItemKind.Field);
         service.documentation = "The service that is rendering the present template. On Helm, this is always Helm.";
- 
+
         return [
-           name,
-           namespace,
-           isUpgrade,
-           isInstall,
-           revision,
-           service
+            name,
+            namespace,
+            isUpgrade,
+            isInstall,
+            revision,
+            service
         ];
     }
 
