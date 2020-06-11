@@ -80,7 +80,7 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
      */
     updateCurrentKey(currentKey: any, allKeys: any): any {
         for (let key in allKeys) {
-            if (typeof currentKey[allKeys[key]] === typeof 'string') {
+            if (Array.isArray(currentKey[allKeys[key]])){
                 return undefined;
             }
             currentKey = currentKey[allKeys[key]];
