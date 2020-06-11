@@ -94,10 +94,6 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
     getCompletionItemList(currentKey: any): vscode.CompletionItem[] {
         const keys = [];
         for (let key in currentKey) {
-            // Check if suggestion is an array index
-            if(currentKey[key].type !== undefined) {
-                continue;
-            }
             switch (typeof currentKey[key]) {
                 case 'object':
                     keys.push(new vscode.CompletionItem(key, vscode.CompletionItemKind.Method));
