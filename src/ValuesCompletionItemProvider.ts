@@ -15,46 +15,30 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
             return undefined;
         }
 
-       
-        let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$', '.').trim();
+        let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
 
-        if (currentString === '.Values.') {
-            currentString = currentString.replace('.', '');
-            const doc = this.getValuesFromFile(document);
-            let currentKey = doc;
-            if (currentString.charAt(currentString.length - 1) === '.') {
-                // Removing the dot at the end
-                currentString = currentString.slice(0, -1);
-
-                if (currentString === 'Values') {
-                    return this.getCompletionItemList(currentKey);
-                }
-
-                // Removing prefix 'Values.'
-                const allKeys = currentString.replace('Values.', '').split('.');
-
-                currentKey = this.updateCurrentKey(currentKey, allKeys);
-            } else {
-                if (!currentString.includes('Values.')) {
-                    return undefined;
-                }
-
-                // Removing prefix 'Values.'
-                const allKeys = currentString.replace('Values.', '').split('.');
-                allKeys.pop();
-
-                currentKey = this.updateCurrentKey(currentKey, allKeys);
-            }
-            return this.getCompletionItemList(currentKey);
+        if(currentString.length === 0) {
+            return [new vscode.CompletionItem(".Values", vscode.CompletionItemKind.Method)];
         }
 
-        if (currentString.startsWith('.')) {
+        if (currentString.startsWith('.') && !currentString.includes('.Values.') && currentString.split('.').length < 3) {
             return [new vscode.CompletionItem('Values', vscode.CompletionItemKind.Method)];
-        } 
+        }
 
-        return [
-            new vscode.CompletionItem(".Values", vscode.CompletionItemKind.Method),
-        ];
+        if (currentString.startsWith('.Values.')) {
+            const doc = this.getValuesFromFile(document);
+
+            if (currentString === '.Values.'){
+                return this.getCompletionItemList(doc);
+            }
+
+            let currentKey = doc;
+            const allKeys = currentString.replace('.Values.', '').split('.');
+            allKeys.pop();
+            
+            currentKey = this.updateCurrentKey(currentKey, allKeys);
+            return this.getCompletionItemList(currentKey);
+        }
     }
 
     /**
