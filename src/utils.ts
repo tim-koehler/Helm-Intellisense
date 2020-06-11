@@ -3,11 +3,7 @@
  */
 export function isInsideBrackets(currentLine: string, position: number): boolean {
     const prefix = currentLine.substring(0, position);
-
-    if(!isBracketsInPrefix(prefix)) {
-        return false;
-    }
-    return true;
+    return isBracketsInPrefix(prefix);
 }
 
 /**
