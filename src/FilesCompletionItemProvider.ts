@@ -17,7 +17,7 @@ export class FilesCompletionItemProvider implements vscode.CompletionItemProvide
         let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
 
         if(currentString.length === 0) {
-            return [new vscode.CompletionItem(".Files", vscode.CompletionItemKind.Method)];
+            return [new vscode.CompletionItem('.Files', vscode.CompletionItemKind.Method)];
         }
 
         if (currentString.startsWith('.') && !currentString.includes('.Files.') && currentString.split('.').length < 3) {
