@@ -3,6 +3,7 @@ import { ValuesCompletionItemProvider } from "./ValuesCompletionItemProvider";
 import { ReleaseCompletionItemProvider } from "./ReleaseCompletionItemProvider";
 import { FilesCompletionItemProvider } from "./FilesCompletionItemProvider";
 import { TemplateCompletionItemProvider } from "./TemplateCompletionItemProvider";
+import { CapabilitiesCompletionItemProvider } from "./CapabilitiesCompletionItemProvider";
 
 /**
  * Activates the extension. Adds completion item providers.
@@ -15,6 +16,7 @@ export function activate(context: vscode.ExtensionContext): void {
 		vscode.languages.registerCompletionItemProvider(lang, new ReleaseCompletionItemProvider() , '.');
 		vscode.languages.registerCompletionItemProvider(lang, new FilesCompletionItemProvider(), '.');
 		vscode.languages.registerCompletionItemProvider(lang, new TemplateCompletionItemProvider(), '.');
+		vscode.languages.registerCompletionItemProvider(lang, new CapabilitiesCompletionItemProvider(), '.');
 	}
 }
 
