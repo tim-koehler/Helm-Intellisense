@@ -1,10 +1,8 @@
 # Change Log
 
-All notable changes to the "Helm-Intellisense" extension will be documented in this file.
-
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
 ## [Unreleased]
+
+## [0.4.0] - 2020-06-13
 ### Added
 - Autocomplete for build in Object `Release`
 - Autocomplete for build in Object `Chart` 
