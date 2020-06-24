@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+## Added
+- Support for yaml anchors and aliases
 
 ## [0.4.0] - 2020-06-13
 ### Added
