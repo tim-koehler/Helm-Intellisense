@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ## Added
+- Command to lint current template file to find wrongly configured `.Values.foo.bar` paths 
 - Support for yaml anchors and aliases
 
 ## [0.4.0] - 2020-06-13

@@ -7,6 +7,10 @@
 
 ![feature X](images/demo.gif)
 
+## Commands
+
+* `Helm-Intellisense: Lint`: This command parses the currently active document and validates that all paths(like `.Values.foo.bar`) point to valid values.
+
 ## Extension Settings
 
 This extension contributes the following settings:
