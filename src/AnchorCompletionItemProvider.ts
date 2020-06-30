@@ -17,6 +17,8 @@ export class AnchorCompletionItemProvider implements vscode.CompletionItemProvid
         for (const index in anchors) {
             const wordRange = document.getWordRangeAtPosition(position);
             if (wordRange === undefined) {
+                const completionItem = new vscode.CompletionItem(anchors[index].replace('&', '*'));
+                completionItems.push(completionItem);
                 continue;
             }
 
@@ -27,7 +29,7 @@ export class AnchorCompletionItemProvider implements vscode.CompletionItemProvid
 
             const completionItemWithoutAsterisk = new vscode.CompletionItem(anchors[index].replace('&', '*'));
             completionItemWithoutAsterisk.range = new vscode.Range(new vscode.Position(wordRange.start.line, wordRange.start.character-1), wordRange.end);
-            completionItemWithoutAsterisk.insertText = "*" + anchors[index].replace('&', '');
+            completionItemWithoutAsterisk.insertText = anchors[index].replace('&', '*');
             completionItems.push(completionItemWithoutAsterisk);
         }
         return completionItems;
