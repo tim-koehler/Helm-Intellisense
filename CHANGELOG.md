@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [0.5.0] - 2020-06-30
 ## Added
 - Command to lint current template file to find wrongly configured `.Values.foo.bar` paths 
 - Support for yaml anchors and aliases
