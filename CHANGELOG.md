@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.5.2] - 2020-06-30
+## Fixed
+- Bug which caused problems with anchor/label completion
+
 ## [0.5.1] - 2020-06-30
 ## Changed
 - Small changes in README
