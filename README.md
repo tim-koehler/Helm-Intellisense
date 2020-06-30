@@ -2,6 +2,8 @@
 
 - This simple extension provides intellisense for helm-templates. The `values.yaml` file of the chart will be read and evaluated automatically to provide intellisense.
 - Support for custom named value files is provided(see settings section below).
+- Lint command to validate correct values templating.
+- Support and autocomplete for `yaml` anchors and labels
 - The extension is compatible with the `Kubernetes` extension.
 - Working with language type  `yaml` and `helm-template`
 

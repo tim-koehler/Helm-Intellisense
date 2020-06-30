@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.5.1] - 2020-06-30
+## Changed
+- Small changes in README
+
 ## [0.5.0] - 2020-06-30
 ## Added
 - Command to lint current template file to find wrongly configured `.Values.foo.bar` paths 
