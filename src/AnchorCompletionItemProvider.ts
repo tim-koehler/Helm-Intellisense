@@ -15,9 +15,6 @@ export class AnchorCompletionItemProvider implements vscode.CompletionItemProvid
         const anchors = this.getAllAnchors(txt);
         let completionItems: vscode.CompletionItem[] = [];
         for (const index in anchors) {
-            const completionItemWithAsterisk = new vscode.CompletionItem(anchors[index].replace('&', '*'));
-            completionItems.push(completionItemWithAsterisk);
-
             const wordRange = document.getWordRangeAtPosition(position);
             if (wordRange === undefined) {
                 continue;
