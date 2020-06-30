@@ -1,3 +1,7 @@
+import * as vscode from 'vscode';
+import * as yaml from 'js-yaml';
+import * as fs from 'fs';
+
 /**
  * Checks whether the position in the line is in between curly brackets.
  */
@@ -36,4 +40,31 @@ export function getWordAt(str: string, pos: number): string {
     }
 
     return str.slice(left, right + pos);
+}
+
+/**
+ * Retrieves the values from the `values.yaml`.
+ */
+export function getValuesFromFile(document: vscode.TextDocument): any {
+    const filenames = getValueFileNamesFromConfig();
+    for (const filename of filenames) {
+        const pathToValuesFile = document.fileName.substr(0, document.fileName.lastIndexOf('/templates')) + "/" + filename;	
+        if(fs.existsSync(pathToValuesFile)){
+            return yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
+        }
+    }
+    vscode.window.showErrorMessage('Could not locate any values.yaml. Is your values file named differently? Configure correct file name in your settings using \'helm-intellisense.customValueFileNames\'');
+    return undefined;
+    }
+
+/**
+ * Pulls list of possible values filenames from config.
+ */
+function getValueFileNamesFromConfig():Array<string> {
+    const customValueFileNames:any = vscode.workspace.getConfiguration('helm-intellisense').get('customValueFileNames');
+    let filenames = [];
+    for (const filename of customValueFileNames) {
+        filenames.push(filename);
+    }
+    return filenames;	
 }
