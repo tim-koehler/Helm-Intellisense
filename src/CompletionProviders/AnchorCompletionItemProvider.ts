@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as utils from "./utils"; 
 
 export class AnchorCompletionItemProvider implements vscode.CompletionItemProvider {
     /**

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
-import * as utils from "./utils"; 
+import * as utils from "../utils"; 
 
 export class ValuesCompletionItemProvider implements vscode.CompletionItemProvider {
     /**

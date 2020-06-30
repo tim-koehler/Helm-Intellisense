@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
-import { ValuesCompletionItemProvider } from "./ValuesCompletionItemProvider";
-import { ReleaseCompletionItemProvider } from "./ReleaseCompletionItemProvider";
-import { FilesCompletionItemProvider } from "./FilesCompletionItemProvider";
-import { TemplateCompletionItemProvider } from "./TemplateCompletionItemProvider";
-import { CapabilitiesCompletionItemProvider } from "./CapabilitiesCompletionItemProvider";
-import { ChartCompletionItemProvider } from "./ChartCompletionItemProvider";
-import { AnchorCompletionItemProvider } from "./AnchorCompletionItemProvider";
-import { LintCommand } from './LintCommand';
+import { ValuesCompletionItemProvider } from "./CompletionProviders/ValuesCompletionItemProvider";
+import { ReleaseCompletionItemProvider } from "./CompletionProviders/ReleaseCompletionItemProvider";
+import { FilesCompletionItemProvider } from "./CompletionProviders/FilesCompletionItemProvider";
+import { TemplateCompletionItemProvider } from "./CompletionProviders/TemplateCompletionItemProvider";
+import { CapabilitiesCompletionItemProvider } from "./CompletionProviders/CapabilitiesCompletionItemProvider";
+import { ChartCompletionItemProvider } from "./CompletionProviders/ChartCompletionItemProvider";
+import { AnchorCompletionItemProvider } from "./CompletionProviders/AnchorCompletionItemProvider";
+import { LintCommand } from './Commands/LintCommand';
 
 /**
  * Activates the extension. Adds completion item providers.
