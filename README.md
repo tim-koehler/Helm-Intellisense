@@ -11,7 +11,8 @@
 
 ## Commands
 
-* `Helm-Intellisense: Lint`: This command parses the currently active document and validates that all paths(like `.Values.foo.bar`) point to valid values.
+* `Helm-Intellisense: Lint` :       This command parses the currently active document and validates that all paths(like `.Values.foo.bar`) point to valid values.
+* `Helm-Intellisense: Lint Chart` : Equivalent to `Lint` command but for all files in the chart of the file that is currently active.
 
 ## Extension Settings
 
