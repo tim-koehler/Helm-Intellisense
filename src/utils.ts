@@ -48,14 +48,31 @@ export function getWordAt(str: string, pos: number): string {
 export function getValuesFromFile(document: vscode.TextDocument): any {
     const filenames = getValueFileNamesFromConfig();
     for (const filename of filenames) {
-        const pathToValuesFile = document.fileName.substr(0, document.fileName.lastIndexOf('/templates')) + "/" + filename;	
+        const pathToValuesFile = getChartBasePath(document) + '/' + filename;
         if(fs.existsSync(pathToValuesFile)){
             return yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
         }
     }
     vscode.window.showErrorMessage('Could not locate any values.yaml. Is your values file named differently? Configure correct file name in your settings using \'helm-intellisense.customValueFileNames\'');
     return undefined;
+}
+
+
+export function getChartBasePath(document: vscode.TextDocument): string | undefined {
+    const pathToChartDirectory = document.fileName.substr(0, document.fileName.lastIndexOf('/templates'));	
+
+    if(pathToChartDirectory !== '' && fs.existsSync(pathToChartDirectory)){
+        return pathToChartDirectory;
     }
+
+    const currentFilePath = document.fileName.substring(0, document.fileName.lastIndexOf("/"));
+    const currentFilesInDir = fs.readdirSync(currentFilePath);
+    if (currentFilesInDir.includes("Chart.yaml") && currentFilesInDir.includes("templates")) {
+        return currentFilePath;
+    } 
+
+    return undefined;
+}
 
 /**
  * Pulls list of possible values filenames from config.

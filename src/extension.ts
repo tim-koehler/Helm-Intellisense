@@ -7,6 +7,7 @@ import { CapabilitiesCompletionItemProvider } from "./CompletionProviders/Capabi
 import { ChartCompletionItemProvider } from "./CompletionProviders/ChartCompletionItemProvider";
 import { AnchorCompletionItemProvider } from "./CompletionProviders/AnchorCompletionItemProvider";
 import { LintCommand } from './Commands/LintCommand';
+import { LintChartCommand } from './Commands/LintChartCommand';
 
 /**
  * Activates the extension. Adds completion item providers.
@@ -24,11 +25,12 @@ export function activate(context: vscode.ExtensionContext): void {
 		vscode.languages.registerCompletionItemProvider(lang, new AnchorCompletionItemProvider(), '*');
 	}
 
-	const disposable = vscode.commands.registerCommand('extension.Lint', LintCommand);
-	context.subscriptions.push(disposable);
+	const lintCommand = vscode.commands.registerCommand('extension.Lint', LintCommand);
+	context.subscriptions.push(lintCommand);
+
+	const lintChartCommand = vscode.commands.registerCommand('extension.LintChart', LintChartCommand);
+	context.subscriptions.push(lintChartCommand);
 }
-
-
 
 /**
  * Deactivates the extension.

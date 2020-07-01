@@ -7,8 +7,15 @@ export function LintCommand() {
         return;
     }
 
+    const keys = getAllKeyPathsOfDocument(doc);
+    const values = utils.getValuesFromFile(doc);
+
+    validateKeyPathExists(keys, values, doc);
+}
+
+export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): string[] {
     const txt = doc.getText().split('\n');
-    let keys = [];
+    let keys: string[] = [];
     for (let index = 0; index < txt.length; index++) {
         const line = txt[index];
         if (!line.includes('.Values')) {
@@ -24,8 +31,10 @@ export function LintCommand() {
             keys.push(word);
         }
     }
+    return keys;    
+}
 
-    const values = utils.getValuesFromFile(doc);
+export function validateKeyPathExists(keys: string[], values: any, doc: vscode.TextDocument) {
     for (let index = 0; index < keys.length; index++) {
         const parts = keys[index].split('.');
         parts.shift(); // Remove empty
@@ -37,7 +46,7 @@ export function LintCommand() {
             current	= current[element];
         }
         if(current === undefined) {
-            vscode.window.showErrorMessage("Missing value at path: " + keys[index]);
+            vscode.window.showErrorMessage("[" + doc.fileName + "] Missing value at path: " + keys[index]);
         }
     }
 }
