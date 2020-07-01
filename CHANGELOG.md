@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.6.0] - 2020-07-01
+## Added
+- Command to lint current chart
+## Changed
+- Name of `Helm-Intellisense: Lint` command to `Helm-Intellisense: Lint File`
+
 ## [0.5.2] - 2020-06-30
 ## Fixed
 - Bug which caused problems with anchor/label completion
