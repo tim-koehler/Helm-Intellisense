@@ -37,7 +37,11 @@
 		"commands": [
 			{
 				"command": "extension.Lint",
-				"title": "Helm-Intellisense: Lint"
+				"title": "Helm-Intellisense: Lint File"
+			},
+			{
+				"command": "extension.LintChart",
+				"title": "Helm-Intellisense: Lint Chart"
 			}
 		],
 		"configuration": {
