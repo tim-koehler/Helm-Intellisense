@@ -46,6 +46,9 @@ export function getInvalidKeyPaths(keys: string[], values: any, doc: vscode.Text
         for (let index2 = 0; index2 < parts.length; index2++) {
             const element = parts[index2];
             current	= current[element];
+            if (current === undefined) {
+                break;
+            }
         }
         if(current === undefined) {
             list.push("Missing value at path: \"" + keys[index] + "\" in file: " + doc.fileName);
