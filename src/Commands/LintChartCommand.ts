@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import * as utils from "../utils"; 
 import * as fs from 'fs';
-import { getAllKeyPathsOfDocument, validateKeyPathExists } from './LintCommand';
+import { getAllKeyPathsOfDocument, getInvalidKeyPaths, printToOutputChannel } from './LintCommand';
 
-export function LintChartCommand() {
+export async function LintChartCommand() {
     const doc = vscode.window.activeTextEditor?.document;
     if (doc === undefined) {
         return;
@@ -15,13 +15,16 @@ export function LintChartCommand() {
     }
 
     const templates = walkDirectory(chartBasePath + "/templates");
+    let listOfInvalidKeyPaths: string[] = []; 
     for (let index = 0; index < templates.length; index++) {
-        vscode.workspace.openTextDocument(templates[index]).then(template => {
+        await vscode.workspace.openTextDocument(templates[index]).then(template => {
             const keys = getAllKeyPathsOfDocument(template);
             const values = utils.getValuesFromFile(template);
-            validateKeyPathExists(keys, values, template);
+            
+            listOfInvalidKeyPaths = listOfInvalidKeyPaths.concat(getInvalidKeyPaths(keys, values, template));
         });   
     }
+    printToOutputChannel(listOfInvalidKeyPaths);
 }
 
 function walkDirectory(dir: string) {

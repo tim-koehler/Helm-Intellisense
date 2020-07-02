@@ -10,7 +10,8 @@ export function LintCommand() {
     const keys = getAllKeyPathsOfDocument(doc);
     const values = utils.getValuesFromFile(doc);
 
-    validateKeyPathExists(keys, values, doc);
+    const invalidKeyPaths = getInvalidKeyPaths(keys, values, doc);
+    printToOutputChannel(invalidKeyPaths);
 }
 
 export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): string[] {
@@ -34,7 +35,8 @@ export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): string[] {
     return keys;    
 }
 
-export function validateKeyPathExists(keys: string[], values: any, doc: vscode.TextDocument) {
+export function getInvalidKeyPaths(keys: string[], values: any, doc: vscode.TextDocument): string[] {
+    let list: string[] =  [];
     for (let index = 0; index < keys.length; index++) {
         const parts = keys[index].split('.');
         parts.shift(); // Remove empty
@@ -46,7 +48,20 @@ export function validateKeyPathExists(keys: string[], values: any, doc: vscode.T
             current	= current[element];
         }
         if(current === undefined) {
-            vscode.window.showErrorMessage("[" + doc.fileName + "] Missing value at path: " + keys[index]);
+            list.push("Missing value at path: \"" + keys[index] + "\" in file: " + doc.fileName);
         }
     }
+    return list;
+}
+
+export function printToOutputChannel(listOfInvalidKeyPaths: string[]) {
+    const outChannel = vscode.window.createOutputChannel("Helm-Intellisense");
+    for (let index = 0; index < listOfInvalidKeyPaths.length; index++) {
+        const element = listOfInvalidKeyPaths[index];       
+        outChannel.appendLine(element);
+    }
+    if (listOfInvalidKeyPaths.length === 0) {
+        outChannel.appendLine("Helm-Intellisense: No issues detected :)");
+    }
+    outChannel.show();
 }
