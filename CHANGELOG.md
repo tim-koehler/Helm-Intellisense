@@ -1,6 +1,6 @@
 # Change Log
 
-## [0.6.1] - 2020-07-03
+## [0.6.3] - 2020-07-03
 ## Changed 
 - Added line number to linting output.
 
