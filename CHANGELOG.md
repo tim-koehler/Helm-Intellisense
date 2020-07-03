@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.6.1] - 2020-07-03
+## Changed 
+- Added line number to linting output.
+
 ## [0.6.2] - 2020-07-02
 ## Fixed 
 - Bug which crashed linter.

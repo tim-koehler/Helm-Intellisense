@@ -14,46 +14,47 @@ export function LintCommand() {
     printToOutputChannel(invalidKeyPaths);
 }
 
-export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): string[] {
+export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Map<string, number> {
     const txt = doc.getText().split('\n');
-    let keys: string[] = [];
-    for (let index = 0; index < txt.length; index++) {
-        const line = txt[index];
+    
+    let map = new Map<string, number>();
+    for (let lineIndex = 0; lineIndex < txt.length; lineIndex++) {
+        const line = txt[lineIndex];
         if (!line.includes('.Values')) {
             continue;
         }
         
         const words = line.split(" ");
-        for (let index2 = 0; index2 < words.length; index2++) {
-            const word = words[index2];
+        for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
+            const word = words[wordIndex];
             if(!word.includes('.Values')) {
                 continue;
             }
-            keys.push(word);
+            map.set(word, lineIndex+1);
         }
     }
-    return keys;    
+    return map;    
 }
 
-export function getInvalidKeyPaths(keys: string[], values: any, doc: vscode.TextDocument): string[] {
+export function getInvalidKeyPaths(map: Map<string, number>, values: any, doc: vscode.TextDocument): string[] {
     let list: string[] =  [];
-    for (let index = 0; index < keys.length; index++) {
-        const parts = keys[index].split('.');
+    map.forEach((lineNumber: number, key: string) => {
+        const parts = key.split('.');
         parts.shift(); // Remove empty
         parts.shift(); // Remove '.Values'
         
         let current = values;
-        for (let index2 = 0; index2 < parts.length; index2++) {
-            const element = parts[index2];
+        for (let index = 0; index < parts.length; index++) {
+            const element = parts[index];
             current	= current[element];
             if (current === undefined) {
                 break;
             }
         }
         if(current === undefined) {
-            list.push("Missing value at path: \"" + keys[index] + "\" in file: " + doc.fileName);
+            list.push(`Missing value at path [${key}] in file [${doc.fileName}:${lineNumber}]`);
         }
-    }
+    });
     return list;
 }
 
