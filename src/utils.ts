@@ -33,13 +33,7 @@ function isBracketsInPrefix(prefix: string) {
  */
 export function getWordAt(str: string, pos: number): string {
     const left = str.slice(0, pos + 1).search(/\S+$/);
-    const right = str.slice(pos).search(/\s/);
-
-    if (right < 0) {
-        return str.slice(left);
-    }
-
-    return str.slice(left, right + pos);
+    return str.slice(left, pos + 1);
 }
 
 /**

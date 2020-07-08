@@ -16,12 +16,14 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
         }
 
         let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
+        console.log(currentString);
+        
 
         if(currentString.length === 0) {
             return [new vscode.CompletionItem('.Values', vscode.CompletionItemKind.Method)];
         }
 
-        if (currentString.startsWith('.') && !currentString.includes('.Values.') && currentString.split('.').length < 3) {
+        if (currentString.startsWith('.') && !currentString.includes('.Values') && currentString.split('.').length < 3) {
             return [new vscode.CompletionItem('Values', vscode.CompletionItemKind.Method)];
         }
 
@@ -39,13 +41,6 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
             currentKey = this.updateCurrentKey(currentKey, allKeys);
             return this.getCompletionItemList(currentKey);
         }
-    }
-
-    /**
-    * Checks whether the position is part of a values reference.
-    */
-    isInValuesString(currentLine: string, position: number): boolean {
-        return utils.getWordAt(currentLine, position - 1).includes('.Values');
     }
 
     /**

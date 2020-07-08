@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.6.4] - 2020-07-08
+## Fixed 
+- Autocomplete is now also working when replacing a key within a path.
+
 ## [0.6.3] - 2020-07-03
 ## Changed 
 - Added line number to linting output.
