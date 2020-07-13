@@ -16,8 +16,6 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
         }
 
         let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
-        console.log(currentString);
-        
 
         if(currentString.length === 0) {
             return [new vscode.CompletionItem('.Values', vscode.CompletionItemKind.Method)];
