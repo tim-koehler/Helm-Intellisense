@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as utils from "../utils"; 
 
-export function LintCommand() {
+export function LintCommand(outputChannel: vscode.OutputChannel) {
     const doc = vscode.window.activeTextEditor?.document;
     if (doc === undefined) {
         return;
@@ -11,7 +11,7 @@ export function LintCommand() {
     const values = utils.getValuesFromFile(doc);
 
     const invalidKeyPaths = getInvalidKeyPaths(keys, values, doc);
-    printToOutputChannel(invalidKeyPaths);
+    printToOutputChannel(invalidKeyPaths, outputChannel);
 }
 
 export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Map<string, number> {
@@ -58,14 +58,16 @@ export function getInvalidKeyPaths(map: Map<string, number>, values: any, doc: v
     return list;
 }
 
-export function printToOutputChannel(listOfInvalidKeyPaths: string[]) {
-    const outChannel = vscode.window.createOutputChannel("Helm-Intellisense");
+export function printToOutputChannel(listOfInvalidKeyPaths: string[], outputChannel: vscode.OutputChannel) {
+    if (listOfInvalidKeyPaths.length === 0) {
+        outputChannel.clear();
+        outputChannel.hide();
+        return;
+    }
+    outputChannel.clear();
     for (let index = 0; index < listOfInvalidKeyPaths.length; index++) {
         const element = listOfInvalidKeyPaths[index];       
-        outChannel.appendLine(element);
+        outputChannel.appendLine(element);
     }
-    if (listOfInvalidKeyPaths.length === 0) {
-        outChannel.appendLine("Helm-Intellisense: No issues detected :)");
-    }
-    outChannel.show();
+    outputChannel.show();
 }

@@ -53,6 +53,11 @@
 						"values.yaml"
 					],
 					"description": "List of alternative value file names"
+				},
+				"helm-intellisense.lintFileOnSave": {
+					"type": "boolean",
+					"default": true,
+					"description": "If set true the current file will be linted"
 				}
 			}
 		}

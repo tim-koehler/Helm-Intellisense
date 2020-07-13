@@ -25,11 +25,18 @@ export function activate(context: vscode.ExtensionContext): void {
 		vscode.languages.registerCompletionItemProvider(lang, new AnchorCompletionItemProvider(), '*');
 	}
 
-	const lintCommand = vscode.commands.registerCommand('extension.Lint', LintCommand);
+	let outputChannel = vscode.window.createOutputChannel("Helm-Intellisense");
+	const lintCommand = vscode.commands.registerCommand('extension.Lint', () => LintCommand(outputChannel));
 	context.subscriptions.push(lintCommand);
 
-	const lintChartCommand = vscode.commands.registerCommand('extension.LintChart', LintChartCommand);
+	const lintChartCommand = vscode.commands.registerCommand('extension.LintChart', () => LintChartCommand(outputChannel));
 	context.subscriptions.push(lintChartCommand);
+
+	vscode.workspace.onDidSaveTextDocument(() => {
+		if (vscode.workspace.getConfiguration('helm-intellisense').get('lintFileOnSave') === true) {
+			vscode.commands.executeCommand('extension.Lint');
+		}
+    });
 }
 
 /**

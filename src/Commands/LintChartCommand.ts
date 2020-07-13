@@ -3,7 +3,7 @@ import * as utils from "../utils";
 import * as fs from 'fs';
 import { getAllKeyPathsOfDocument, getInvalidKeyPaths, printToOutputChannel } from './LintCommand';
 
-export async function LintChartCommand() {
+export async function LintChartCommand(outputChannel: vscode.OutputChannel) {
     const doc = vscode.window.activeTextEditor?.document;
     if (doc === undefined) {
         return;
@@ -24,7 +24,7 @@ export async function LintChartCommand() {
             listOfInvalidKeyPaths = listOfInvalidKeyPaths.concat(getInvalidKeyPaths(keys, values, template));
         });   
     }
-    printToOutputChannel(listOfInvalidKeyPaths);
+    printToOutputChannel(listOfInvalidKeyPaths, outputChannel);
 }
 
 function walkDirectory(dir: string) {
