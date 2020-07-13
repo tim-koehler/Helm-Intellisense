@@ -19,3 +19,4 @@
 This extension contributes the following settings:
 
 * `helm-intellisense.customValueFileNames`: Defines list of possible files containing values(default: `values.yaml`)
+* `helm-intellisense.lintFileOnSave`: If set to `true` the `Helm-Intellisense: Lint` command will be executed(default: `true`)

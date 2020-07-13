@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.6.5] - 2020-07-13
+## Fixed
+- Only one output channel will be used now.
+## Added
+- Lint file on save can now be configured
+## Changed 
+- If linting returns no errors no output box will be displayed
+
 ## [0.6.4] - 2020-07-08
 ## Fixed 
 - Autocomplete is now also working when replacing a key within a path.
