@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.6.6] - 2020-07-14
+## Fixed
+- Check if file is inside Helm Chart before linting
+
 ## [0.6.5] - 2020-07-13
 ## Fixed
 - Only one output channel will be used now.

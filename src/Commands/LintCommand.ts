@@ -7,6 +7,10 @@ export function LintCommand(outputChannel: vscode.OutputChannel) {
         return;
     }
 
+    if (utils.getChartBasePath(doc) === undefined) {
+        return;
+    }
+
     const keys = getAllKeyPathsOfDocument(doc);
     const values = utils.getValuesFromFile(doc);
 
