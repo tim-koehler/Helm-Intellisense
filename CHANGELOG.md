@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.7.1] - 2020-07-16
+## Fixed
+- Possible security issue with lodash
+
 ## [0.7.0] - 2020-07-16
 ## Added
 - Windows support
