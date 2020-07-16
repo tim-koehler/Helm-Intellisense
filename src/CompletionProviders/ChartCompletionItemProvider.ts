@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import * as utils from "../utils"; 
+import {sep as pathSeperator} from 'path';
 
 export class ChartCompletionItemProvider implements vscode.CompletionItemProvider {
     /**
@@ -52,7 +53,7 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
      * Retrieves the values from the `values.yaml`.
      */
     getValuesFromFile(document: vscode.TextDocument): any {
-        const pathToChartFile = document.fileName.substr(0, document.fileName.lastIndexOf('/templates')) + "/Chart.yaml";	
+        const pathToChartFile = document.fileName.substr(0, document.fileName.lastIndexOf(pathSeperator + 'templates')) + pathSeperator + "Chart.yaml";	
         if(fs.existsSync(pathToChartFile)){
             return yaml.safeLoad(fs.readFileSync(pathToChartFile, 'utf8'));
         }

@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
+import { sep as pathSeperator } from 'path';
 
 /**
  * Checks whether the position in the line is in between curly brackets.
@@ -42,7 +43,7 @@ export function getWordAt(str: string, pos: number): string {
 export function getValuesFromFile(document: vscode.TextDocument): any {
     const filenames = getValueFileNamesFromConfig();
     for (const filename of filenames) {
-        const pathToValuesFile = getChartBasePath(document) + '/' + filename;
+        const pathToValuesFile = getChartBasePath(document) + pathSeperator + filename;
         if(fs.existsSync(pathToValuesFile)){
             return yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
         }
@@ -53,13 +54,13 @@ export function getValuesFromFile(document: vscode.TextDocument): any {
 
 
 export function getChartBasePath(document: vscode.TextDocument): string | undefined {
-    const pathToChartDirectory = document.fileName.substr(0, document.fileName.lastIndexOf('/templates'));	
+    const pathToChartDirectory = document.fileName.substr(0, document.fileName.lastIndexOf(pathSeperator + 'templates'));
 
     if(pathToChartDirectory !== '' && fs.existsSync(pathToChartDirectory)){
         return pathToChartDirectory;
     }
 
-    const currentFilePath = document.fileName.substring(0, document.fileName.lastIndexOf("/"));
+    const currentFilePath = document.fileName.substring(0, document.fileName.lastIndexOf(pathSeperator));
     const currentFilesInDir = fs.readdirSync(currentFilePath);
     if (currentFilesInDir.includes("Chart.yaml") && currentFilesInDir.includes("templates")) {
         return currentFilePath;
