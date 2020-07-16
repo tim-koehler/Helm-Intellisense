@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.7.0] - 2020-07-16
+## Added
+- Windows support
+
 ## [0.6.6] - 2020-07-14
 ## Fixed
 - Check if file is inside Helm Chart before linting

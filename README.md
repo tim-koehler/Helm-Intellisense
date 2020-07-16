@@ -1,6 +1,7 @@
 # Helm-Intellisense
 
 - This simple extension provides intellisense for helm-templates. The `values.yaml` file of the chart will be read and evaluated automatically to provide intellisense.
+- Compatible with Windows and Linux/Unix
 - Support for custom named value files is provided(see settings section below).
 - Lint command to validate correct values templating.
 - Support and autocomplete for `yaml` anchors and labels
