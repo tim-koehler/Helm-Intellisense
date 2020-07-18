@@ -20,14 +20,13 @@ export class AnchorCompletionItemProvider implements vscode.CompletionItemProvid
                 completionItems.push(completionItem);
                 continue;
             }
-
             const completionItemWithAsteriskReplace = new vscode.CompletionItem(anchors[index].replace('&', ''));
             completionItemWithAsteriskReplace.range = new vscode.Range(new vscode.Position(wordRange.start.line, wordRange.start.character-1), wordRange.end);
             completionItemWithAsteriskReplace.insertText = " *" + anchors[index].replace('&', '');
             completionItems.push(completionItemWithAsteriskReplace);
 
             const completionItemWithoutAsterisk = new vscode.CompletionItem(anchors[index].replace('&', '*'));
-            completionItemWithoutAsterisk.range = new vscode.Range(new vscode.Position(wordRange.start.line, wordRange.start.character-1), wordRange.end);
+            completionItemWithoutAsterisk.range = new vscode.Range(new vscode.Position(wordRange.start.line, wordRange.start.character), wordRange.end);
             completionItemWithoutAsterisk.insertText = anchors[index].replace('&', '*');
             completionItems.push(completionItemWithoutAsterisk);
         }

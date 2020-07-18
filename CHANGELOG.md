@@ -1,24 +1,28 @@
 # Change Log
 
+## [0.7.2] - 2020-07-18
+## Fixed
+- Bug which replaced whitespace before alias(anchor) during autocomplete.
+
 ## [0.7.1] - 2020-07-16
 ## Fixed
-- Possible security issue with lodash
+- Possible security issue with lodash.
 
 ## [0.7.0] - 2020-07-16
 ## Added
-- Windows support
+- Windows support.
 
 ## [0.6.6] - 2020-07-14
 ## Fixed
-- Check if file is inside Helm Chart before linting
+- Check if file is inside Helm Chart before linting.
 
 ## [0.6.5] - 2020-07-13
 ## Fixed
 - Only one output channel will be used now.
 ## Added
-- Lint file on save can now be configured
+- Lint file on save can now be configured.
 ## Changed 
-- If linting returns no errors no output box will be displayed
+- If linting returns no errors no output box will be displayed.
 
 ## [0.6.4] - 2020-07-08
 ## Fixed 
@@ -38,33 +42,33 @@
 
 ## [0.6.0] - 2020-07-01
 ## Added
-- Command to lint current chart
+- Command to lint current chart.
 ## Changed
-- Name of `Helm-Intellisense: Lint` command to `Helm-Intellisense: Lint File`
+- Name of `Helm-Intellisense: Lint` command to `Helm-Intellisense: Lint File`.
 
 ## [0.5.2] - 2020-06-30
 ## Fixed
-- Bug which caused problems with anchor/label completion
+- Bug which caused problems with anchor/label completion.
 
 ## [0.5.1] - 2020-06-30
 ## Changed
-- Small changes in README
+- Small changes in README.
 
 ## [0.5.0] - 2020-06-30
 ## Added
-- Command to lint current template file to find wrongly configured `.Values.foo.bar` paths 
-- Support for yaml anchors and aliases
+- Command to lint current template file to find wrongly configured `.Values.foo.bar` paths .
+- Support for yaml anchors and aliases.
 
 ## [0.4.0] - 2020-06-13
 ### Added
-- Autocomplete for build in Object `Release`
-- Autocomplete for build in Object `Chart` 
-- Autocomplete for build in Object `Files` 
-- Autocomplete for build in Object `Capabilities` 
-- Autocomplete for build in Object `Template` 
-### Fixed
-- Bug where values was not shown when the key was named 'type'
+- Autocomplete for build in Object `Release`.
+- Autocomplete for build in Object `Chart`.
+- Autocomplete for build in Object `Files`.
+- Autocomplete for build in Object `Capabilities`. 
+- Autocomplete for build in Object `Template`.
 
+### Fixed
+- Bug where values was not shown when the key was named 'type'.
 
 ## [0.3.1] - 2020-06-04
 ### Changed
@@ -73,7 +77,7 @@
 ## [0.3.0] - 2020-06-02
 ### Added
 - Support of custom named value files.
-- CHANGELOG
+- CHANGELOG.
 
 ## [0.2.3] - 2020-06-02
 ### Added
