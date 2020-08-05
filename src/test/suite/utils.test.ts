@@ -23,7 +23,7 @@ suite('Test Utils', () => {
 		assert.strictEqual(utils.getWordAt('', 0), '');
 	});
 	test('getWordAt() extrema', () => {
-		assert.strictEqual(utils.getWordAt('foo bar baz', 0), 'foo');
+		assert.strictEqual(utils.getWordAt('foo bar baz', 0), 'f');
 		assert.strictEqual(utils.getWordAt('foo bar baz', 2), 'foo');
 	});
 	test('getWordAt() between words', () => {
