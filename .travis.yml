@@ -1,19 +1,21 @@
-sudo: false
-
+language: node_js
 os:
-  - osx
-  - linux
-
-before_install:
-  - if [ $TRAVIS_OS_NAME == "linux" ]; then
-      export CXX="g++-4.9" CC="gcc-4.9" DISPLAY=:99.0;
-      sh -e /etc/init.d/xvfb start;
-      sleep 3;
-    fi
+- osx
+- linux
+node_js: 10
 
 install:
-  - npm install
-  - npm run vscode:prepublish
-
+- |
+  if [ $TRAVIS_OS_NAME == "linux" ]; then
+    export DISPLAY=':99.0'
+    /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+  fi
 script:
-  - npm test --silent
+- |
+  echo ">>> Compile vscode-test"
+  yarn && yarn compile
+  echo ">>> Compiled vscode-test"
+  cd sample
+  echo ">>> Run sample integration test"
+  yarn && yarn compile && yarn test
+cache: yarn
