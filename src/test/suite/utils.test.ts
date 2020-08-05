@@ -29,6 +29,9 @@ suite('Test Utils', () => {
 	test('getWordAt() between words', () => {
 		assert.strictEqual(utils.getWordAt('foo bar baz', 3), '');
 	});
+	test('getWordAt() second word', () => {
+		assert.strictEqual(utils.getWordAt('foo bar baz', 5), 'bar');
+	});
 	test('getWordAt() out of bounds', () => {
 		assert.strictEqual(utils.getWordAt('foo bar baz', 100), 'baz');
 	});
