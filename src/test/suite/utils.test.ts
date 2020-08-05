@@ -30,7 +30,10 @@ suite('Test Utils', () => {
 		assert.strictEqual(utils.getWordAt('foo bar baz', 3), '');
 	});
 	test('getWordAt() second word', () => {
-		assert.strictEqual(utils.getWordAt('foo bar baz', 5), 'bar');
+		assert.strictEqual(utils.getWordAt('foo bar baz', 5), 'ba');
+	});
+	test('getWordAt() third word', () => {
+		assert.strictEqual(utils.getWordAt('foo bar baz', 8), 'b');
 	});
 	test('getWordAt() out of bounds', () => {
 		assert.strictEqual(utils.getWordAt('foo bar baz', 100), 'baz');
