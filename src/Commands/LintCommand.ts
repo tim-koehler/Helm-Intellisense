@@ -18,13 +18,17 @@ export function LintCommand(outputChannel: vscode.OutputChannel) {
     printToOutputChannel(invalidKeyPaths, outputChannel);
 }
 
-export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Map<string, number> {
+export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Array<[string, number]> {
     const txt = doc.getText().split('\n');
     
-    let map = new Map<string, number>();
+    let map = new Array<[string, number]>();
     for (let lineIndex = 0; lineIndex < txt.length; lineIndex++) {
         const line = txt[lineIndex];
         if (!line.includes('.Values')) {
+            continue;
+        }
+
+        if(line.includes('{{ if') || line.includes('{{- if')) {
             continue;
         }
         
@@ -34,15 +38,19 @@ export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Map<string, 
             if(!word.includes('.Values')) {
                 continue;
             }
-            map.set(word, lineIndex+1);
+            map.push([word, lineIndex]);
         }
     }
     return map;    
 }
 
-export function getInvalidKeyPaths(map: Map<string, number>, values: any, doc: vscode.TextDocument): string[] {
+export function getInvalidKeyPaths(map: Array<[string, number]>, values: any, doc: vscode.TextDocument): string[] {
     let list: string[] =  [];
-    map.forEach((lineNumber: number, key: string) => {
+    
+    map.forEach(element => {
+        const key = element[0];
+        const lineNumber = element[1];
+
         const parts = key.split('.');
         parts.shift(); // Remove empty
         parts.shift(); // Remove '.Values'
@@ -51,15 +59,21 @@ export function getInvalidKeyPaths(map: Map<string, number>, values: any, doc: v
         for (let index = 0; index < parts.length; index++) {
             const element = parts[index];
             current	= current[element];
-            if (current === undefined) {
-                break;
+            if(current === undefined) {
+                if(isDefaultDefined(lineNumber, doc)) {
+                    continue;
+                }
+                list.push(`Missing value at path [${key}] in file [${doc.fileName}:${lineNumber + 1}]`);
             }
-        }
-        if(current === undefined) {
-            list.push(`Missing value at path [${key}] in file [${doc.fileName}:${lineNumber}]`);
-        }
+        } 
     });
+    
     return list;
+}
+
+export function isDefaultDefined(lineNumber: number, doc: vscode.TextDocument ): boolean {
+    const line = doc.getText(new vscode.Range(new vscode.Position(lineNumber, 0), new vscode.Position(lineNumber + 1, 0)));
+    return line.includes('| default');
 }
 
 export function printToOutputChannel(listOfInvalidKeyPaths: string[], outputChannel: vscode.OutputChannel) {
