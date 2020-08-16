@@ -57,13 +57,14 @@ export function getInvalidKeyPaths(map: Array<[string, number]>, values: any, do
         
         let current = values;
         for (let index = 0; index < parts.length; index++) {
-            const element = parts[index];
+            const element = parts[index];     
             current	= current[element];
             if(current === undefined) {
                 if(isDefaultDefined(lineNumber, doc)) {
-                    continue;
+                    break;
                 }
                 list.push(`Missing value at path [${key}] in file [${doc.fileName}:${lineNumber + 1}]`);
+                break;
             }
         } 
     });
@@ -87,5 +88,5 @@ export function printToOutputChannel(listOfInvalidKeyPaths: string[], outputChan
         const element = listOfInvalidKeyPaths[index];       
         outputChannel.appendLine(element);
     }
-    outputChannel.show();
+    outputChannel.show(true);
 }
