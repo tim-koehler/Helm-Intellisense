@@ -1,5 +1,10 @@
 # Change Log
 
+
+## [0.7.3] - 2020-08-16
+## Changed
+- Issue #14
+
 ## [0.7.2] - 2020-07-18
 ## Fixed
 - Bug which replaced whitespace before alias(anchor) during autocomplete.
