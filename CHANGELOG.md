@@ -1,9 +1,14 @@
 # Change Log
 
+## [0.7.4] - 2020-08-16
+## Changed
+- Issue #15 -> Preventing focus switch to output when linter ran. 
+## Fixed
+- Bug which causes linter to crash in some cases.
 
 ## [0.7.3] - 2020-08-16
 ## Changed
-- Issue #14
+- Issue #14 -> Linter will ignore missing value if `default` is set.
 
 ## [0.7.2] - 2020-07-18
 ## Fixed
