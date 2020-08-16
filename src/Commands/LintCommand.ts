@@ -87,5 +87,5 @@ export function printToOutputChannel(listOfInvalidKeyPaths: string[], outputChan
         const element = listOfInvalidKeyPaths[index];       
         outputChannel.appendLine(element);
     }
-    outputChannel.show();
+    outputChannel.show(true);
 }
