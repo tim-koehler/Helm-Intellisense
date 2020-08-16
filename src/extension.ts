@@ -34,7 +34,9 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	vscode.workspace.onDidSaveTextDocument(() => {
 		if (vscode.workspace.getConfiguration('helm-intellisense').get('lintFileOnSave') === true) {
-			vscode.commands.executeCommand('extension.Lint');
+			vscode.commands.executeCommand('extension.Lint').then(undefined, err => {
+				console.error(err);
+			});
 		}
     });
 }
