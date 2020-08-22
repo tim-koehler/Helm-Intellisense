@@ -75,7 +75,10 @@ export function getChartName(basePath: string): string {
     if(fs.existsSync(pathToChartFile)){
         const chartYaml = yaml.safeLoad(fs.readFileSync(pathToChartFile, 'utf8'));
         if (chartYaml !== undefined) {
-            return chartYaml['name'];;
+            const chartName = chartYaml['name'];;
+            if (chartName !== undefined) {
+                return chartName + '';
+            }
         }
     }
     return 'Not found';
