@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as utils from "../utils"; 
 import * as fs from 'fs';
 import { getAllKeyPathsOfDocument, getInvalidKeyPaths, printToOutputChannel } from './LintCommand';
-import { sep as pathSeperator } from 'path';
+import { sep as pathSeperator, sep } from 'path';
 
 export async function LintChartCommand(outputChannel: vscode.OutputChannel) {
     const doc = vscode.window.activeTextEditor?.document;
@@ -26,6 +26,10 @@ export async function LintChartCommand(outputChannel: vscode.OutputChannel) {
         });   
     }
     printToOutputChannel(listOfInvalidKeyPaths, outputChannel);
+    if (listOfInvalidKeyPaths.length !== 0) {
+        return;
+    }
+    vscode.window.showInformationMessage(`No errors found in chart '${utils.getChartName(chartBasePath)}' :)`);
 }
 
 function walkDirectory(dir: string) {

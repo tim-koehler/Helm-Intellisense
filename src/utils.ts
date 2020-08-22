@@ -69,6 +69,15 @@ export function getChartBasePath(document: vscode.TextDocument): string | undefi
     return undefined;
 }
 
+
+export function getChartName(basePath: string): string {
+    const pathToChartFile = basePath + pathSeperator + 'Chart.yaml';
+    if(fs.existsSync(pathToChartFile)){
+        return yaml.safeLoad(fs.readFileSync(pathToChartFile, 'utf8'))['name'];
+    }
+    return 'Not found';
+}
+
 /**
  * Pulls list of possible values filenames from config.
  */

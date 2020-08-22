@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.7.5] - 2020-08-23
+## Changed
+- The `Helm-Intellisense: Lint Chart` command now gives feedback after running without errors.
+
 ## [0.7.4] - 2020-08-16
 ## Changed
 - Issue #15 -> Preventing focus switch to output when linter ran. 
