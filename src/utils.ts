@@ -74,9 +74,7 @@ export function getChartName(basePath: string): string {
     const pathToChartFile = basePath + pathSeperator + 'Chart.yaml';
     if(fs.existsSync(pathToChartFile)){
         const chartYaml = yaml.safeLoad(fs.readFileSync(pathToChartFile, 'utf8'));
-        if (chartYaml === Object) {
-            return String(chartYaml.name);
-        }
+        return String((chartYaml as any).name);
     }
     return 'No name found';
 }
