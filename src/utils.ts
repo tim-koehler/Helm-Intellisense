@@ -73,9 +73,9 @@ export function getChartBasePath(document: vscode.TextDocument): string | undefi
 export function getChartName(basePath: string): string {
     const pathToChartFile = basePath + pathSeperator + 'Chart.yaml';
     if(fs.existsSync(pathToChartFile)){
-        const chartName = yaml.safeLoad(fs.readFileSync(pathToChartFile, 'utf8'))['name'];
-        if (chartName !== undefined) {
-            return chartName;
+        const chartYaml = yaml.safeLoad(fs.readFileSync(pathToChartFile, 'utf8'));
+        if (chartYaml !== undefined) {
+            return chartYaml['name'];;
         }
     }
     return 'Not found';
