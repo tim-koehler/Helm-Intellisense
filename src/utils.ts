@@ -70,13 +70,15 @@ export function getChartBasePath(document: vscode.TextDocument): string | undefi
 }
 
 
-export function getChartName(basePath: string): any {
+export function getChartName(basePath: string): string {
     const pathToChartFile = basePath + pathSeperator + 'Chart.yaml';
     if(fs.existsSync(pathToChartFile)){
         const chartYaml = yaml.safeLoad(fs.readFileSync(pathToChartFile, 'utf8'));
-        return String(chartYaml.name);
+        if (chartYaml === Object) {
+            return String(chartYaml.name);
+        }
     }
-    return 'Not found';
+    return 'No name found';
 }
 
 /**
