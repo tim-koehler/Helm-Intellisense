@@ -2,8 +2,6 @@ import * as vscode from 'vscode';
 import * as assert from 'assert';
 import * as linter from '../../Commands/LintCommand';
 import * as utils from '../../utils';
-import * as path from 'path';
-import { stringify } from 'querystring';
 
 suite('Test Linter', () => {
         const directory = vscode.workspace.workspaceFolders;
@@ -16,21 +14,21 @@ suite('Test Linter', () => {
                 const doc = await vscode.workspace.openTextDocument(filePath + '/templates/deployment.yaml');
                 const keys = linter.getAllKeyPathsOfDocument(doc);
 
-                const shouldMap = new Map<string, number>([
-                        ['.Values.replicaCount', 8],
-                        ['.Values.imagePullSecrets', 19],
-                        ['.Values.podSecurityContext', 25],
-                        ['.Values.securityContext', 29],
-                        ['.Values.image.repository', 30],
-                        ['.Values.image.tag', 30],
-                        ['.Values.image.pullPolicy', 31],
-                        ['.Values.resources', 45],
-                        ['.Values.nodeSelector', 46],
-                        ['.Values.affinity', 50],
-                        ['.Values.tolerations', 54]
-                ]);
+                const shouldTouples: [string, number][] = [
+                        ['.Values.replicaCount', 7],
+                        ['.Values.imagePullSecrets', 18],
+                        ['.Values.podSecurityContext', 24],
+                        ['.Values.securityContext', 28],
+                        ['.Values.image.repository', 29],
+                        ['.Values.image.tag', 29],
+                        ['.Values.image.pullPolicy', 30],
+                        ['.Values.resources', 44],
+                        ['.Values.nodeSelector', 45],
+                        ['.Values.affinity', 49],
+                        ['.Values.tolerations', 53]
+                ];
 
-                assert.strictEqual(compareMaps(keys, shouldMap), true);
+                compareTouples(keys, shouldTouples);
         });
 
         test('getInvalidKeyPaths()', async () => {
@@ -50,18 +48,13 @@ suite('Test Linter', () => {
         });
 });
 
-function compareMaps(map1: Map<string, number>, map2: Map<string, number>) {
+function compareTouples(touple1: [string, number][], touple2: [string, number][]) {
         var testVal;
-        if (map1.size !== map2.size) {
-            return false;
+        if (touple1.length !== touple2.length) {
+                assert.fail('No equal length');
         }
-        for (var [key, val] of map1) {
-            testVal = map2.get(key);
-            // in cases of an undefined value, make sure the key
-            // actually exists on the object so there are no false positives
-            if (testVal !== val || (testVal === undefined && !map2.has(key))) {
-                return false;
-            }
+        for (let index = 0; index < touple1.length; index++) {
+                assert.equal(touple1[index][0], touple2[index][0]);
+                assert.equal(touple1[index][1], touple2[index][1]);
         }
-        return true;
     }
