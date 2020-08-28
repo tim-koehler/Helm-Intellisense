@@ -41,7 +41,6 @@ suite('Test Linter', () => {
 
                 const docIngress = await vscode.workspace.openTextDocument(filePath + '/templates/ingress.yaml');
                 const missingKeysIngress = linter.getInvalidKeyPaths(linter.getAllKeyPathsOfDocument(docIngress), values, docIngress);
-                console.log(missingKeysIngress);
                 
                 assert.strictEqual(missingKeysIngress.length, 1);
                 assert.equal(missingKeysIngress[0], ['Missing value at path [.Values.wrong] in file [/home/tim/Coding/VSCodeExtensions/Helm-Intellisense/src/test/Test/templates/ingress.yaml:10]']);
