@@ -1,4 +1,4 @@
-# Helm-Intellisense [![Build Status](https://travis-ci.org/tim-koehler/Helm-Intellisense.svg?branch=master)](https://travis-ci.org/tim-koehler/Helm-Intellisense)
+# Helm-Intellisense [![Build Status](https://travis-ci.org/tim-koehler/Helm-Intellisense.svg?branch=master)](https://travis-ci.org/tim-koehler/Helm-Intellisense) [![Installs](https://vsmarketplacebadge.apphb.com/installs-short/tim-koehler.Helm-Intellisense.svg)](https://marketplace.visualstudio.com/items?itemName=tim-koehler.Helm-Intellisense.svg)
 
 - This simple extension provides intellisense for helm-templates. The `values.yaml` file of the chart will be read and evaluated automatically to provide intellisense.
 - Compatible with Windows and Linux/Unix
