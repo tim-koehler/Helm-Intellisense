@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.7.6] - 2020-09-24
+## Added
+- Popup to star on GitHub
+## Changed
+- Some small things in the README
+
 ## [0.7.5] - 2020-08-23
 ## Changed
 - The `Helm-Intellisense: Lint Chart` command now gives feedback after running without errors.
