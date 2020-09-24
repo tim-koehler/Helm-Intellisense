@@ -9,11 +9,14 @@ import { AnchorCompletionItemProvider } from "./CompletionProviders/AnchorComple
 import { LintCommand } from './Commands/LintCommand';
 import { LintChartCommand } from './Commands/LintChartCommand';
 
+
+const githubUrl = 'https://github.com/tim-koehler/Helm-Intellisense';
 /**
  * Activates the extension. Adds completion item providers.
  */
 export function activate(context: vscode.ExtensionContext): void {
-	console.log('Congratulations, your extension "Helm-Intellisense" is now active!');
+
+	checkRatePopup(context);
 
 	for (let lang of ['yaml', 'helm']) {
 		vscode.languages.registerCompletionItemProvider(lang, new ValuesCompletionItemProvider() , '.');
@@ -38,11 +41,22 @@ export function activate(context: vscode.ExtensionContext): void {
 				console.error(err);
 			});
 		}
-    });
+	});
+	
+
 }
 
 /**
  * Deactivates the extension.
  */
 export function deactivate(): void {
+}
+
+async function checkRatePopup(context: vscode.ExtensionContext) {
+	if (context.globalState.get('ratePopup') === undefined) {
+		context.globalState.update('ratePopup', true);
+		await vscode.window.showInformationMessage('If you like Helm-Intellisense I would appreciate your support', 'Give a ⭐ on GitHub').then(() => {
+			vscode.env.openExternal(vscode.Uri.parse(githubUrl));
+        });   
+	}
 }
