@@ -45,7 +45,13 @@ export function getValuesFromFile(document: vscode.TextDocument): any {
     for (const filename of filenames) {
         const pathToValuesFile = getChartBasePath(document) + pathSeperator + filename;
         if(fs.existsSync(pathToValuesFile)){
-            return yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
+            try {
+                const doc = yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
+                return doc;
+              } catch (e) {
+                vscode.window.showErrorMessage('Error in \'' + filename + '\':\n' + e.message);
+                return undefined;
+            }
         }
     }
     vscode.window.showErrorMessage('Could not locate any values.yaml. Is your values file named differently? Configure correct file name in your settings using \'helm-intellisense.customValueFileNames\'');

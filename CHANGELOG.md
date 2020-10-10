@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.7.7] - 2020-10-10
+## Fixed
+- Added error message when values file can't be parsed
+
 ## [0.7.6] - 2020-09-24
 ## Added
 - Popup to star on GitHub
