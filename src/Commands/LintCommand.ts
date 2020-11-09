@@ -34,10 +34,13 @@ export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Array<[strin
         
         const words = line.split(" ");
         for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
-            const word = words[wordIndex];
+            let word = words[wordIndex];
             if(!word.includes('.Values')) {
                 continue;
             }
+
+            word = word.replace('{{', '').replace('}}', '');
+
             map.push([word, lineIndex]);
         }
     }
