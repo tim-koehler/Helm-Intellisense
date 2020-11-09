@@ -41,7 +41,6 @@ export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Array<[strin
 
             word = word.replace('{{', '').replace('}}', '');
 
-            console.log(word);
             map.push([word, lineIndex]);
         }
     }
