@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.7.8] - 2020-11-09
+## Fixed
+- Issue #21
+
 ## [0.7.7] - 2020-10-10
 ## Fixed
 - Added error message when values file can't be parsed
