@@ -8,6 +8,7 @@ import { ChartCompletionItemProvider } from "./CompletionProviders/ChartCompleti
 import { AnchorCompletionItemProvider } from "./CompletionProviders/AnchorCompletionItemProvider";
 import { LintCommand } from './Commands/LintCommand';
 import { LintChartCommand } from './Commands/LintChartCommand';
+import { NamedTemplatesCompletionItemProvider } from './CompletionProviders/NamedTemplatesCompletionItemProvider';
 
 
 const githubUrl = 'https://github.com/tim-koehler/Helm-Intellisense';
@@ -26,6 +27,7 @@ export function activate(context: vscode.ExtensionContext): void {
 		vscode.languages.registerCompletionItemProvider(lang, new CapabilitiesCompletionItemProvider(), '.');
 		vscode.languages.registerCompletionItemProvider(lang, new ChartCompletionItemProvider(), '.');
 		vscode.languages.registerCompletionItemProvider(lang, new AnchorCompletionItemProvider(), '*');
+		vscode.languages.registerCompletionItemProvider(lang, new NamedTemplatesCompletionItemProvider(), '"');
 	}
 
 	let outputChannel = vscode.window.createOutputChannel("Helm-Intellisense");

@@ -58,6 +58,24 @@ export function getValuesFromFile(document: vscode.TextDocument): any {
     return undefined;
 }
 
+/**
+ * Retrieves the namend-teamplate names from the `_helpers.tpl`.
+ */
+export function getNamedTemplatesFromFile(document: vscode.TextDocument): string {
+    const pathToHelpersFile = getChartBasePath(document) + pathSeperator + "templates" + pathSeperator + "_helpers.tpl";
+    if(fs.existsSync(pathToHelpersFile)){
+        try {
+            const content: string = fs.readFileSync(pathToHelpersFile, 'utf8');
+            return content;
+            } catch (e) {
+            vscode.window.showErrorMessage('Error in \'' + pathToHelpersFile + '\':\n' + e.message);
+            return "";
+        }
+    }
+
+    vscode.window.showErrorMessage('Could not locate any _helpers.tpl.');
+    return "";
+}
 
 export function getChartBasePath(document: vscode.TextDocument): string | undefined {
     const pathToChartDirectory = document.fileName.substr(0, document.fileName.lastIndexOf(pathSeperator + 'templates'));
