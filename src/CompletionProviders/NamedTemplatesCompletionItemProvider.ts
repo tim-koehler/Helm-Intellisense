@@ -13,7 +13,7 @@ export class NamedTemplatesCompletionItemProvider implements vscode.CompletionIt
             return undefined;
         }
 
-        if (!currentLine.includes("include")) {
+        if (!((currentLine.includes('include')) || currentLine.includes('template'))) {
             return undefined;
         }
 
