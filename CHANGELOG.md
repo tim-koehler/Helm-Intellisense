@@ -1,89 +1,93 @@
 # Change Log
 
+## [0.8.0] - 2020-12-07
+### Added
+- Autocomplete for `_helpers.tpl` (#23)
+
 ## [0.7.8] - 2020-11-09
-## Fixed
+### Fixed
 - Issue #21
 
 ## [0.7.7] - 2020-10-10
-## Fixed
+### Fixed
 - Added error message when values file can't be parsed
 
 ## [0.7.6] - 2020-09-24
-## Added
+### Added
 - Popup to star on GitHub
-## Changed
+### Changed
 - Some small things in the README
 
 ## [0.7.5] - 2020-08-23
-## Changed
+### Changed
 - The `Helm-Intellisense: Lint Chart` command now gives feedback after running without errors.
 
 ## [0.7.4] - 2020-08-16
-## Changed
+### Changed
 - Issue #15 -> Preventing focus switch to output when linter ran. 
-## Fixed
+### Fixed
 - Bug which causes linter to crash in some cases.
 
 ## [0.7.3] - 2020-08-16
-## Changed
+### Changed
 - Issue #14 -> Linter will ignore missing value if `default` is set.
 
 ## [0.7.2] - 2020-07-18
-## Fixed
+### Fixed
 - Bug which replaced whitespace before alias(anchor) during autocomplete.
 
 ## [0.7.1] - 2020-07-16
-## Fixed
+### Fixed
 - Possible security issue with lodash.
 
 ## [0.7.0] - 2020-07-16
-## Added
+### Added
 - Windows support.
 
 ## [0.6.6] - 2020-07-14
-## Fixed
+### Fixed
 - Check if file is inside Helm Chart before linting.
 
 ## [0.6.5] - 2020-07-13
-## Fixed
+### Fixed
 - Only one output channel will be used now.
-## Added
+### Added
 - Lint file on save can now be configured.
-## Changed 
+### Changed 
 - If linting returns no errors no output box will be displayed.
 
 ## [0.6.4] - 2020-07-08
-## Fixed 
+### Fixed 
 - Autocomplete is now also working when replacing a key within a path.
 
 ## [0.6.3] - 2020-07-03
-## Changed 
+### Changed 
 - Added line number to linting output.
 
 ## [0.6.2] - 2020-07-02
-## Fixed 
+### Fixed 
 - Bug which crashed linter.
 
 ## [0.6.1] - 2020-07-02
-## Changed 
+### Changed 
 - Linting issues will now be printed to the output panel.
 
 ## [0.6.0] - 2020-07-01
-## Added
+### Added
 - Command to lint current chart.
-## Changed
+### Changed
 - Name of `Helm-Intellisense: Lint` command to `Helm-Intellisense: Lint File`.
 
 ## [0.5.2] - 2020-06-30
-## Fixed
+### Fixed
 - Bug which caused problems with anchor/label completion.
 
 ## [0.5.1] - 2020-06-30
-## Changed
+### Changed
 - Small changes in README.
 
 ## [0.5.0] - 2020-06-30
-## Added
+### Added
 - Command to lint current template file to find wrongly configured `.Values.foo.bar` paths .
 - Support for yaml anchors and aliases.
 

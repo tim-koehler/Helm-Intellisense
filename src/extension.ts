@@ -44,8 +44,6 @@ export function activate(context: vscode.ExtensionContext): void {
 			});
 		}
 	});
-	
-
 }
 
 /**
@@ -55,10 +53,20 @@ export function deactivate(): void {
 }
 
 async function checkRatePopup(context: vscode.ExtensionContext) {
-	if (context.globalState.get('ratePopup') === undefined) {
-		context.globalState.update('ratePopup', true);
-		await vscode.window.showInformationMessage('If you like Helm-Intellisense I would appreciate your support', 'Give a ⭐ on GitHub').then(() => {
-			vscode.env.openExternal(vscode.Uri.parse(githubUrl));
-        });   
+	let val = context.globalState.get('ratePopup');
+	if (val === undefined || val === true) {
+		context.globalState.update('ratePopup', 1);
+	} 
+
+	if (val as number >= 50) {
+		context.globalState.update('ratePopup', 1);
+		await vscode.window.showInformationMessage('If you like Helm-Intellisense, I would appreciate your support :)',
+			'Give a ⭐ on GitHub').then(selection => {
+			if (selection === 'Give a ⭐ on GitHub') {
+				vscode.env.openExternal(vscode.Uri.parse(githubUrl));
+			} 
+		});
+	} else {
+		context.globalState.update('ratePopup', val as number + 1);
 	}
 }
