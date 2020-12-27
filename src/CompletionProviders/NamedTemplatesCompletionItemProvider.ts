@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as utils from "../utils"; 
+import * as utils from "../utils";
 
 export class NamedTemplatesCompletionItemProvider implements vscode.CompletionItemProvider {
     /**
@@ -34,10 +34,10 @@ export class NamedTemplatesCompletionItemProvider implements vscode.CompletionIt
         let listOfCompletionItems = [];
         const listOfNamedTemplates = this.getListOfNamedTemplates(content);
         for (const tpl of listOfNamedTemplates) {
-            let item = new vscode.CompletionItem(tpl, vscode.CompletionItemKind.Field);	
+            let item = new vscode.CompletionItem(tpl, vscode.CompletionItemKind.Field);
             item.insertText = tpl;
             listOfCompletionItems.push(item);
-            
+
         }
         return listOfCompletionItems;
     }
@@ -46,13 +46,14 @@ export class NamedTemplatesCompletionItemProvider implements vscode.CompletionIt
      * Parses named-template names from the _helpers.tpl files content.
      */
     getListOfNamedTemplates(content: string): string[] {
-        let listOfNamedTemplates: string[] = [];
-        for (const line of content.split("\n")) {
-            if(line.includes('define')) {
-                const len = line.lastIndexOf('"') - line.indexOf('"');
-                listOfNamedTemplates.push(line.substr(line.indexOf('"') + 1, len - 1));
-            }
-        }
-        return listOfNamedTemplates;
+		const matchRanges = [];
+
+		const templatePattern = /{{-? *define +"(.+?)" *-?}}/g;
+		let result;
+		while ((result = templatePattern.exec(content)) !== null) {
+			matchRanges.push(result[1])
+		}
+
+		return matchRanges;
     }
 }
