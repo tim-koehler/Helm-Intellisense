@@ -62,10 +62,10 @@ export function getValuesFromFile(document: vscode.TextDocument): any {
 /**
  * Retrieves the namend-teamplate names from all `*.tpl`.
  */
-export function getAllNamedTemplatesFromFiles(document: vscode.TextDocument): string {
+export function getAllNamedTemplatesFromFiles(document: vscode.TextDocument): string[] {
     const startPath = getChartBasePath(document) + path.sep + "templates";
 
-    const tplFiles: string[] = getAllNamedTemplatesFromDirectory(startPath);
+    const tplFiles: string[] = getAllTplFilesFromDirectoryRecursively(startPath);
 
     let content: string = "";
     for (const tplFile of tplFiles) {
@@ -77,10 +77,10 @@ export function getAllNamedTemplatesFromFiles(document: vscode.TextDocument): st
             }
         }
     }
-    return content;
+    return getListOfNamedTemplates(content);
 }
 
-export function getAllNamedTemplatesFromDirectory(startPath: string): string[] {
+function getAllTplFilesFromDirectoryRecursively(startPath: string): string[] {
     let tplFiles: string[] = [];
 
     if (!fs.existsSync(startPath)){
@@ -92,7 +92,7 @@ export function getAllNamedTemplatesFromDirectory(startPath: string): string[] {
         const filename = path.join(startPath, file);
         const stat = fs.lstatSync(filename);
         if (stat.isDirectory()) {
-            tplFiles = tplFiles.concat(getAllNamedTemplatesFromDirectory(filename)); 
+            tplFiles = tplFiles.concat(getAllTplFilesFromDirectoryRecursively(filename)); 
         }
         else if (filename.indexOf('.tpl') >= 0) {
             tplFiles.push(filename);
@@ -100,6 +100,23 @@ export function getAllNamedTemplatesFromDirectory(startPath: string): string[] {
     }
     return tplFiles;
 }
+
+/**
+ * Parses named-template names from the _helpers.tpl files content.
+ */
+function getListOfNamedTemplates(content: string): string[] {
+    const matchRanges = [];
+
+    const templatePattern = /{{-? *define +"(.+?)" *-?}}/g;
+    let result;
+    while ((result = templatePattern.exec(content)) !== null) {
+        matchRanges.push(result[1]);
+    }
+
+    return matchRanges;
+}
+
+
 
 export function getChartBasePath(document: vscode.TextDocument): string | undefined {
     const pathToChartDirectory = document.fileName.substr(0, document.fileName.lastIndexOf(path.sep + 'templates'));

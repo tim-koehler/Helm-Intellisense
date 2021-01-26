@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as utils from "../utils"; 
-import  { getListOfNamedTemplates } from "../CompletionProviders/NamedTemplatesCompletionItemProvider";
 
 export function LintCommand(outputChannel: vscode.OutputChannel) {
     const doc = vscode.window.activeTextEditor?.document;
@@ -16,23 +15,25 @@ export function LintCommand(outputChannel: vscode.OutputChannel) {
     const values = utils.getValuesFromFile(doc);
     const invalidKeyPaths = getInvalidKeyPaths(keys, values, doc);
 
-    const usedTpls = getAllNamedTemplatesOfDocument(doc);
+    const usedTpls = getAllUsedNamedTemplatesOfDocument(doc);
     const definedTpls = utils.getAllNamedTemplatesFromFiles(doc);
-    const invalidTpls = getInvalidTpls(usedTpls, getListOfNamedTemplates(definedTpls), doc);
+    const invalidTpls = getInvalidTpls(usedTpls, definedTpls, doc);
 
     printToOutputChannel(invalidKeyPaths.concat(invalidTpls), outputChannel);
 }
 
-export function getAllNamedTemplatesOfDocument(doc: vscode.TextDocument): Array<[string, number]> {
+export function getAllUsedNamedTemplatesOfDocument(doc: vscode.TextDocument): Array<[string, number]> {
     const txt = doc.getText().split('\n');
     
     let map = new Array<[string, number]>();
     for (let lineIndex = 0; lineIndex < txt.length; lineIndex++) {
         const line = txt[lineIndex];
-        if (!(line.includes('{{ include') || line.includes('{{ template') || line.includes('{{- include') || line.includes('{{- template'))) { // TODO: Replace with regex
+        const regex = /\{\{-? *(template|include) +"(.+?)".*?\}\}/g;
+        const result = regex.exec(line);
+        if (result === null) {
             continue;
         }
-        map.push([line, lineIndex]);
+        map.push([result[2], lineIndex]);
     }
     return map;    
 }
@@ -98,13 +99,11 @@ export function getInvalidTpls(map: Array<[string, number]>, definedTpls: string
     let list: string[] =  [];
     
     map.forEach(element => {
-        const line = element[0];
+        const usedTpl = element[0];
         const lineNumber = element[1];
-        
-        const usedTpl = '';// TODO: get tpl name with regex | Example: {{ template "foo.bar" index .Values .Values.baz.imageRef }} -> 'foo.bar'
 
         if (!definedTpls.includes(usedTpl)) {
-            list.push(`Undefined Named-Template '${line}' in file [${doc.fileName}:${lineNumber + 1}]`);
+            list.push(`Undefined Named-Template '${usedTpl}' in file [${doc.fileName}:${lineNumber + 1}]`);
         }
     });
     return list;

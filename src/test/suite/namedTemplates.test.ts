@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as assert from 'assert';
-import { getListOfNamedTemplates } from '../../CompletionProviders/NamedTemplatesCompletionItemProvider';
 import { getAllNamedTemplatesFromFiles } from '../../utils';
 
 suite('Test Named-Template autocomplete', () => {
@@ -13,8 +12,7 @@ suite('Test Named-Template autocomplete', () => {
     test('getListOfNamedTemplates()', async () => {
         const baseFile = await vscode.workspace.openTextDocument(filePath + '/templates/service.yaml');
         const shouldList: string[] = ['Test.name','Test.fullname','Test.chart','Test.labels','Test.serviceAccountName', 'Test.recursive'];
-        const content: string = getAllNamedTemplatesFromFiles(baseFile);
-        const isList = getListOfNamedTemplates(content);
+        const isList = getAllNamedTemplatesFromFiles(baseFile);
         for (const shouldItem of shouldList) {
             assert.strictEqual(isList.includes(shouldItem), true);
         }
