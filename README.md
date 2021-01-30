@@ -1,10 +1,10 @@
 # Helm-Intellisense [![Installs](https://vsmarketplacebadge.apphb.com/installs-short/tim-koehler.Helm-Intellisense.svg)](https://marketplace.visualstudio.com/items?itemName=tim-koehler.Helm-Intellisense.svg)
 
 - This simple extension provides intellisense for helm-templates. The `values.yaml` file of the chart will be read and evaluated automatically to provide intellisense.
-- Autocomplete will also work for all `Named Templates` defined in the `_helpers.tpl`.
+- Autocomplete will also work for all `Named Templates` defined in the any `.tpl` file.
 - Compatible with Windows and Linux/Unix.
 - Support for custom named value files is provided(see settings section below).
-- Lint command to validate correct values templating.
+- Lint command to validate correct values templating and usage of NamedTemplates.
 - Support and autocomplete for `yaml` anchors and labels
 - The extension is compatible with the `Kubernetes` extension.
 - Working with language type  `yaml` and `helm-template`.

@@ -13,9 +13,29 @@ export function LintCommand(outputChannel: vscode.OutputChannel) {
 
     const keys = getAllKeyPathsOfDocument(doc);
     const values = utils.getValuesFromFile(doc);
-
     const invalidKeyPaths = getInvalidKeyPaths(keys, values, doc);
-    printToOutputChannel(invalidKeyPaths, outputChannel);
+
+    const usedTpls = getAllUsedNamedTemplatesOfDocument(doc);
+    const definedTpls = utils.getAllNamedTemplatesFromFiles(doc);
+    const invalidTpls = getInvalidTpls(usedTpls, definedTpls, doc);
+
+    printToOutputChannel(invalidKeyPaths.concat(invalidTpls), outputChannel);
+}
+
+export function getAllUsedNamedTemplatesOfDocument(doc: vscode.TextDocument): Array<[string, number]> {
+    const txt = doc.getText().split('\n');
+    
+    let map = new Array<[string, number]>();
+    for (let lineIndex = 0; lineIndex < txt.length; lineIndex++) {
+        const line = txt[lineIndex];
+        const regex = /\{\{-? *(template|include) +"(.+?)".*?\}\}/g;
+        const result = regex.exec(line);
+        if (result === null) {
+            continue;
+        }
+        map.push([result[2], lineIndex]);
+    }
+    return map;    
 }
 
 export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Array<[string, number]> {
@@ -40,7 +60,6 @@ export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Array<[strin
             }
 
             word = word.replace('{{', '').replace('}}', '');
-
             map.push([word, lineIndex]);
         }
     }
@@ -75,20 +94,35 @@ export function getInvalidKeyPaths(map: Array<[string, number]>, values: any, do
     return list;
 }
 
+
+export function getInvalidTpls(map: Array<[string, number]>, definedTpls: string[], doc: vscode.TextDocument): string[] {
+    let list: string[] =  [];
+    
+    map.forEach(element => {
+        const usedTpl = element[0];
+        const lineNumber = element[1];
+
+        if (!definedTpls.includes(usedTpl)) {
+            list.push(`Undefined Named-Template '${usedTpl}' in file [${doc.fileName}:${lineNumber + 1}]`);
+        }
+    });
+    return list;
+}
+
 export function isDefaultDefined(lineNumber: number, doc: vscode.TextDocument ): boolean {
     const line = doc.getText(new vscode.Range(new vscode.Position(lineNumber, 0), new vscode.Position(lineNumber + 1, 0)));
     return line.includes('| default');
 }
 
-export function printToOutputChannel(listOfInvalidKeyPaths: string[], outputChannel: vscode.OutputChannel) {
-    if (listOfInvalidKeyPaths.length === 0) {
+export function printToOutputChannel(listOfErrors: string[], outputChannel: vscode.OutputChannel) {
+    if (listOfErrors.length === 0) {
         outputChannel.clear();
         outputChannel.hide();
         return;
     }
     outputChannel.clear();
-    for (let index = 0; index < listOfInvalidKeyPaths.length; index++) {
-        const element = listOfInvalidKeyPaths[index];       
+    for (let index = 0; index < listOfErrors.length; index++) {
+        const element = listOfErrors[index];       
         outputChannel.appendLine(element);
     }
     outputChannel.show(true);

@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
-import { sep as pathSeperator } from 'path';
+import * as path from 'path';
+import { start } from 'repl';
 
 /**
  * Checks whether the position in the line is in between curly brackets.
@@ -43,7 +44,7 @@ export function getWordAt(str: string, pos: number): string {
 export function getValuesFromFile(document: vscode.TextDocument): any {
     const filenames = getValueFileNamesFromConfig();
     for (const filename of filenames) {
-        const pathToValuesFile = getChartBasePath(document) + pathSeperator + filename;
+        const pathToValuesFile = getChartBasePath(document) + path.sep + filename;
         if(fs.existsSync(pathToValuesFile)){
             try {
                 const doc = yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
@@ -59,32 +60,72 @@ export function getValuesFromFile(document: vscode.TextDocument): any {
 }
 
 /**
- * Retrieves the namend-teamplate names from the `_helpers.tpl`.
+ * Retrieves the namend-teamplate names from all `*.tpl`.
  */
-export function getNamedTemplatesFromFile(document: vscode.TextDocument): string {
-    const pathToHelpersFile = getChartBasePath(document) + pathSeperator + "templates" + pathSeperator + "_helpers.tpl";
-    if(fs.existsSync(pathToHelpersFile)){
-        try {
-            const content: string = fs.readFileSync(pathToHelpersFile, 'utf8');
-            return content;
+export function getAllNamedTemplatesFromFiles(document: vscode.TextDocument): string[] {
+    const startPath = getChartBasePath(document) + path.sep + "templates";
+
+    const tplFiles: string[] = getAllTplFilesFromDirectoryRecursively(startPath);
+
+    let content: string = "";
+    for (const tplFile of tplFiles) {
+        if(fs.existsSync(tplFile)) {
+            try {
+                content += fs.readFileSync(tplFile, 'utf8') + "\n\n";
             } catch (e) {
-            vscode.window.showErrorMessage('Error in \'' + pathToHelpersFile + '\':\n' + e.message);
-            return "";
+                vscode.window.showErrorMessage('Error in \'' + tplFile + '\':\n' + e.message);
+            }
         }
     }
-
-    vscode.window.showErrorMessage('Could not locate any _helpers.tpl.');
-    return "";
+    return getListOfNamedTemplates(content);
 }
 
+function getAllTplFilesFromDirectoryRecursively(startPath: string): string[] {
+    let tplFiles: string[] = [];
+
+    if (!fs.existsSync(startPath)){
+        return tplFiles;
+    }
+
+    const files: string[] = fs.readdirSync(startPath);
+    for (const file of files) {
+        const filename = path.join(startPath, file);
+        const stat = fs.lstatSync(filename);
+        if (stat.isDirectory()) {
+            tplFiles = tplFiles.concat(getAllTplFilesFromDirectoryRecursively(filename)); 
+        }
+        else if (filename.indexOf('.tpl') >= 0) {
+            tplFiles.push(filename);
+        };
+    }
+    return tplFiles;
+}
+
+/**
+ * Parses named-template names from the _helpers.tpl files content.
+ */
+function getListOfNamedTemplates(content: string): string[] {
+    const matchRanges = [];
+
+    const templatePattern = /{{-? *define +"(.+?)" *-?}}/g;
+    let result;
+    while ((result = templatePattern.exec(content)) !== null) {
+        matchRanges.push(result[1]);
+    }
+
+    return matchRanges;
+}
+
+
+
 export function getChartBasePath(document: vscode.TextDocument): string | undefined {
-    const pathToChartDirectory = document.fileName.substr(0, document.fileName.lastIndexOf(pathSeperator + 'templates'));
+    const pathToChartDirectory = document.fileName.substr(0, document.fileName.lastIndexOf(path.sep + 'templates'));
 
     if(pathToChartDirectory !== '' && fs.existsSync(pathToChartDirectory)){
         return pathToChartDirectory;
     }
 
-    const currentFilePath = document.fileName.substring(0, document.fileName.lastIndexOf(pathSeperator));
+    const currentFilePath = document.fileName.substring(0, document.fileName.lastIndexOf(path.sep));
     const currentFilesInDir = fs.readdirSync(currentFilePath);
     if (currentFilesInDir.includes("Chart.yaml") && currentFilesInDir.includes("templates")) {
         return currentFilePath;
@@ -95,7 +136,7 @@ export function getChartBasePath(document: vscode.TextDocument): string | undefi
 
 
 export function getChartName(basePath: string): string {
-    const pathToChartFile = basePath + pathSeperator + 'Chart.yaml';
+    const pathToChartFile = basePath + path.sep + 'Chart.yaml';
     if(fs.existsSync(pathToChartFile)){
         const chartYaml = yaml.safeLoad(fs.readFileSync(pathToChartFile, 'utf8'));
         return String((chartYaml as any).name);
