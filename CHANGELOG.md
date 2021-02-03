@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.9.1] - 2021-02-03
+### Fixed
+- Issue #27
+
 ## [0.9.0] - 2021-01-30
 ### Added
 - Autocomplete and linting for all NamedTemplates defined in any `*.tpl` file
