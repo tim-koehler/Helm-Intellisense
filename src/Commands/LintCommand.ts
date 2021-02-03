@@ -47,8 +47,9 @@ export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Array<[strin
         if (!line.includes('.Values')) {
             continue;
         }
-
-        if(line.includes('{{ if') || line.includes('{{- if')) {
+        
+        const regex = /\{\{-?\ ?(else )?if .*?\}\}/g;
+        if (regex.exec(line) !== null) {
             continue;
         }
         
