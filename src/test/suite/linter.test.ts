@@ -25,25 +25,30 @@ suite('Test Linter', () => {
                         ['.Values.resources', 44],
                         ['.Values.nodeSelector', 45],
                         ['.Values.affinity', 49],
-                        ['.Values.tolerations', 53]
+                        ['.Values.tolerations', 53],
+                        ['.Values.', 57],
+                        ['.Values.imag', 58]
                 ];
-
                 compareTouples(keys, shouldTouples);
         });
 
         test('getInvalidKeyPaths()', async () => {
                 const valuesFile = await vscode.workspace.openTextDocument(filePath + '/values.yaml');
-                const values = utils.getValuesFromFile(valuesFile);
+                const values = utils.getValuesFromFile(valuesFile.fileName);
                 
                 const docDeployment = await vscode.workspace.openTextDocument(filePath + '/templates/deployment.yaml');
                 const missingKeysDeployment = linter.getInvalidKeyPaths(linter.getAllKeyPathsOfDocument(docDeployment), values, docDeployment);
-                assert.strictEqual(missingKeysDeployment.length, 0);
+                assert.strictEqual(missingKeysDeployment.length, 2);
+
+                const docService = await vscode.workspace.openTextDocument(filePath + '/templates/service.yaml');
+                const missingKeysService = linter.getInvalidKeyPaths(linter.getAllKeyPathsOfDocument(docService), values, docService);
+                assert.strictEqual(missingKeysService.length, 0);
 
                 const docIngress = await vscode.workspace.openTextDocument(filePath + '/templates/ingress.yaml');
                 const missingKeysIngress = linter.getInvalidKeyPaths(linter.getAllKeyPathsOfDocument(docIngress), values, docIngress);
                 
                 assert.strictEqual(missingKeysIngress.length, 1);
-                assert.equal(missingKeysIngress[0], ['Missing value at path [.Values.wrong] in file [/home/tim/Coding/VSCodeExtensions/Helm-Intellisense/src/test/Test/templates/ingress.yaml:10]']);
+                assert.notStrictEqual(missingKeysIngress[0], ['Missing value at path [.Values.wrong] in file [/home/tim/Coding/VSCodeExtensions/Helm-Intellisense/src/test/Test/templates/ingress.yaml:10]']);
         });
 });
 

@@ -15,7 +15,6 @@ export class CapabilitiesCompletionItemProvider implements vscode.CompletionItem
         }
 
         let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
-
         if(currentString.length === 0) {
             return [new vscode.CompletionItem('.Capabilities', vscode.CompletionItemKind.Method)];
         }
@@ -52,36 +51,4 @@ export class CapabilitiesCompletionItemProvider implements vscode.CompletionItem
 
         return [];
     }
-    /**
-     * Put together list of items with the information from the official Helm website.
-     */
-    getCompletionItemList(): vscode.CompletionItem[] {
-        let get = new vscode.CompletionItem("Get", vscode.CompletionItemKind.Field);
-        get.documentation = "Files.Get is a function for getting a file by name (.Files.Get config.ini)";
-
-        let getBytes = new vscode.CompletionItem("GetBytes", vscode.CompletionItemKind.Field);
-        getBytes.documentation = "Files.GetBytes is a function for getting the contents of a file as an array of bytes instead of as a string. This is useful for things like images.";
-
-        let glob = new vscode.CompletionItem("Glob", vscode.CompletionItemKind.Field);
-        glob.documentation = "Files.Glob is a function that returns a list of files whose names match the given shell glob pattern.";
-
-        let lines = new vscode.CompletionItem("Lines", vscode.CompletionItemKind.Field);
-        lines.documentation = "Files.Lines is a function that reads a file line-by-line. This is useful for iterating over each line in a file.";
-
-        let asSecrets = new vscode.CompletionItem("AsSecrets", vscode.CompletionItemKind.Field);
-        asSecrets.documentation = "Files.AsSecrets is a function that returns the file bodies as Base 64 encoded strings.";
-
-        let asConfig = new vscode.CompletionItem("AsConfig", vscode.CompletionItemKind.Field);
-        asConfig.documentation = "Files.AsConfig is a function that returns file bodies as a YAML map.";
-
-        return [
-            get,
-            getBytes,
-            glob,
-            lines,
-            asSecrets,
-            asConfig
-        ];
-    }
-
 }

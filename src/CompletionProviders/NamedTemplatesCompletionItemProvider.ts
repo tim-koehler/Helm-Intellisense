@@ -19,7 +19,7 @@ export class NamedTemplatesCompletionItemProvider implements vscode.CompletionIt
 
         const currentString = utils.getWordAt(currentLine, position.character - 1).trim();
         if (currentString.startsWith('"')) {
-            const namedTemplates: string[] = utils.getAllNamedTemplatesFromFiles(document);
+            const namedTemplates: string[] = utils.getAllNamedTemplatesFromFiles(document.fileName);
             return this.getCompletionItemList(namedTemplates);
         }
     }
@@ -27,7 +27,7 @@ export class NamedTemplatesCompletionItemProvider implements vscode.CompletionIt
     /**
      * Generates a list of possible completions for the current template prefix.
      */
-    getCompletionItemList(namedTemplates: string[]): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    private getCompletionItemList(namedTemplates: string[]): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
         let listOfCompletionItems = [];
         for (const namedTemplate of namedTemplates) {
             let item = new vscode.CompletionItem(namedTemplate, vscode.CompletionItemKind.Field);

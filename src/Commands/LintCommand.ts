@@ -7,16 +7,16 @@ export function LintCommand(outputChannel: vscode.OutputChannel) {
         return;
     }
 
-    if (utils.getChartBasePath(doc) === undefined) {
+    if (utils.getChartBasePath(doc.fileName) === undefined) {
         return;
     }
 
     const keys = getAllKeyPathsOfDocument(doc);
-    const values = utils.getValuesFromFile(doc);
+    const values = utils.getValuesFromFile(doc.fileName);
     const invalidKeyPaths = getInvalidKeyPaths(keys, values, doc);
 
     const usedTpls = getAllUsedNamedTemplatesOfDocument(doc);
-    const definedTpls = utils.getAllNamedTemplatesFromFiles(doc);
+    const definedTpls = utils.getAllNamedTemplatesFromFiles(doc.fileName);
     const invalidTpls = getInvalidTpls(usedTpls, definedTpls, doc);
 
     printToOutputChannel(invalidKeyPaths.concat(invalidTpls), outputChannel);
@@ -60,7 +60,7 @@ export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Array<[strin
                 continue;
             }
 
-            word = word.replace('{{', '').replace('}}', '');
+            word = word.replace('{{', '').replace('}}', '').replace('(', '').replace(')', '');
             map.push([word, lineIndex]);
         }
     }

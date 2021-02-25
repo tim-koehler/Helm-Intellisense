@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as utils from "../utils"; 
 import * as fs from 'fs';
 import { getAllKeyPathsOfDocument, getInvalidKeyPaths, printToOutputChannel } from './LintCommand';
-import { sep as pathSeperator, sep } from 'path';
+import { sep } from 'path';
 
 export async function LintChartCommand(outputChannel: vscode.OutputChannel) {
     const doc = vscode.window.activeTextEditor?.document;
@@ -10,17 +10,17 @@ export async function LintChartCommand(outputChannel: vscode.OutputChannel) {
         return;
     }
 
-    const chartBasePath = utils.getChartBasePath(doc);
+    const chartBasePath = utils.getChartBasePath(doc.fileName);
     if (chartBasePath === undefined) {
         return;
     }
 
-    const templates = walkDirectory(chartBasePath + pathSeperator + "templates");
+    const templates = walkDirectory(chartBasePath + sep + "templates");
     let listOfInvalidKeyPaths: string[] = []; 
     for (let index = 0; index < templates.length; index++) {
         await vscode.workspace.openTextDocument(templates[index]).then(template => {
             const keys = getAllKeyPathsOfDocument(template);
-            const values = utils.getValuesFromFile(template);
+            const values = utils.getValuesFromFile(template.fileName);
             
             listOfInvalidKeyPaths = listOfInvalidKeyPaths.concat(getInvalidKeyPaths(keys, values, template));
         });   
@@ -29,14 +29,14 @@ export async function LintChartCommand(outputChannel: vscode.OutputChannel) {
     if (listOfInvalidKeyPaths.length !== 0) {
         return;
     }
-    vscode.window.showInformationMessage(`No errors found in chart '${utils.getChartName(chartBasePath)}' :)`);
+    vscode.window.showInformationMessage(`No errors found in chart '${utils.getNameOfChart(doc.fileName)}' :)`);
 }
 
 function walkDirectory(dir: string) {
     var results: string[] = [];
     var list = fs.readdirSync(dir);
     list.forEach(function(file) {
-        file = dir + pathSeperator + file;
+        file = dir + sep + file;
         var stat = fs.statSync(file);
         if (stat && stat.isDirectory()) { 
             /* Recurse into a subdirectory */

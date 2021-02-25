@@ -17,7 +17,6 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
         }
 
         let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
-
         if(currentString.length === 0) {
             return [new vscode.CompletionItem('.Chart', vscode.CompletionItemKind.Method)];
         }
@@ -27,7 +26,7 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
         }
 
         if (currentString.startsWith('.Chart.')) {
-            const doc = this.getValuesFromFile(document);
+            const doc = this.getValuesFromChartFile(document);
 
             if (currentString === '.Chart.'){
                 return this.getCompletionItemList(doc);
@@ -45,15 +44,20 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
     /**
     * Checks whether the position is part of a values reference.
     */
-    isInChartString(currentLine: string, position: number): boolean {
+    private isInChartString(currentLine: string, position: number): boolean {
         return utils.getWordAt(currentLine, position - 1).includes('.Chart');
     }
 
     /**
      * Retrieves the values from the `values.yaml`.
      */
-    getValuesFromFile(document: vscode.TextDocument): any {
-        const pathToChartFile = document.fileName.substr(0, document.fileName.lastIndexOf(pathSeperator + 'templates')) + pathSeperator + "Chart.yaml";	
+    private getValuesFromChartFile(document: vscode.TextDocument): any {
+        const chartBasePath = utils.getChartBasePath(document.fileName);
+        if(chartBasePath === undefined) {
+            return undefined;
+        }
+
+        const pathToChartFile =  chartBasePath + pathSeperator + 'Chart.yaml';	
         if(fs.existsSync(pathToChartFile)){
             return yaml.safeLoad(fs.readFileSync(pathToChartFile, 'utf8'));
         }
@@ -65,7 +69,7 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
     /**
      * Updates the currently active key.
      */
-    updateCurrentKey(currentKey: any, allKeys: any): any {
+    private updateCurrentKey(currentKey: any, allKeys: any): any {
         for (let key in allKeys) {
             if (Array.isArray(currentKey[allKeys[key]])){
                 return undefined;
@@ -78,7 +82,7 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
     /**
      * Generates a list of possible completions for the current key.
      */
-    getCompletionItemList(currentKey: any): vscode.CompletionItem[] {
+    private getCompletionItemList(currentKey: any): vscode.CompletionItem[] {
         const keys = [];
         for (let key in currentKey) {
             switch (typeof currentKey[key]) {

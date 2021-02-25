@@ -15,7 +15,6 @@ export class FilesCompletionItemProvider implements vscode.CompletionItemProvide
         }
 
         let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
-
         if(currentString.length === 0) {
             return [new vscode.CompletionItem('.Files', vscode.CompletionItemKind.Method)];
         }
@@ -33,7 +32,7 @@ export class FilesCompletionItemProvider implements vscode.CompletionItemProvide
     /**
      * Put together list of items with the information from the official Helm website.
      */
-    getCompletionItemList(): vscode.CompletionItem[] {
+    private getCompletionItemList(): vscode.CompletionItem[] {
         let get = new vscode.CompletionItem("Get", vscode.CompletionItemKind.Field);
         get.documentation = "Files.Get is a function for getting a file by name (.Files.Get config.ini)";
 
@@ -61,5 +60,4 @@ export class FilesCompletionItemProvider implements vscode.CompletionItemProvide
             asConfig
         ];
     }
-
 }

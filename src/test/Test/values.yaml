@@ -4,6 +4,13 @@
 
 replicaCount: 1
 
+foo:
+  bar: baz
+  baz:
+    - foo
+    - bar
+    - baz
+
 image:
   repository: nginx
   tag: stable
