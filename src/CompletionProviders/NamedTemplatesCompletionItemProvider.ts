@@ -19,7 +19,7 @@ export class NamedTemplatesCompletionItemProvider implements vscode.CompletionIt
 
         const currentString = utils.getWordAt(currentLine, position.character - 1).trim();
         if (currentString.startsWith('"')) {
-            const namedTemplates: string[] = utils.getAllNamedTemplatesFromFiles(document);
+            const namedTemplates: string[] = utils.getAllNamedTemplatesFromFiles(document.fileName);
             return this.getCompletionItemList(namedTemplates);
         }
     }

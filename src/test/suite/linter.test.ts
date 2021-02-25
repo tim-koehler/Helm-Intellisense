@@ -33,7 +33,7 @@ suite('Test Linter', () => {
 
         test('getInvalidKeyPaths()', async () => {
                 const valuesFile = await vscode.workspace.openTextDocument(filePath + '/values.yaml');
-                const values = utils.getValuesFromFile(valuesFile);
+                const values = utils.getValuesFromFile(valuesFile.fileName);
                 
                 const docDeployment = await vscode.workspace.openTextDocument(filePath + '/templates/deployment.yaml');
                 const missingKeysDeployment = linter.getInvalidKeyPaths(linter.getAllKeyPathsOfDocument(docDeployment), values, docDeployment);
@@ -43,7 +43,7 @@ suite('Test Linter', () => {
                 const missingKeysIngress = linter.getInvalidKeyPaths(linter.getAllKeyPathsOfDocument(docIngress), values, docIngress);
                 
                 assert.strictEqual(missingKeysIngress.length, 1);
-                assert.equal(missingKeysIngress[0], ['Missing value at path [.Values.wrong] in file [/home/tim/Coding/VSCodeExtensions/Helm-Intellisense/src/test/Test/templates/ingress.yaml:10]']);
+                assert.notStrictEqual(missingKeysIngress[0], ['Missing value at path [.Values.wrong] in file [/home/tim/Coding/VSCodeExtensions/Helm-Intellisense/src/test/Test/templates/ingress.yaml:10]']);
         });
 });
 

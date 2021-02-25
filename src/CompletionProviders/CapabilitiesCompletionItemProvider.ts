@@ -15,7 +15,6 @@ export class CapabilitiesCompletionItemProvider implements vscode.CompletionItem
         }
 
         let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
-
         if(currentString.length === 0) {
             return [new vscode.CompletionItem('.Capabilities', vscode.CompletionItemKind.Method)];
         }

@@ -26,7 +26,7 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
         }
 
         if (currentString.startsWith('.Values.')) {
-            const doc = utils.getValuesFromFile(document);
+            const doc = utils.getValuesFromFile(document.fileName);
 
             if (currentString === '.Values.'){
                 return this.getCompletionItemList(doc);
@@ -72,7 +72,6 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
                     keys.push(valueItem);
                     break;
                 default:
-                    console.log("Unknown type: " + typeof currentKey[key]);
                     let unknownItem = new vscode.CompletionItem(key, vscode.CompletionItemKind.Issue);
                     unknownItem.documentation = "Helm-Intellisense could not find type";
                     keys.push(unknownItem);

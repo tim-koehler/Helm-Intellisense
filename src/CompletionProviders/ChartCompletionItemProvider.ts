@@ -17,7 +17,6 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
         }
 
         let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
-
         if(currentString.length === 0) {
             return [new vscode.CompletionItem('.Chart', vscode.CompletionItemKind.Method)];
         }
