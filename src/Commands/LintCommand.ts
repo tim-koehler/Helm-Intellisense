@@ -60,7 +60,7 @@ export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Array<[strin
                 continue;
             }
 
-            word = word.replace('{{', '').replace('}}', '');
+            word = word.replace('{{', '').replace('}}', '').replace('(', '').replace(')', '');
             map.push([word, lineIndex]);
         }
     }

@@ -25,9 +25,10 @@ suite('Test Linter', () => {
                         ['.Values.resources', 44],
                         ['.Values.nodeSelector', 45],
                         ['.Values.affinity', 49],
-                        ['.Values.tolerations', 53]
+                        ['.Values.tolerations', 53],
+                        ['.Values.', 57],
+                        ['.Values.imag', 58]
                 ];
-
                 compareTouples(keys, shouldTouples);
         });
 
@@ -37,7 +38,11 @@ suite('Test Linter', () => {
                 
                 const docDeployment = await vscode.workspace.openTextDocument(filePath + '/templates/deployment.yaml');
                 const missingKeysDeployment = linter.getInvalidKeyPaths(linter.getAllKeyPathsOfDocument(docDeployment), values, docDeployment);
-                assert.strictEqual(missingKeysDeployment.length, 0);
+                assert.strictEqual(missingKeysDeployment.length, 2);
+
+                const docService = await vscode.workspace.openTextDocument(filePath + '/templates/service.yaml');
+                const missingKeysService = linter.getInvalidKeyPaths(linter.getAllKeyPathsOfDocument(docService), values, docService);
+                assert.strictEqual(missingKeysService.length, 0);
 
                 const docIngress = await vscode.workspace.openTextDocument(filePath + '/templates/ingress.yaml');
                 const missingKeysIngress = linter.getInvalidKeyPaths(linter.getAllKeyPathsOfDocument(docIngress), values, docIngress);

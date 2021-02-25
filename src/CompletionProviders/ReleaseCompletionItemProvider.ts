@@ -33,7 +33,7 @@ export class ReleaseCompletionItemProvider implements vscode.CompletionItemProvi
     /**
      * Put together list of items with the information from the official Helm website.
      */
-    getCompletionItemList(): vscode.CompletionItem[] {
+    private getCompletionItemList(): vscode.CompletionItem[] {
         let name = new vscode.CompletionItem("Name", vscode.CompletionItemKind.Field);
         name.documentation = "The release name";
 

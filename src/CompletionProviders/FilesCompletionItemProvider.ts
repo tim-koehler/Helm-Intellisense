@@ -32,7 +32,7 @@ export class FilesCompletionItemProvider implements vscode.CompletionItemProvide
     /**
      * Put together list of items with the information from the official Helm website.
      */
-    getCompletionItemList(): vscode.CompletionItem[] {
+    private getCompletionItemList(): vscode.CompletionItem[] {
         let get = new vscode.CompletionItem("Get", vscode.CompletionItemKind.Field);
         get.documentation = "Files.Get is a function for getting a file by name (.Files.Get config.ini)";
 

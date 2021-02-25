@@ -27,7 +27,7 @@ export class NamedTemplatesCompletionItemProvider implements vscode.CompletionIt
     /**
      * Generates a list of possible completions for the current template prefix.
      */
-    getCompletionItemList(namedTemplates: string[]): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    private getCompletionItemList(namedTemplates: string[]): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
         let listOfCompletionItems = [];
         for (const namedTemplate of namedTemplates) {
             let item = new vscode.CompletionItem(namedTemplate, vscode.CompletionItemKind.Field);

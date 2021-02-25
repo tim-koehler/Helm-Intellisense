@@ -8,7 +8,7 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
      * Generates a list of completion items based on the current position in the
      * document.
      */
-    provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
+    provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
         const currentLine = document.lineAt(position).text;
 
         if (!utils.isInsideBrackets(currentLine, position.character)) {
@@ -44,7 +44,7 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
     /**
      * Updates the currently active key.
      */
-    updateCurrentKey(currentKey: any, allKeys: any): any {
+    private updateCurrentKey(currentKey: any, allKeys: any): any {
         for (let key in allKeys) {
             if (Array.isArray(currentKey[allKeys[key]])){
                 return undefined;
@@ -57,7 +57,7 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
     /**
      * Generates a list of possible completions for the current key.
      */
-    getCompletionItemList(currentKey: any): vscode.CompletionItem[] {
+    private getCompletionItemList(currentKey: any): vscode.CompletionItem[] {
         const keys = [];
         for (let key in currentKey) {
             switch (typeof currentKey[key]) {
@@ -80,5 +80,4 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
         }
         return keys;
     }
-
 }

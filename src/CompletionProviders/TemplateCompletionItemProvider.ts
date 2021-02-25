@@ -33,7 +33,7 @@ export class TemplateCompletionItemProvider implements vscode.CompletionItemProv
     /**
      * Put together list of items with the information from the official Helm website.
      */
-    getCompletionItemList(): vscode.CompletionItem[] {
+    private getCompletionItemList(): vscode.CompletionItem[] {
         let name = new vscode.CompletionItem("Name", vscode.CompletionItemKind.Field);
         name.documentation = "A namespaced file path to the current template (e.g. mychart/templates/mytemplate.yaml)";
 
