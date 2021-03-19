@@ -15,6 +15,7 @@ script:
   echo ">>> Compile vscode-test"
   yarn && yarn compile
   echo ">>> Compiled vscode-test"
+  ls
   cd sample
   echo ">>> Run sample integration test"
   yarn && yarn compile && yarn test
