@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.9.2] - 2021-04-02
+### Fixed
+- Security issue
+### Added
+- New README
+- 
 ## [0.9.2] - 2021-02-25
 ### Fixed
 - Issue #29
