@@ -1,6 +1,6 @@
 # Change Log
 
-## [0.9.2] - 2021-04-02
+## [0.9.3] - 2021-04-02
 ### Fixed
 - Security issue
 ### Added
