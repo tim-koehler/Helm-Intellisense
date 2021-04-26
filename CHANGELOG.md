@@ -1,4 +1,7 @@
 # Change Log
+## [0.9.4] - 2021-04-26
+### Changed
+- 'Rate me' popup. See issue #33.
 ## [0.9.3] - 2021-04-02
 ### Fixed
 - Security issue

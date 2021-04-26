@@ -11,7 +11,7 @@
 ![Demo Gif](https://imgur.com/pC2vuoN.gif) 
 </div>
 
-## Features :sparkles:
+## Features
 
 - The `values.yaml` file of the chart will be read and evaluated automatically to provide intellisense.
 - Autocomplete will also work for all `Named Templates` defined in the any `.tpl` file.
@@ -22,12 +22,12 @@
 - The extension is compatible with the `Kubernetes` extension.
 - Working with language type `yaml` and `helm-template`.
 
-## Commands :computer:
+## Commands
 
 * `Helm-Intellisense: Lint` :       This command parses the currently active document and validates that all paths(like `.Values.foo.bar`) point to valid values.
 * `Helm-Intellisense: Lint Chart` : Equivalent to `Lint` command but for all files in the chart of the file that is currently active.
 
-## Settings :wrench:
+## Settings
 
 | Setting                                   | Description
 |:------------------------------------------|:----------------------------------------------------------------------------------------

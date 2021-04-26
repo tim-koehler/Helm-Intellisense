@@ -58,6 +58,10 @@ export function deactivate(): void {
 }
 
 async function updateAndShowRatePopup(context: vscode.ExtensionContext) {
+	if (context.globalState.get('ratePopupDisabled') === true) {
+		return;
+	}
+
 	const ratePopupValue = context.globalState.get('ratePopup');
 	if (ratePopupValue === undefined || typeof ratePopupValue !== 'number') {
 		context.globalState.update('ratePopup', 1);
@@ -73,6 +77,7 @@ async function updateAndShowRatePopup(context: vscode.ExtensionContext) {
 	await vscode.window.showInformationMessage('If you like Helm-Intellisense, I would appreciate your support :)', 'Give a ⭐ on GitHub').then(selection => {
 		if (selection === 'Give a ⭐ on GitHub') {
 			vscode.env.openExternal(vscode.Uri.parse(GITHUB_URL));
+			context.globalState.update('ratePopupDisabled', true);
 		} 
 	});
 }
