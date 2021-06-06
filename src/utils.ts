@@ -64,7 +64,13 @@ export function getValuesFromFile(fileName: string): any {
         vscode.window.showErrorMessage('Could not locate any values.yaml. Is your values file named differently? Configure correct file name in your settings using \'helm-intellisense.customValueFileNames\'');
         return undefined;
     }
-    return yaml.safeLoad(allYamlContent, {json: true});
+    allYamlContent = allYamlContent.replace(/\-\-\-/gi, '').replace(/\.\.\./gi, '');
+    const loadedYaml = yaml.safeLoad(allYamlContent, {json: true});
+    if (typeof loadedYaml === undefined || loadedYaml === "") {
+        vscode.window.showErrorMessage('Something went wrong parsing value files');
+        return undefined;
+    }
+    return loadedYaml;
 }
 
 /**
