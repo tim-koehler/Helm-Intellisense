@@ -1,4 +1,8 @@
 # Change Log
+
+## [0.10.0] - 2021-06-06
+### Added
+- Value file overriding (hierarchy) (Issue #35)
 ## [0.9.4] - 2021-04-26
 ### Changed
 - 'Rate me' popup. See issue #33.

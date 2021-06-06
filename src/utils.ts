@@ -41,12 +41,13 @@ export function getWordAt(str: string, pos: number): string {
  * Retrieves the values from the `values.yaml`.
  */
 export function getValuesFromFile(fileName: string): any {
-    const filenames = getValueFileNamesFromConfig();
+    const filenames = getValueFileNamesFromConfig().reverse();
     const chartBasePath = getChartBasePath(fileName);
     if (chartBasePath === undefined) {
         return undefined;
     }
 
+    let allYamlContent: string = "";
     for (const filename of filenames) {
         const pathToValuesFile = path.join(chartBasePath, filename);
         if(!fs.existsSync(pathToValuesFile)) { 
@@ -54,14 +55,16 @@ export function getValuesFromFile(fileName: string): any {
         }
 
         try {
-            return yaml.safeLoad(fs.readFileSync(pathToValuesFile, 'utf8'));
+            allYamlContent += fs.readFileSync(pathToValuesFile, 'utf8') + "\n";
         } catch (e) {
             vscode.window.showErrorMessage('Error in \'' + filename + '\':\n' + e.message);
-            return undefined;
         }
     }
-    vscode.window.showErrorMessage('Could not locate any values.yaml. Is your values file named differently? Configure correct file name in your settings using \'helm-intellisense.customValueFileNames\'');
-    return undefined;
+    if (allYamlContent === "") {
+        vscode.window.showErrorMessage('Could not locate any values.yaml. Is your values file named differently? Configure correct file name in your settings using \'helm-intellisense.customValueFileNames\'');
+        return undefined;
+    }
+    return yaml.safeLoad(allYamlContent, {json: true});
 }
 
 /**
