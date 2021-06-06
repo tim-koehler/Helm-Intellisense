@@ -33,3 +33,15 @@
 |:------------------------------------------|:----------------------------------------------------------------------------------------
 | `helm-intellisense.customValueFileNames`  | Defines list of possible files containing values<br>(default: `values.yaml`)
 | `helm-intellisense.lintFileOnSave`        | If set to `true` the `Helm-Intellisense: Lint` command will be executed on save (default: `true`)
+
+## Multiple value files (overriding)
+
+When mulitple value files are defined they are parsed from the bottom up:
+```json
+"helm-intellisense.customValueFileNames": [
+    "prod-values.yaml",
+    "dev-values.yaml",
+    "values.yaml"
+]
+```
+In this case values will be overwritten by dev and dev by prod. This also means that the linter will only throw an error if a certain key is not found in any of the specified files.
