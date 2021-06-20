@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import * as utils from "../utils";
+import * as utils from '../utils';
 
-export function LintCommand(outputChannel: vscode.OutputChannel) {
+export function LintCommand(outputChannel: vscode.OutputChannel): void {
     const doc = vscode.window.activeTextEditor?.document;
     if (doc === undefined) {
         return;
@@ -22,10 +22,10 @@ export function LintCommand(outputChannel: vscode.OutputChannel) {
     printToOutputChannel(invalidKeyPaths.concat(invalidTpls), outputChannel);
 }
 
-export function getAllUsedNamedTemplatesOfDocument(doc: vscode.TextDocument): Array<[string, number]> {
+export function getAllUsedNamedTemplatesOfDocument(doc: vscode.TextDocument): [string, number][] {
     const txt = doc.getText().split('\n');
 
-    let map = new Array<[string, number]>();
+    const map = new Array<[string, number]>();
     for (let lineIndex = 0; lineIndex < txt.length; lineIndex++) {
         const line = txt[lineIndex];
         const regex = /\{\{-? *(template|include) +"(.+?)".*?\}\}/g;
@@ -38,22 +38,22 @@ export function getAllUsedNamedTemplatesOfDocument(doc: vscode.TextDocument): Ar
     return map;
 }
 
-export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Array<[string, number]> {
+export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): [string, number][] {
     const txt = doc.getText().split('\n');
 
-    let map = new Array<[string, number]>();
+    const map = new Array<[string, number]>();
     for (let lineIndex = 0; lineIndex < txt.length; lineIndex++) {
         const line = txt[lineIndex];
         if (!line.includes('.Values')) {
             continue;
         }
 
-        const regex = /\{\{-?\ ?(else )?if .*?\}\}/g;
+        const regex = /\{\{-? ?(else )?if .*?\}\}/g;
         if (regex.exec(line) !== null) {
             continue;
         }
 
-        const words = line.split(" ");
+        const words = line.split(' ');
         for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
             let word = words[wordIndex];
             if (!word.includes('.Values')) {
@@ -67,8 +67,8 @@ export function getAllKeyPathsOfDocument(doc: vscode.TextDocument): Array<[strin
     return map;
 }
 
-export function getInvalidKeyPaths(map: Array<[string, number]>, values: any, doc: vscode.TextDocument): string[] {
-    let list: string[] = [];
+export function getInvalidKeyPaths(map: [string, number][], values: any, doc: vscode.TextDocument): string[] {
+    const list: string[] = [];
 
     map.forEach(element => {
         const key = element[0];
@@ -96,8 +96,8 @@ export function getInvalidKeyPaths(map: Array<[string, number]>, values: any, do
 }
 
 
-export function getInvalidTpls(map: Array<[string, number]>, definedTpls: string[], doc: vscode.TextDocument): string[] {
-    let list: string[] = [];
+export function getInvalidTpls(map: [string, number][], definedTpls: string[], doc: vscode.TextDocument): string[] {
+    const list: string[] = [];
 
     map.forEach(element => {
         const usedTpl = element[0];
@@ -115,7 +115,7 @@ export function isDefaultDefined(lineNumber: number, doc: vscode.TextDocument): 
     return line.includes('| default');
 }
 
-export function printToOutputChannel(listOfErrors: string[], outputChannel: vscode.OutputChannel) {
+export function printToOutputChannel(listOfErrors: string[], outputChannel: vscode.OutputChannel): void {
     if (listOfErrors.length === 0) {
         outputChannel.clear();
         outputChannel.hide();

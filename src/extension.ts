@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
-import { ValuesCompletionItemProvider } from "./CompletionProviders/ValuesCompletionItemProvider";
-import { ReleaseCompletionItemProvider } from "./CompletionProviders/ReleaseCompletionItemProvider";
-import { FilesCompletionItemProvider } from "./CompletionProviders/FilesCompletionItemProvider";
-import { TemplateCompletionItemProvider } from "./CompletionProviders/TemplateCompletionItemProvider";
-import { CapabilitiesCompletionItemProvider } from "./CompletionProviders/CapabilitiesCompletionItemProvider";
-import { ChartCompletionItemProvider } from "./CompletionProviders/ChartCompletionItemProvider";
-import { AnchorCompletionItemProvider } from "./CompletionProviders/AnchorCompletionItemProvider";
+import { ValuesCompletionItemProvider } from './CompletionProviders/ValuesCompletionItemProvider';
+import { ReleaseCompletionItemProvider } from './CompletionProviders/ReleaseCompletionItemProvider';
+import { FilesCompletionItemProvider } from './CompletionProviders/FilesCompletionItemProvider';
+import { TemplateCompletionItemProvider } from './CompletionProviders/TemplateCompletionItemProvider';
+import { CapabilitiesCompletionItemProvider } from './CompletionProviders/CapabilitiesCompletionItemProvider';
+import { ChartCompletionItemProvider } from './CompletionProviders/ChartCompletionItemProvider';
+import { AnchorCompletionItemProvider } from './CompletionProviders/AnchorCompletionItemProvider';
 import { LintCommand } from './Commands/LintCommand';
 import { LintChartCommand } from './Commands/LintChartCommand';
 import { NamedTemplatesCompletionItemProvider } from './CompletionProviders/NamedTemplatesCompletionItemProvider';
@@ -22,7 +22,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
     updateAndShowRatePopup(context);
 
-    for (let lang of ['yaml', 'helm']) {
+    for (const lang of ['yaml', 'helm']) {
         vscode.languages.registerCompletionItemProvider(lang, new ValuesCompletionItemProvider(), '.');
         vscode.languages.registerCompletionItemProvider(lang, new ReleaseCompletionItemProvider(), '.');
         vscode.languages.registerCompletionItemProvider(lang, new FilesCompletionItemProvider(), '.');
@@ -33,7 +33,7 @@ export function activate(context: vscode.ExtensionContext): void {
         vscode.languages.registerCompletionItemProvider(lang, new NamedTemplatesCompletionItemProvider(), '"');
     }
 
-    let outputChannel = vscode.window.createOutputChannel("Helm-Intellisense");
+    const outputChannel = vscode.window.createOutputChannel('Helm-Intellisense');
     const lintCommand = vscode.commands.registerCommand(LINT_COMMAND_STRING, () => LintCommand(outputChannel));
     context.subscriptions.push(lintCommand);
 
@@ -55,9 +55,10 @@ export function activate(context: vscode.ExtensionContext): void {
  * Deactivates the extension.
  */
 export function deactivate(): void {
+    return;
 }
 
-async function updateAndShowRatePopup(context: vscode.ExtensionContext) {
+async function updateAndShowRatePopup(context: vscode.ExtensionContext): Promise<void> {
     if (context.globalState.get('ratePopupDisabled') === true) {
         return;
     }

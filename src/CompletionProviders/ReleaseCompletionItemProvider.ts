@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as utils from "../utils";
+import * as utils from '../utils';
 
 export class ReleaseCompletionItemProvider implements vscode.CompletionItemProvider {
 
@@ -14,7 +14,7 @@ export class ReleaseCompletionItemProvider implements vscode.CompletionItemProvi
             return undefined;
         }
 
-        let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
+        const currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
 
         if (currentString.length === 0) {
             return [new vscode.CompletionItem('.Release', vscode.CompletionItemKind.Method)];
@@ -35,23 +35,23 @@ export class ReleaseCompletionItemProvider implements vscode.CompletionItemProvi
      * Put together list of items with the information from the official Helm website.
      */
     private getCompletionItemList(): vscode.CompletionItem[] {
-        let name = new vscode.CompletionItem("Name", vscode.CompletionItemKind.Field);
-        name.documentation = "The release name";
+        const name = new vscode.CompletionItem('Name', vscode.CompletionItemKind.Field);
+        name.documentation = 'The release name';
 
-        let namespace = new vscode.CompletionItem("Namespace", vscode.CompletionItemKind.Field);
-        namespace.documentation = "The namespace to be released into (if the manifest doesn’t override)";
+        const namespace = new vscode.CompletionItem('Namespace', vscode.CompletionItemKind.Field);
+        namespace.documentation = 'The namespace to be released into (if the manifest doesn’t override)';
 
-        let isUpgrade = new vscode.CompletionItem("IsUpgrade", vscode.CompletionItemKind.Field);
-        isUpgrade.documentation = "This is set to true if the current operation is an upgrade or rollback.";
+        const isUpgrade = new vscode.CompletionItem('IsUpgrade', vscode.CompletionItemKind.Field);
+        isUpgrade.documentation = 'This is set to true if the current operation is an upgrade or rollback.';
 
-        let isInstall = new vscode.CompletionItem("IsInstall", vscode.CompletionItemKind.Field);
-        isInstall.documentation = "This is set to true if the current operation is an install.";
+        const isInstall = new vscode.CompletionItem('IsInstall', vscode.CompletionItemKind.Field);
+        isInstall.documentation = 'This is set to true if the current operation is an install.';
 
-        let revision = new vscode.CompletionItem("Revision", vscode.CompletionItemKind.Field);
-        revision.documentation = "The revision number for this release. On install, this is 1, and it is incremented with each upgrade and rollback.";
+        const revision = new vscode.CompletionItem('Revision', vscode.CompletionItemKind.Field);
+        revision.documentation = 'The revision number for this release. On install, this is 1, and it is incremented with each upgrade and rollback.';
 
-        let service = new vscode.CompletionItem("Service", vscode.CompletionItemKind.Field);
-        service.documentation = "The service that is rendering the present template. On Helm, this is always Helm.";
+        const service = new vscode.CompletionItem('Service', vscode.CompletionItemKind.Field);
+        service.documentation = 'The service that is rendering the present template. On Helm, this is always Helm.';
 
         return [
             name,

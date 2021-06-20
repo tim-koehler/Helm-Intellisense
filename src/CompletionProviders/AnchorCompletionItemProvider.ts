@@ -12,7 +12,7 @@ export class AnchorCompletionItemProvider implements vscode.CompletionItemProvid
 
     private getCompletionItemList(txt: string, document: vscode.TextDocument, position: vscode.Position): vscode.CompletionItem[] {
         const anchors = this.getAllAnchors(txt);
-        let completionItems: vscode.CompletionItem[] = [];
+        const completionItems: vscode.CompletionItem[] = [];
         for (const index in anchors) {
             const wordRange = document.getWordRangeAtPosition(position);
             if (wordRange === undefined) {
@@ -22,7 +22,7 @@ export class AnchorCompletionItemProvider implements vscode.CompletionItemProvid
             }
             const completionItemWithAsteriskReplace = new vscode.CompletionItem(anchors[index].replace('&', ''));
             completionItemWithAsteriskReplace.range = new vscode.Range(new vscode.Position(wordRange.start.line, wordRange.start.character - 1), wordRange.end);
-            completionItemWithAsteriskReplace.insertText = " *" + anchors[index].replace('&', '');
+            completionItemWithAsteriskReplace.insertText = ' *' + anchors[index].replace('&', '');
             completionItems.push(completionItemWithAsteriskReplace);
 
             const completionItemWithoutAsterisk = new vscode.CompletionItem(anchors[index].replace('&', '*'));
@@ -34,12 +34,12 @@ export class AnchorCompletionItemProvider implements vscode.CompletionItemProvid
     }
 
     private getAllAnchors(txt: string): string[] {
-        const phrases = txt.split(" ");
-        let anchors: string[] = [];
+        const phrases = txt.split(' ');
+        const anchors: string[] = [];
 
         for (const index in txt.split(' ')) {
-            if (phrases[index].startsWith("&")) {
-                anchors.push(phrases[index].replace(/[^\x20-\x7E]+/g, ""));
+            if (phrases[index].startsWith('&')) {
+                anchors.push(phrases[index].replace(/[^\x20-\x7E]+/g, ''));
             }
         }
         return anchors;

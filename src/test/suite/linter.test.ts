@@ -52,7 +52,7 @@ suite('Test Linter', () => {
     });
 });
 
-function compareTouples(touple1: [string, number][], touple2: [string, number][]) {
+function compareTouples(touple1: [string, number][], touple2: [string, number][]): void {
     var testVal;
     if (touple1.length !== touple2.length) {
         assert.fail('No equal length');

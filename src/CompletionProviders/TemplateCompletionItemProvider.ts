@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as utils from "../utils";
+import * as utils from '../utils';
 
 export class TemplateCompletionItemProvider implements vscode.CompletionItemProvider {
 
@@ -14,7 +14,7 @@ export class TemplateCompletionItemProvider implements vscode.CompletionItemProv
             return undefined;
         }
 
-        let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
+        const currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
 
         if (currentString.length === 0) {
             return [new vscode.CompletionItem('.Template', vscode.CompletionItemKind.Method)];
@@ -35,11 +35,11 @@ export class TemplateCompletionItemProvider implements vscode.CompletionItemProv
      * Put together list of items with the information from the official Helm website.
      */
     private getCompletionItemList(): vscode.CompletionItem[] {
-        let name = new vscode.CompletionItem("Name", vscode.CompletionItemKind.Field);
-        name.documentation = "A namespaced file path to the current template (e.g. mychart/templates/mytemplate.yaml)";
+        const name = new vscode.CompletionItem('Name', vscode.CompletionItemKind.Field);
+        name.documentation = 'A namespaced file path to the current template (e.g. mychart/templates/mytemplate.yaml)';
 
-        let basePath = new vscode.CompletionItem("BasePath", vscode.CompletionItemKind.Field);
-        basePath.documentation = "BasePath: The namespaced path to the templates directory of the current chart (e.g. mychart/templates).";
+        const basePath = new vscode.CompletionItem('BasePath', vscode.CompletionItemKind.Field);
+        basePath.documentation = 'BasePath: The namespaced path to the templates directory of the current chart (e.g. mychart/templates).';
 
         return [
             name,

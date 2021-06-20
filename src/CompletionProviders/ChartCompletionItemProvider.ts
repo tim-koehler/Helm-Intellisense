@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
-import * as utils from "../utils";
+import * as utils from '../utils';
 import { sep as pathSeperator } from 'path';
 
 export class ChartCompletionItemProvider implements vscode.CompletionItemProvider {
@@ -16,7 +16,7 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
             return undefined;
         }
 
-        let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
+        const currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
         if (currentString.length === 0) {
             return [new vscode.CompletionItem('.Chart', vscode.CompletionItemKind.Method)];
         }
@@ -72,7 +72,7 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
      * Updates the currently active key.
      */
     private updateCurrentKey(currentKey: any, allKeys: any): any {
-        for (let key in allKeys) {
+        for (const key in allKeys) {
             if (Array.isArray(currentKey[allKeys[key]])) {
                 return undefined;
             }
@@ -86,7 +86,7 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
      */
     private getCompletionItemList(currentKey: any): vscode.CompletionItem[] {
         const keys = [];
-        for (let key in currentKey) {
+        for (const key in currentKey) {
             switch (typeof currentKey[key]) {
                 case 'object':
                     keys.push(new vscode.CompletionItem(key.charAt(0).toUpperCase() + key.slice(1), vscode.CompletionItemKind.Method));
@@ -94,14 +94,14 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
                 case 'string':
                 case 'boolean':
                 case 'number':
-                    let valueItem = new vscode.CompletionItem(key.charAt(0).toUpperCase() + key.slice(1), vscode.CompletionItemKind.Field);
-                    valueItem.documentation = "Value: " + currentKey[key];
+                    const valueItem = new vscode.CompletionItem(key.charAt(0).toUpperCase() + key.slice(1), vscode.CompletionItemKind.Field);
+                    valueItem.documentation = 'Value: ' + currentKey[key];
                     keys.push(valueItem);
                     break;
                 default:
-                    console.log("Unknown type: " + typeof currentKey[key]);
-                    let unknownItem = new vscode.CompletionItem(key.charAt(0).toUpperCase() + key.slice(1), vscode.CompletionItemKind.Issue);
-                    unknownItem.documentation = "Helm-Intellisense could not find type";
+                    console.log('Unknown type: ' + typeof currentKey[key]);
+                    const unknownItem = new vscode.CompletionItem(key.charAt(0).toUpperCase() + key.slice(1), vscode.CompletionItemKind.Issue);
+                    unknownItem.documentation = 'Helm-Intellisense could not find type';
                     keys.push(unknownItem);
                     break;
             }
