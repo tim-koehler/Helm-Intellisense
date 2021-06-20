@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as utils from "../utils"; 
+import * as utils from "../utils";
 import * as fs from 'fs';
 import { getAllKeyPathsOfDocument, getInvalidKeyPaths, printToOutputChannel } from './LintCommand';
 import { sep } from 'path';
@@ -16,14 +16,14 @@ export async function LintChartCommand(outputChannel: vscode.OutputChannel) {
     }
 
     const templates = walkDirectory(chartBasePath + sep + "templates");
-    let listOfInvalidKeyPaths: string[] = []; 
+    let listOfInvalidKeyPaths: string[] = [];
     for (let index = 0; index < templates.length; index++) {
         await vscode.workspace.openTextDocument(templates[index]).then(template => {
             const keys = getAllKeyPathsOfDocument(template);
             const values = utils.getValuesFromFile(template.fileName);
-            
+
             listOfInvalidKeyPaths = listOfInvalidKeyPaths.concat(getInvalidKeyPaths(keys, values, template));
-        });   
+        });
     }
     printToOutputChannel(listOfInvalidKeyPaths, outputChannel);
     if (listOfInvalidKeyPaths.length !== 0) {
@@ -35,13 +35,13 @@ export async function LintChartCommand(outputChannel: vscode.OutputChannel) {
 function walkDirectory(dir: string) {
     var results: string[] = [];
     var list = fs.readdirSync(dir);
-    list.forEach(function(file) {
+    list.forEach(function (file) {
         file = dir + sep + file;
         var stat = fs.statSync(file);
-        if (stat && stat.isDirectory()) { 
+        if (stat && stat.isDirectory()) {
             /* Recurse into a subdirectory */
             results = results.concat(walkDirectory(file));
-        } else { 
+        } else {
             /* Is a file */
             if (file.endsWith('.yaml') || file.endsWith('.yml')) {
                 results.push(file);

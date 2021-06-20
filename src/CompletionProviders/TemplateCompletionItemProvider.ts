@@ -16,7 +16,7 @@ export class TemplateCompletionItemProvider implements vscode.CompletionItemProv
 
         let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
 
-        if(currentString.length === 0) {
+        if (currentString.length === 0) {
             return [new vscode.CompletionItem('.Template', vscode.CompletionItemKind.Method)];
         }
 
@@ -30,6 +30,7 @@ export class TemplateCompletionItemProvider implements vscode.CompletionItemProv
 
         return [];
     }
+
     /**
      * Put together list of items with the information from the official Helm website.
      */
@@ -41,8 +42,8 @@ export class TemplateCompletionItemProvider implements vscode.CompletionItemProv
         basePath.documentation = "BasePath: The namespaced path to the templates directory of the current chart (e.g. mychart/templates).";
 
         return [
-          name,
-          basePath
+            name,
+            basePath
         ];
     }
 

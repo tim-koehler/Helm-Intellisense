@@ -20,35 +20,35 @@ const LINT_CHART_COMMAND_STRING = 'extension.LintChart';
  */
 export function activate(context: vscode.ExtensionContext): void {
 
-	updateAndShowRatePopup(context);
+    updateAndShowRatePopup(context);
 
-	for (let lang of ['yaml', 'helm']) {
-		vscode.languages.registerCompletionItemProvider(lang, new ValuesCompletionItemProvider() , '.');
-		vscode.languages.registerCompletionItemProvider(lang, new ReleaseCompletionItemProvider() , '.');
-		vscode.languages.registerCompletionItemProvider(lang, new FilesCompletionItemProvider(), '.');
-		vscode.languages.registerCompletionItemProvider(lang, new TemplateCompletionItemProvider(), '.');
-		vscode.languages.registerCompletionItemProvider(lang, new CapabilitiesCompletionItemProvider(), '.');
-		vscode.languages.registerCompletionItemProvider(lang, new ChartCompletionItemProvider(), '.');
-		vscode.languages.registerCompletionItemProvider(lang, new AnchorCompletionItemProvider(), '*');
-		vscode.languages.registerCompletionItemProvider(lang, new NamedTemplatesCompletionItemProvider(), '"');
-	}
+    for (let lang of ['yaml', 'helm']) {
+        vscode.languages.registerCompletionItemProvider(lang, new ValuesCompletionItemProvider(), '.');
+        vscode.languages.registerCompletionItemProvider(lang, new ReleaseCompletionItemProvider(), '.');
+        vscode.languages.registerCompletionItemProvider(lang, new FilesCompletionItemProvider(), '.');
+        vscode.languages.registerCompletionItemProvider(lang, new TemplateCompletionItemProvider(), '.');
+        vscode.languages.registerCompletionItemProvider(lang, new CapabilitiesCompletionItemProvider(), '.');
+        vscode.languages.registerCompletionItemProvider(lang, new ChartCompletionItemProvider(), '.');
+        vscode.languages.registerCompletionItemProvider(lang, new AnchorCompletionItemProvider(), '*');
+        vscode.languages.registerCompletionItemProvider(lang, new NamedTemplatesCompletionItemProvider(), '"');
+    }
 
-	let outputChannel = vscode.window.createOutputChannel("Helm-Intellisense");
-	const lintCommand = vscode.commands.registerCommand(LINT_COMMAND_STRING, () => LintCommand(outputChannel));
-	context.subscriptions.push(lintCommand);
+    let outputChannel = vscode.window.createOutputChannel("Helm-Intellisense");
+    const lintCommand = vscode.commands.registerCommand(LINT_COMMAND_STRING, () => LintCommand(outputChannel));
+    context.subscriptions.push(lintCommand);
 
-	const lintChartCommand = vscode.commands.registerCommand(LINT_CHART_COMMAND_STRING, () => LintChartCommand(outputChannel));
-	context.subscriptions.push(lintChartCommand);
+    const lintChartCommand = vscode.commands.registerCommand(LINT_CHART_COMMAND_STRING, () => LintChartCommand(outputChannel));
+    context.subscriptions.push(lintChartCommand);
 
-	vscode.workspace.onDidSaveTextDocument(() => {
-		if (vscode.workspace.getConfiguration('helm-intellisense').get('lintFileOnSave') === false) { 
-			return;
-		}
+    vscode.workspace.onDidSaveTextDocument(() => {
+        if (vscode.workspace.getConfiguration('helm-intellisense').get('lintFileOnSave') === false) {
+            return;
+        }
 
-		vscode.commands.executeCommand(LINT_COMMAND_STRING).then(undefined, err => {
-			console.error(err);
-		});
-	});
+        vscode.commands.executeCommand(LINT_COMMAND_STRING).then(undefined, err => {
+            console.error(err);
+        });
+    });
 }
 
 /**
@@ -58,26 +58,26 @@ export function deactivate(): void {
 }
 
 async function updateAndShowRatePopup(context: vscode.ExtensionContext) {
-	if (context.globalState.get('ratePopupDisabled') === true) {
-		return;
-	}
+    if (context.globalState.get('ratePopupDisabled') === true) {
+        return;
+    }
 
-	const ratePopupValue = context.globalState.get('ratePopup');
-	if (ratePopupValue === undefined || typeof ratePopupValue !== 'number') {
-		context.globalState.update('ratePopup', 1);
-		return;
-	} 
+    const ratePopupValue = context.globalState.get('ratePopup');
+    if (ratePopupValue === undefined || typeof ratePopupValue !== 'number') {
+        context.globalState.update('ratePopup', 1);
+        return;
+    }
 
-	if (ratePopupValue as number < 50)	{
-		context.globalState.update('ratePopup', ratePopupValue as number + 1);
-		return;
-	}
+    if (ratePopupValue as number < 50) {
+        context.globalState.update('ratePopup', ratePopupValue as number + 1);
+        return;
+    }
 
-	context.globalState.update('ratePopup', 1);
-	await vscode.window.showInformationMessage('If you like Helm-Intellisense, I would appreciate your support :)', 'Give a ⭐ on GitHub').then(selection => {
-		if (selection === 'Give a ⭐ on GitHub') {
-			vscode.env.openExternal(vscode.Uri.parse(GITHUB_URL));
-			context.globalState.update('ratePopupDisabled', true);
-		} 
-	});
+    context.globalState.update('ratePopup', 1);
+    await vscode.window.showInformationMessage('If you like Helm-Intellisense, I would appreciate your support :)', 'Give a ⭐ on GitHub').then(selection => {
+        if (selection === 'Give a ⭐ on GitHub') {
+            vscode.env.openExternal(vscode.Uri.parse(GITHUB_URL));
+            context.globalState.update('ratePopupDisabled', true);
+        }
+    });
 }

@@ -15,7 +15,7 @@ export class CapabilitiesCompletionItemProvider implements vscode.CompletionItem
         }
 
         let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
-        if(currentString.length === 0) {
+        if (currentString.length === 0) {
             return [new vscode.CompletionItem('.Capabilities', vscode.CompletionItemKind.Method)];
         }
 
@@ -39,13 +39,13 @@ export class CapabilitiesCompletionItemProvider implements vscode.CompletionItem
         if (/^\.Capabilities\.KubeVersion\.\w*$/.test(currentString)) {
             let version = new vscode.CompletionItem("Version", vscode.CompletionItemKind.Field);
             version.documentation = "Capabilities.KubeVersion and Capabilities.KubeVersion.Version is the Kubernetes version.";
-            
+
             let major = new vscode.CompletionItem("Major", vscode.CompletionItemKind.Field);
             major.documentation = "Capabilities.KubeVersion.Major is the Kubernetes major version.";
-            
+
             let minor = new vscode.CompletionItem("Minor", vscode.CompletionItemKind.Field);
             minor.documentation = "Capabilities.KubeVersion.Minor is the Kubernetes minor version.";
-            
+
             return [version, major, minor];
         }
 

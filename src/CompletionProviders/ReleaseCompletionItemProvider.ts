@@ -16,7 +16,7 @@ export class ReleaseCompletionItemProvider implements vscode.CompletionItemProvi
 
         let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
 
-        if(currentString.length === 0) {
+        if (currentString.length === 0) {
             return [new vscode.CompletionItem('.Release', vscode.CompletionItemKind.Method)];
         }
 
@@ -30,6 +30,7 @@ export class ReleaseCompletionItemProvider implements vscode.CompletionItemProvi
 
         return [];
     }
+
     /**
      * Put together list of items with the information from the official Helm website.
      */

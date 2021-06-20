@@ -50,7 +50,7 @@ export function getValuesFromFile(fileName: string): any {
     let allYamlContent: string = "";
     for (const filename of filenames) {
         const pathToValuesFile = path.join(chartBasePath, filename);
-        if(!fs.existsSync(pathToValuesFile)) { 
+        if (!fs.existsSync(pathToValuesFile)) {
             continue;
         }
 
@@ -82,7 +82,7 @@ export function getAllNamedTemplatesFromFiles(filePath: string): string[] {
 
     let content: string = "";
     for (const tplFile of tplFiles) {
-        if(!fs.existsSync(tplFile)) {
+        if (!fs.existsSync(tplFile)) {
             continue;
         }
         try {
@@ -95,18 +95,17 @@ export function getAllNamedTemplatesFromFiles(filePath: string): string[] {
 }
 
 function getAllTplFilesFromDirectoryRecursively(startPath: string): string[] {
-    if (!fs.existsSync(startPath)){
+    if (!fs.existsSync(startPath)) {
         return [];
     }
-    
+
     let tplFiles: string[] = [];
     const files: string[] = fs.readdirSync(startPath);
     for (const file of files) {
         const filename = path.join(startPath, file);
         if (fs.lstatSync(filename).isDirectory()) {
-            tplFiles = tplFiles.concat(getAllTplFilesFromDirectoryRecursively(filename)); 
-        }
-        else if (filename.indexOf('.tpl') >= 0) {
+            tplFiles = tplFiles.concat(getAllTplFilesFromDirectoryRecursively(filename));
+        } else if (filename.indexOf('.tpl') >= 0) {
             tplFiles.push(filename);
         }
     }
@@ -136,28 +135,28 @@ export function getChartBasePath(fileName: string): string | undefined {
     const dirs = ['templates', 'charts', 'crds'];
     for (const dir of dirs) {
         const lastIndexOf = possiblePathToChartDirectory.lastIndexOf(path.sep + dir);
-        if(lastIndexOf !== -1) {
+        if (lastIndexOf !== -1) {
             possiblePathToChartDirectory = possiblePathToChartDirectory.substr(0, lastIndexOf);
             break;
-        }    
+        }
     }
 
     const currentFilesInDir = fs.readdirSync(possiblePathToChartDirectory);
     if (!currentFilesInDir.includes("Chart.yaml")) {
         return undefined;
-    } 
-    
+    }
+
     return possiblePathToChartDirectory;
 }
 
 export function getNameOfChart(filePath: string): string {
     const chartBasePath = getChartBasePath(filePath);
-    if(chartBasePath === undefined) {
+    if (chartBasePath === undefined) {
         return 'No name found';
     }
 
     const pathToChartFile = path.join(chartBasePath, 'Chart.yaml');
-    if(!fs.existsSync(pathToChartFile)){
+    if (!fs.existsSync(pathToChartFile)) {
         return 'No name found';
     }
 
@@ -174,5 +173,5 @@ function getValueFileNamesFromConfig(): Array<string> {
     for (const filename of customValueFileNames) {
         filenames.push(filename);
     }
-    return filenames;	
+    return filenames;
 }
