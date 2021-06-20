@@ -37,6 +37,8 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
             currentKey = this.updateCurrentKey(currentKey, allKeys);
             return this.getCompletionItemList(currentKey);
         }
+
+        return undefined;
     }
 
     /**

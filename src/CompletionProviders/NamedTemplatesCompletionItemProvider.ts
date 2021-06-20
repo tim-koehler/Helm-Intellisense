@@ -22,6 +22,8 @@ export class NamedTemplatesCompletionItemProvider implements vscode.CompletionIt
             const namedTemplates: string[] = utils.getAllNamedTemplatesFromFiles(document.fileName);
             return this.getCompletionItemList(namedTemplates);
         }
+
+        return undefined;
     }
 
     /**

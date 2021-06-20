@@ -39,6 +39,8 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
             currentKey = this.updateCurrentKey(currentKey, allKeys);
             return this.getCompletionItemList(currentKey);
         }
+
+        return undefined;
     }
 
     /**
