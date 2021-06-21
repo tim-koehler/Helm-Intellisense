@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as utils from "../utils";
+import * as utils from '../utils';
 
 export class CapabilitiesCompletionItemProvider implements vscode.CompletionItemProvider {
 
@@ -14,8 +14,8 @@ export class CapabilitiesCompletionItemProvider implements vscode.CompletionItem
             return undefined;
         }
 
-        let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
-        if(currentString.length === 0) {
+        const currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
+        if (currentString.length === 0) {
             return [new vscode.CompletionItem('.Capabilities', vscode.CompletionItemKind.Method)];
         }
 
@@ -25,27 +25,27 @@ export class CapabilitiesCompletionItemProvider implements vscode.CompletionItem
 
         if (/^\.Capabilities\.\w*$/.test(currentString)) {
             return [
-                new vscode.CompletionItem("APIVersions", vscode.CompletionItemKind.Method),
-                new vscode.CompletionItem("KubeVersion", vscode.CompletionItemKind.Method)
+                new vscode.CompletionItem('APIVersions', vscode.CompletionItemKind.Method),
+                new vscode.CompletionItem('KubeVersion', vscode.CompletionItemKind.Method)
             ];
         }
 
         if (/^\.Capabilities\.APIVersions\.\w*$/.test(currentString)) {
-            let has = new vscode.CompletionItem("Has", vscode.CompletionItemKind.Field);
-            has.documentation = "Capabilities.APIVersions.Has $version indicates whether a version (e.g., batch/v1) or resource (e.g., apps/v1/Deployment) is available on the cluster.";
+            const has = new vscode.CompletionItem('Has', vscode.CompletionItemKind.Field);
+            has.documentation = 'Capabilities.APIVersions.Has $version indicates whether a version (e.g., batch/v1) or resource (e.g., apps/v1/Deployment) is available on the cluster.';
             return [has];
         }
 
         if (/^\.Capabilities\.KubeVersion\.\w*$/.test(currentString)) {
-            let version = new vscode.CompletionItem("Version", vscode.CompletionItemKind.Field);
-            version.documentation = "Capabilities.KubeVersion and Capabilities.KubeVersion.Version is the Kubernetes version.";
-            
-            let major = new vscode.CompletionItem("Major", vscode.CompletionItemKind.Field);
-            major.documentation = "Capabilities.KubeVersion.Major is the Kubernetes major version.";
-            
-            let minor = new vscode.CompletionItem("Minor", vscode.CompletionItemKind.Field);
-            minor.documentation = "Capabilities.KubeVersion.Minor is the Kubernetes minor version.";
-            
+            const version = new vscode.CompletionItem('Version', vscode.CompletionItemKind.Field);
+            version.documentation = 'Capabilities.KubeVersion and Capabilities.KubeVersion.Version is the Kubernetes version.';
+
+            const major = new vscode.CompletionItem('Major', vscode.CompletionItemKind.Field);
+            major.documentation = 'Capabilities.KubeVersion.Major is the Kubernetes major version.';
+
+            const minor = new vscode.CompletionItem('Minor', vscode.CompletionItemKind.Field);
+            minor.documentation = 'Capabilities.KubeVersion.Minor is the Kubernetes minor version.';
+
             return [version, major, minor];
         }
 

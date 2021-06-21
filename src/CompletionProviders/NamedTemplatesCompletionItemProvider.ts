@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as utils from "../utils";
+import * as utils from '../utils';
 
 export class NamedTemplatesCompletionItemProvider implements vscode.CompletionItemProvider {
     /**
@@ -22,15 +22,17 @@ export class NamedTemplatesCompletionItemProvider implements vscode.CompletionIt
             const namedTemplates: string[] = utils.getAllNamedTemplatesFromFiles(document.fileName);
             return this.getCompletionItemList(namedTemplates);
         }
+
+        return undefined;
     }
 
     /**
      * Generates a list of possible completions for the current template prefix.
      */
     private getCompletionItemList(namedTemplates: string[]): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
-        let listOfCompletionItems = [];
+        const listOfCompletionItems = [];
         for (const namedTemplate of namedTemplates) {
-            let item = new vscode.CompletionItem(namedTemplate, vscode.CompletionItemKind.Field);
+            const item = new vscode.CompletionItem(namedTemplate, vscode.CompletionItemKind.Field);
             item.insertText = namedTemplate;
             listOfCompletionItems.push(item);
         }

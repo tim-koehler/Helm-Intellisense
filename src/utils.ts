@@ -14,7 +14,7 @@ export function isInsideBrackets(currentLine: string, position: number): boolean
 /**
  * Checks whether string before cursor contains'{{' or not
  */
-function isBracketsInPrefix(prefix: string) {
+function isBracketsInPrefix(prefix: string): boolean {
     let prevChar = '';
     for (let index = prefix.length - 1; index >= 0; index--) {
         if (prefix.charAt(index) === '}') {
@@ -47,26 +47,26 @@ export function getValuesFromFile(fileName: string): any {
         return undefined;
     }
 
-    let allYamlContent: string = "";
+    let allYamlContent = '';
     for (const filename of filenames) {
         const pathToValuesFile = path.join(chartBasePath, filename);
-        if(!fs.existsSync(pathToValuesFile)) { 
+        if (!fs.existsSync(pathToValuesFile)) {
             continue;
         }
 
         try {
-            allYamlContent += fs.readFileSync(pathToValuesFile, 'utf8') + "\n";
+            allYamlContent += fs.readFileSync(pathToValuesFile, 'utf8') + '\n';
         } catch (e) {
             vscode.window.showErrorMessage('Error in \'' + filename + '\':\n' + e.message);
         }
     }
-    if (allYamlContent === "") {
+    if (allYamlContent === '') {
         vscode.window.showErrorMessage('Could not locate any values.yaml. Is your values file named differently? Configure correct file name in your settings using \'helm-intellisense.customValueFileNames\'');
         return undefined;
     }
-    allYamlContent = allYamlContent.replace(/\-\-\-/gi, '').replace(/\.\.\./gi, '');
+    allYamlContent = allYamlContent.replace(/---/gi, '').replace(/\.\.\./gi, '');
     const loadedYaml = yaml.safeLoad(allYamlContent, {json: true});
-    if (typeof loadedYaml === undefined || loadedYaml === "") {
+    if (typeof loadedYaml === undefined || loadedYaml === '') {
         vscode.window.showErrorMessage('Something went wrong parsing value files');
         return undefined;
     }
@@ -77,16 +77,16 @@ export function getValuesFromFile(fileName: string): any {
  * Retrieves the namend-teamplate names from all `*.tpl`.
  */
 export function getAllNamedTemplatesFromFiles(filePath: string): string[] {
-    const startPath = getChartBasePath(filePath) + path.sep + "templates";
+    const startPath = getChartBasePath(filePath) + path.sep + 'templates';
     const tplFiles: string[] = getAllTplFilesFromDirectoryRecursively(startPath);
 
-    let content: string = "";
+    let content = '';
     for (const tplFile of tplFiles) {
-        if(!fs.existsSync(tplFile)) {
+        if (!fs.existsSync(tplFile)) {
             continue;
         }
         try {
-            content += fs.readFileSync(tplFile, 'utf8') + "\n\n";
+            content += fs.readFileSync(tplFile, 'utf8') + '\n\n';
         } catch (e) {
             vscode.window.showErrorMessage('Error in \'' + tplFile + '\':\n' + e.message);
         }
@@ -95,18 +95,17 @@ export function getAllNamedTemplatesFromFiles(filePath: string): string[] {
 }
 
 function getAllTplFilesFromDirectoryRecursively(startPath: string): string[] {
-    if (!fs.existsSync(startPath)){
+    if (!fs.existsSync(startPath)) {
         return [];
     }
-    
+
     let tplFiles: string[] = [];
     const files: string[] = fs.readdirSync(startPath);
     for (const file of files) {
         const filename = path.join(startPath, file);
         if (fs.lstatSync(filename).isDirectory()) {
-            tplFiles = tplFiles.concat(getAllTplFilesFromDirectoryRecursively(filename)); 
-        }
-        else if (filename.indexOf('.tpl') >= 0) {
+            tplFiles = tplFiles.concat(getAllTplFilesFromDirectoryRecursively(filename));
+        } else if (filename.indexOf('.tpl') >= 0) {
             tplFiles.push(filename);
         }
     }
@@ -136,28 +135,28 @@ export function getChartBasePath(fileName: string): string | undefined {
     const dirs = ['templates', 'charts', 'crds'];
     for (const dir of dirs) {
         const lastIndexOf = possiblePathToChartDirectory.lastIndexOf(path.sep + dir);
-        if(lastIndexOf !== -1) {
+        if (lastIndexOf !== -1) {
             possiblePathToChartDirectory = possiblePathToChartDirectory.substr(0, lastIndexOf);
             break;
-        }    
+        }
     }
 
     const currentFilesInDir = fs.readdirSync(possiblePathToChartDirectory);
-    if (!currentFilesInDir.includes("Chart.yaml")) {
+    if (!currentFilesInDir.includes('Chart.yaml')) {
         return undefined;
-    } 
-    
+    }
+
     return possiblePathToChartDirectory;
 }
 
 export function getNameOfChart(filePath: string): string {
     const chartBasePath = getChartBasePath(filePath);
-    if(chartBasePath === undefined) {
+    if (chartBasePath === undefined) {
         return 'No name found';
     }
 
     const pathToChartFile = path.join(chartBasePath, 'Chart.yaml');
-    if(!fs.existsSync(pathToChartFile)){
+    if (!fs.existsSync(pathToChartFile)) {
         return 'No name found';
     }
 
@@ -168,11 +167,11 @@ export function getNameOfChart(filePath: string): string {
 /**
  * Pulls list of possible values filenames from config.
  */
-function getValueFileNamesFromConfig(): Array<string> {
+function getValueFileNamesFromConfig(): string[] {
     const customValueFileNames: any = vscode.workspace.getConfiguration('helm-intellisense').get('customValueFileNames');
-    let filenames = [];
+    const filenames = [];
     for (const filename of customValueFileNames) {
         filenames.push(filename);
     }
-    return filenames;	
+    return filenames;
 }

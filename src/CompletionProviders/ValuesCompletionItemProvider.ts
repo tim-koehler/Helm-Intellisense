@@ -1,7 +1,5 @@
 import * as vscode from 'vscode';
-import * as yaml from 'js-yaml';
-import * as fs from 'fs';
-import * as utils from "../utils"; 
+import * as utils from '../utils';
 
 export class ValuesCompletionItemProvider implements vscode.CompletionItemProvider {
     /**
@@ -15,9 +13,9 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
             return undefined;
         }
 
-        let currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
+        const currentString = utils.getWordAt(currentLine, position.character - 1).replace('$.', '.').trim();
 
-        if(currentString.length === 0) {
+        if (currentString.length === 0) {
             return [new vscode.CompletionItem('.Values', vscode.CompletionItemKind.Method)];
         }
 
@@ -28,25 +26,27 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
         if (currentString.startsWith('.Values.')) {
             const doc = utils.getValuesFromFile(document.fileName);
 
-            if (currentString === '.Values.'){
+            if (currentString === '.Values.') {
                 return this.getCompletionItemList(doc);
             }
 
             let currentKey = doc;
             const allKeys = currentString.replace('.Values.', '').split('.');
             allKeys.pop();
-            
+
             currentKey = this.updateCurrentKey(currentKey, allKeys);
             return this.getCompletionItemList(currentKey);
         }
+
+        return undefined;
     }
 
     /**
      * Updates the currently active key.
      */
     private updateCurrentKey(currentKey: any, allKeys: any): any {
-        for (let key in allKeys) {
-            if (Array.isArray(currentKey[allKeys[key]])){
+        for (const key in allKeys) {
+            if (Array.isArray(currentKey[allKeys[key]])) {
                 return undefined;
             }
             currentKey = currentKey[allKeys[key]];
@@ -59,7 +59,7 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
      */
     private getCompletionItemList(currentKey: any): vscode.CompletionItem[] {
         const keys = [];
-        for (let key in currentKey) {
+        for (const key in currentKey) {
             switch (typeof currentKey[key]) {
                 case 'object':
                     keys.push(new vscode.CompletionItem(key, vscode.CompletionItemKind.Method));
@@ -67,13 +67,13 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
                 case 'string':
                 case 'boolean':
                 case 'number':
-                    let valueItem = new vscode.CompletionItem(key, vscode.CompletionItemKind.Field);	
-                    valueItem.documentation = "Value: " + currentKey[key];
+                    const valueItem = new vscode.CompletionItem(key, vscode.CompletionItemKind.Field);
+                    valueItem.documentation = 'Value: ' + currentKey[key];
                     keys.push(valueItem);
                     break;
                 default:
-                    let unknownItem = new vscode.CompletionItem(key, vscode.CompletionItemKind.Issue);
-                    unknownItem.documentation = "Helm-Intellisense could not find type";
+                    const unknownItem = new vscode.CompletionItem(key, vscode.CompletionItemKind.Issue);
+                    unknownItem.documentation = 'Helm-Intellisense could not find type';
                     keys.push(unknownItem);
                     break;
             }

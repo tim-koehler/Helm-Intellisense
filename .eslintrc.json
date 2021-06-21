@@ -8,12 +8,43 @@
 	"plugins": [
 		"@typescript-eslint"
 	],
+	"env": {
+		"browser": true
+	},
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"ignorePatterns": [
+		"**/test/**/*.ts"
+	],
 	"rules": {
-		"@typescript-eslint/class-name-casing": "warn",
+		"@typescript-eslint/array-type": ["error", { "default": "array" }],
+		"@typescript-eslint/class-name-casing": "error",
+		"@typescript-eslint/comma-spacing": "error",
+		"@typescript-eslint/explicit-function-return-type": "error",
+		"@typescript-eslint/func-call-spacing": "error",
+		"@typescript-eslint/indent": ["error", 4, { "SwitchCase": 1 }],
+		"@typescript-eslint/keyword-spacing": "error",
+		"@typescript-eslint/naming-convention": "error",
+		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-unused-vars": ["error", { "args": "none" }],
+		"@typescript-eslint/no-use-before-define": "off",
+		"@typescript-eslint/prefer-for-of": "warn",
+		"@typescript-eslint/quotes": ["error", "single"],
 		"@typescript-eslint/semi": "warn",
+		"@typescript-eslint/space-before-function-paren": ["error", {"anonymous": "always", "named": "never", "asyncArrow": "always"}],
+		"@typescript-eslint/type-annotation-spacing": "error",
+		"comma-spacing": "off",
 		"curly": "warn",
 		"eqeqeq": "warn",
+		"func-call-spacing": "off",
+		"key-spacing": "off",
+		"no-case-declarations": "off",
 		"no-throw-literal": "warn",
-		"semi": "off"
+		"quotes": "off",
+		"semi": "off",
+		"space-before-function-paren": "off",
+        "indent": "off"
 	}
 }
