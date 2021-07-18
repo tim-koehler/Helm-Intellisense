@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
 import * as utils from '../utils';
 
+type Variable = { key: string; value: string };
+
 const ZERO_POSITION = new vscode.Position(0, 0);
 const VARIABLE_DECLARATION_PATTERN = /{{-?\s*\$(?<key>[a-zA-Z0-9_]+?)\s*:=\s*(?<value>.+?)\s*-?}}/g;
 
@@ -11,16 +13,21 @@ export class VariableCompletionItemProvider implements vscode.CompletionItemProv
             return undefined;
         }
 
-        const definedVariables = getDefinedVariables(document, position);
-        return Object.keys(definedVariables)
-            .map(key => new vscode.CompletionItem(key.trim(), vscode.CompletionItemKind.Variable));
+        return getDefinedVariables(document, position)
+            .map(toCompletionItem);
     }
+}
+
+function toCompletionItem(variable: Variable): vscode.CompletionItem {
+    const completionItem = new vscode.CompletionItem(variable.key, vscode.CompletionItemKind.Variable);
+    completionItem.detail = variable.value;
+    return completionItem;
 }
 
 /**
  * Returns a record of all variables defined above the given position.
  */
-function getDefinedVariables(document: vscode.TextDocument, position: vscode.Position): Record<string, string> {
+function getDefinedVariables(document: vscode.TextDocument, position: vscode.Position): Variable[] {
     const previousText = document.getText(new vscode.Range(ZERO_POSITION, position));
     return getVariables(previousText);
 }
@@ -31,15 +38,15 @@ function getDefinedVariables(document: vscode.TextDocument, position: vscode.Pos
  *
  * @param str The string in which to search for variable declarations.
  */
-function getVariables(str: string): Record<string, string> {
+function getVariables(str: string): Variable[] {
     let result;
-    const templates: Record<string, string> = {};
+    const templates: Variable[] = [];
     while ((result = VARIABLE_DECLARATION_PATTERN.exec(str)) !== null) {
         if (result.groups === undefined) {
             console.warn('getDefinedVariables: capture groups are unexpectedly undefined.');
             continue;
         }
-        templates[result.groups.key] = result.groups.value;
+        templates.push({key: result.groups.key, value: result.groups.value.trim()});
     }
     return templates;
 }
