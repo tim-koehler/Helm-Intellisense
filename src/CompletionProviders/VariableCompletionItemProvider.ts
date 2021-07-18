@@ -13,40 +13,41 @@ export class VariableCompletionItemProvider implements vscode.CompletionItemProv
             return undefined;
         }
 
-        return getDefinedVariables(document, position)
-            .map(toCompletionItem);
+        return this.getDefinedVariables(document, position)
+            .map(this.toCompletionItem);
     }
-}
 
-function toCompletionItem(variable: Variable): vscode.CompletionItem {
-    const completionItem = new vscode.CompletionItem(variable.key, vscode.CompletionItemKind.Variable);
-    completionItem.detail = variable.value;
-    return completionItem;
-}
+    private toCompletionItem(variable: Variable): vscode.CompletionItem {
+        const completionItem = new vscode.CompletionItem(variable.key, vscode.CompletionItemKind.Variable);
+        completionItem.detail = variable.value;
+        return completionItem;
+    }
 
-/**
- * Returns a record of all variables defined above the given position.
- */
-function getDefinedVariables(document: vscode.TextDocument, position: vscode.Position): Variable[] {
-    const previousText = document.getText(new vscode.Range(ZERO_POSITION, position));
-    return getVariables(previousText);
-}
+    /**
+     * Returns a record of all variables defined above the given position.
+     */
+    private getDefinedVariables(document: vscode.TextDocument, position: vscode.Position): Variable[] {
+        const previousText = document.getText(new vscode.Range(ZERO_POSITION, position));
+        return this.getVariables(previousText);
+    }
 
-/**
- * Extracts all variable declarations from the given string. Declared variables
- * are returned as a Record, mapping variable names to variable values.
- *
- * @param str The string in which to search for variable declarations.
- */
-function getVariables(str: string): Variable[] {
-    let result;
-    const templates: Variable[] = [];
-    while ((result = VARIABLE_DECLARATION_PATTERN.exec(str)) !== null) {
-        if (result.groups === undefined) {
-            console.warn('getDefinedVariables: capture groups are unexpectedly undefined.');
-            continue;
+    /**
+     * Extracts all variable declarations from the given string. Declared variables
+     * are returned as a Record, mapping variable names to variable values.
+     *
+     * @param str The string in which to search for variable declarations.
+     */
+    private getVariables(str: string): Variable[] {
+        let result;
+        const templates: Variable[] = [];
+        while ((result = VARIABLE_DECLARATION_PATTERN.exec(str)) !== null) {
+            if (result.groups === undefined) {
+                console.warn('getDefinedVariables: capture groups are unexpectedly undefined.');
+                continue;
+            }
+            templates.push({key: result.groups.key, value: result.groups.value.trim()});
         }
-        templates.push({key: result.groups.key, value: result.groups.value.trim()});
+        return templates;
     }
-    return templates;
 }
+
