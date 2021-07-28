@@ -1,5 +1,8 @@
 # Change Log
 
+## [0.11.0] - 2021-07-29
+### Added
+- VariableCompletionItemProvider
 ## [0.10.0] - 2021-06-06
 ### Added
 - Value file overriding (hierarchy) (Issue #35)
