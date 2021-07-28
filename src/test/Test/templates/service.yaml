@@ -4,8 +4,9 @@ metadata:
   name: {{ include "Test.fullname" . }}
   labels:
 {{ include "Test.labels" . | indent 4 }}
+{{ $variable := {{ .Values.service.type }} }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ $variable }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: http

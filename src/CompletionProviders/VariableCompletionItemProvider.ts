@@ -7,7 +7,7 @@ const ZERO_POSITION = new vscode.Position(0, 0);
 const VARIABLE_DECLARATION_PATTERN = /{{-?\s*\$(?<key>[a-zA-Z0-9_]+?)\s*:=\s*(?<value>.+?)\s*-?}}/g;
 
 export class VariableCompletionItemProvider implements vscode.CompletionItemProvider {
-    provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[]> {
+    provideCompletionItems(document: vscode.TextDocument, position: vscode.Position): vscode.ProviderResult<vscode.CompletionItem[]> {
         const currentLine = document.lineAt(position).text;
         if (!utils.isInsideBrackets(currentLine, position.character)) {
             return undefined;
