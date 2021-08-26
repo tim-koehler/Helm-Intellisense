@@ -68,12 +68,12 @@ export class ValuesCompletionItemProvider implements vscode.CompletionItemProvid
                 case 'boolean':
                 case 'number':
                     const valueItem = new vscode.CompletionItem(key, vscode.CompletionItemKind.Field);
-                    valueItem.documentation = 'Value: ' + currentKey[key];
+                    valueItem.detail = currentKey[key].toString();
                     keys.push(valueItem);
                     break;
                 default:
                     const unknownItem = new vscode.CompletionItem(key, vscode.CompletionItemKind.Issue);
-                    unknownItem.documentation = 'Helm-Intellisense could not find type';
+                    unknownItem.detail = 'Helm-Intellisense could not find type';
                     keys.push(unknownItem);
                     break;
             }

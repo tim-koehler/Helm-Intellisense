@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import * as path from 'path';
+import mergeYaml = require('merge-yaml');
 
 /**
  * Checks whether the position in the line is in between curly brackets.
@@ -46,31 +47,13 @@ export function getValuesFromFile(fileName: string): any {
     if (chartBasePath === undefined) {
         return undefined;
     }
-
-    let allYamlContent = '';
+    
+    const completeFilePaths = [];
     for (const filename of filenames) {
-        const pathToValuesFile = path.join(chartBasePath, filename);
-        if (!fs.existsSync(pathToValuesFile)) {
-            continue;
-        }
+        completeFilePaths.push(path.join(chartBasePath, filename));
+    }
 
-        try {
-            allYamlContent += fs.readFileSync(pathToValuesFile, 'utf8') + '\n';
-        } catch (e) {
-            vscode.window.showErrorMessage('Error in \'' + filename + '\':\n' + e.message);
-        }
-    }
-    if (allYamlContent === '') {
-        vscode.window.showErrorMessage('Could not locate any values.yaml. Is your values file named differently? Configure correct file name in your settings using \'helm-intellisense.customValueFileNames\'');
-        return undefined;
-    }
-    allYamlContent = allYamlContent.replace(/---/gi, '').replace(/\.\.\./gi, '');
-    const loadedYaml = yaml.safeLoad(allYamlContent, {json: true});
-    if (typeof loadedYaml === undefined || loadedYaml === '') {
-        vscode.window.showErrorMessage('Something went wrong parsing value files');
-        return undefined;
-    }
-    return loadedYaml;
+    return mergeYaml(completeFilePaths);
 }
 
 /**

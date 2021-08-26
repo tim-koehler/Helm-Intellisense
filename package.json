@@ -70,7 +70,8 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"dependencies": {
-		"js-yaml": "^3.13.1"
+		"js-yaml": "^3.13.1",
+		"merge-yaml": "^1.1.0"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.3",

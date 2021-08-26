@@ -36,22 +36,22 @@ export class ReleaseCompletionItemProvider implements vscode.CompletionItemProvi
      */
     private getCompletionItemList(): vscode.CompletionItem[] {
         const name = new vscode.CompletionItem('Name', vscode.CompletionItemKind.Field);
-        name.documentation = 'The release name';
+        name.detail = 'The release name';
 
         const namespace = new vscode.CompletionItem('Namespace', vscode.CompletionItemKind.Field);
-        namespace.documentation = 'The namespace to be released into (if the manifest doesn’t override)';
+        namespace.detail = 'The namespace to be released into (if the manifest doesn’t override)';
 
         const isUpgrade = new vscode.CompletionItem('IsUpgrade', vscode.CompletionItemKind.Field);
-        isUpgrade.documentation = 'This is set to true if the current operation is an upgrade or rollback.';
+        isUpgrade.detail = 'This is set to true if the current operation is an upgrade or rollback.';
 
         const isInstall = new vscode.CompletionItem('IsInstall', vscode.CompletionItemKind.Field);
-        isInstall.documentation = 'This is set to true if the current operation is an install.';
+        isInstall.detail = 'This is set to true if the current operation is an install.';
 
         const revision = new vscode.CompletionItem('Revision', vscode.CompletionItemKind.Field);
-        revision.documentation = 'The revision number for this release. On install, this is 1, and it is incremented with each upgrade and rollback.';
+        revision.detail = 'The revision number for this release. On install, this is 1, and it is incremented with each upgrade and rollback.';
 
         const service = new vscode.CompletionItem('Service', vscode.CompletionItemKind.Field);
-        service.documentation = 'The service that is rendering the present template. On Helm, this is always Helm.';
+        service.detail = 'The service that is rendering the present template. On Helm, this is always Helm.';
 
         return [
             name,

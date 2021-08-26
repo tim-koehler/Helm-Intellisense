@@ -95,13 +95,13 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
                 case 'boolean':
                 case 'number':
                     const valueItem = new vscode.CompletionItem(key.charAt(0).toUpperCase() + key.slice(1), vscode.CompletionItemKind.Field);
-                    valueItem.documentation = 'Value: ' + currentKey[key];
+                    valueItem.detail = currentKey[key].toString();
                     keys.push(valueItem);
                     break;
                 default:
                     console.log('Unknown type: ' + typeof currentKey[key]);
                     const unknownItem = new vscode.CompletionItem(key.charAt(0).toUpperCase() + key.slice(1), vscode.CompletionItemKind.Issue);
-                    unknownItem.documentation = 'Helm-Intellisense could not find type';
+                    unknownItem.detail = 'Helm-Intellisense could not find type';
                     keys.push(unknownItem);
                     break;
             }

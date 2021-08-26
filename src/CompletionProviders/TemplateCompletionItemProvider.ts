@@ -36,10 +36,10 @@ export class TemplateCompletionItemProvider implements vscode.CompletionItemProv
      */
     private getCompletionItemList(): vscode.CompletionItem[] {
         const name = new vscode.CompletionItem('Name', vscode.CompletionItemKind.Field);
-        name.documentation = 'A namespaced file path to the current template (e.g. mychart/templates/mytemplate.yaml)';
+        name.detail = 'A namespaced file path to the current template (e.g. mychart/templates/mytemplate.yaml)';
 
         const basePath = new vscode.CompletionItem('BasePath', vscode.CompletionItemKind.Field);
-        basePath.documentation = 'BasePath: The namespaced path to the templates directory of the current chart (e.g. mychart/templates).';
+        basePath.detail = 'BasePath: The namespaced path to the templates directory of the current chart (e.g. mychart/templates).';
 
         return [
             name,

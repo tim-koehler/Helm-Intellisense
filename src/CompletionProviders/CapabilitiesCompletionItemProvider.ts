@@ -32,19 +32,19 @@ export class CapabilitiesCompletionItemProvider implements vscode.CompletionItem
 
         if (/^\.Capabilities\.APIVersions\.\w*$/.test(currentString)) {
             const has = new vscode.CompletionItem('Has', vscode.CompletionItemKind.Field);
-            has.documentation = 'Capabilities.APIVersions.Has $version indicates whether a version (e.g., batch/v1) or resource (e.g., apps/v1/Deployment) is available on the cluster.';
+            has.detail = 'Capabilities.APIVersions.Has $version indicates whether a version (e.g., batch/v1) or resource (e.g., apps/v1/Deployment) is available on the cluster.';
             return [has];
         }
 
         if (/^\.Capabilities\.KubeVersion\.\w*$/.test(currentString)) {
             const version = new vscode.CompletionItem('Version', vscode.CompletionItemKind.Field);
-            version.documentation = 'Capabilities.KubeVersion and Capabilities.KubeVersion.Version is the Kubernetes version.';
+            version.detail = 'Capabilities.KubeVersion and Capabilities.KubeVersion.Version is the Kubernetes version.';
 
             const major = new vscode.CompletionItem('Major', vscode.CompletionItemKind.Field);
-            major.documentation = 'Capabilities.KubeVersion.Major is the Kubernetes major version.';
+            major.detail = 'Capabilities.KubeVersion.Major is the Kubernetes major version.';
 
             const minor = new vscode.CompletionItem('Minor', vscode.CompletionItemKind.Field);
-            minor.documentation = 'Capabilities.KubeVersion.Minor is the Kubernetes minor version.';
+            minor.detail = 'Capabilities.KubeVersion.Minor is the Kubernetes minor version.';
 
             return [version, major, minor];
         }
