@@ -4,7 +4,7 @@ import * as path from 'path';
 
 const TEST_CHART_PATH = path.join(path.resolve(), 'src', 'test', 'Test');
 const DUMMY_PATH = path.join(path.resolve(), 'src', 'test', 'Dummy');
-const SHOULD_VALUES = `{"replicaCount":1,"foo":{"bar":"baz","baz":["foo","bar","baz"]},"image":{"repository":"nginx","tag":"stable","pullPolicy":"IfNotPresent"},"imagePullSecrets":[],"nameOverride":"","fullnameOverride":"","serviceAccount":{"create":true,"name":null},"podSecurityContext":{},"securityContext":{},"service":{"type":"ClusterIP","port":80},"ingress":{"enabled":false,"annotations":{},"hosts":[{"host":"chart-example.local","paths":[]}],"tls":[]},"resources":{},"nodeSelector":{},"tolerations":[],"affinity":{}}`;
+const SHOULD_VALUES = `{"replicaCount":1,"foo":{"bar":"baz","baz":["foo","bar","baz"]},"image":{"repository":"nginx","tag":"stable","pullPolicy":"Always"},"imagePullSecrets":[],"nameOverride":"","fullnameOverride":"","serviceAccount":{"create":true,"name":null},"podSecurityContext":{},"securityContext":{},"service":{"type":"ClusterIP","port":80},"ingress":{"enabled":false,"annotations":{},"hosts":[{"host":"chart-example.local","paths":[]}],"tls":[]},"resources":{},"nodeSelector":{},"tolerations":[],"affinity":{}}`;
 
 suite('Test Utils', () => {
     test('isInsideBrackets() outside brackets', () => {

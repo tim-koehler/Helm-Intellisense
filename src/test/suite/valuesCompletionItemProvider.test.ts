@@ -5,7 +5,7 @@ import { ValuesCompletionItemProvider } from "../../CompletionProviders/ValuesCo
 
 const TEST_CHART_PATH = path.join(path.resolve(), 'src', 'test', 'Test');
 const SHOULD_VALUES_ALL = `[{"label":"replicaCount","kind":"Field","detail":"1"},{"label":"foo","kind":"Method"},{"label":"image","kind":"Method"},{"label":"imagePullSecrets","kind":"Method"},{"label":"nameOverride","kind":"Field","detail":""},{"label":"fullnameOverride","kind":"Field","detail":""},{"label":"serviceAccount","kind":"Method"},{"label":"podSecurityContext","kind":"Method"},{"label":"securityContext","kind":"Method"},{"label":"service","kind":"Method"},{"label":"ingress","kind":"Method"},{"label":"resources","kind":"Method"},{"label":"nodeSelector","kind":"Method"},{"label":"tolerations","kind":"Method"},{"label":"affinity","kind":"Method"}]`;
-const SHOULD_VALUES_IMAGE = `[{"label":"repository","kind":"Field","detail":"nginx"},{"label":"tag","kind":"Field","detail":"stable"},{"label":"pullPolicy","kind":"Field","detail":"IfNotPresent"}]`;
+const SHOULD_VALUES_IMAGE = `[{"label":"repository","kind":"Field","detail":"nginx"},{"label":"tag","kind":"Field","detail":"stable"},{"label":"pullPolicy","kind":"Field","detail":"Always"}]`;
 suite('Test ValuesCompletionItemProvider', () => {
     test('provideCompletionItems() with all values', async () => {
         const document = await vscode.workspace.openTextDocument(path.join(TEST_CHART_PATH, 'templates', 'deployment.yaml'));
