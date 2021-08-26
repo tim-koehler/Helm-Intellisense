@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.12.0] - 2021-08-26
+### Changed
+- Overwriting of values files will now be merged instead of simply overwritten
+
 ## [0.11.0] - 2021-07-29
 ### Added
 - VariableCompletionItemProvider

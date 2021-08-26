@@ -45,4 +45,4 @@ When mulitple value files are defined they are parsed from the bottom up:
     "values.yaml"
 ]
 ```
-In this case values will be overwritten by dev and dev by prod. This also means that the linter will only throw an error if a certain key is not found in any of the specified files.
+In this case values will be overwritten/merged by dev and dev by prod. This also means that the linter will only throw an error if a certain key is not found in any of the specified files.
