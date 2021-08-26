@@ -1,8 +1,7 @@
 import * as vscode from 'vscode';
-import * as yaml from 'js-yaml';
+import * as yaml from './yaml';
 import * as fs from 'fs';
 import * as path from 'path';
-import mergeYaml = require('merge-yaml');
 
 /**
  * Checks whether the position in the line is in between curly brackets.
@@ -47,13 +46,13 @@ export function getValuesFromFile(fileName: string): any {
     if (chartBasePath === undefined) {
         return undefined;
     }
-    
+
     const completeFilePaths = [];
     for (const filename of filenames) {
         completeFilePaths.push(path.join(chartBasePath, filename));
     }
 
-    return mergeYaml(completeFilePaths);
+    return yaml.loadMerge(completeFilePaths);
 }
 
 /**
@@ -143,7 +142,7 @@ export function getNameOfChart(filePath: string): string {
         return 'No name found';
     }
 
-    const chartYaml = yaml.safeLoad(fs.readFileSync(pathToChartFile, 'utf8'));
+    const chartYaml = yaml.load(pathToChartFile);
     return String((chartYaml as any).name);
 }
 

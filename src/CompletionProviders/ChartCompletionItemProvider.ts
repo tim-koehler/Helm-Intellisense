@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as yaml from 'js-yaml';
+import * as yaml from '../yaml';
 import * as fs from 'fs';
 import * as utils from '../utils';
 import { sep as pathSeperator } from 'path';
@@ -61,7 +61,7 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
 
         const pathToChartFile = chartBasePath + pathSeperator + 'Chart.yaml';
         if (fs.existsSync(pathToChartFile)) {
-            return yaml.safeLoad(fs.readFileSync(pathToChartFile, 'utf8'));
+            return yaml.load(pathToChartFile);
         }
 
         vscode.window.showErrorMessage('Could not locate the Chart.yaml.');
