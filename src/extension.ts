@@ -35,11 +35,12 @@ export function activate(context: vscode.ExtensionContext): void {
         vscode.languages.registerCompletionItemProvider(lang, new VariableCompletionItemProvider(), '$');
     }
 
-    const outputChannel = vscode.window.createOutputChannel('Helm-Intellisense');
-    const lintCommand = vscode.commands.registerCommand(LINT_COMMAND_STRING, () => LintCommand(outputChannel));
+    const collection = vscode.languages.createDiagnosticCollection("Helm-Intellisense")
+    
+    const lintCommand = vscode.commands.registerCommand(LINT_COMMAND_STRING, () => LintCommand(collection));
     context.subscriptions.push(lintCommand);
 
-    const lintChartCommand = vscode.commands.registerCommand(LINT_CHART_COMMAND_STRING, () => LintChartCommand(outputChannel));
+    const lintChartCommand = vscode.commands.registerCommand(LINT_CHART_COMMAND_STRING, () => LintChartCommand(collection));
     context.subscriptions.push(lintChartCommand);
 
     vscode.workspace.onDidSaveTextDocument(() => {
