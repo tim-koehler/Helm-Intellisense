@@ -2,7 +2,7 @@
 	"name": "helm-intellisense",
 	"displayName": "Helm Intellisense",
 	"description": "This extension provides intellisense for helm templates",
-	"version": "0.12.0",
+	"version": "0.13.0",
 	"publisher": "Tim-Koehler",
 	"author": {
 		"name": "tim-koehler",
