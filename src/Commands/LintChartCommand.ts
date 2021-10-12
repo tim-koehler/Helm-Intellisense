@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import * as utils from '../utils';
 import * as fs from 'fs';
-import { getAllKeyPathsOfDocument, getInvalidKeyPaths, printToOutputChannel } from './LintCommand';
+import { LintCommand } from './LintCommand';
 import { sep } from 'path';
 
-export async function LintChartCommand(outputChannel: vscode.OutputChannel): Promise<void> {
+export async function LintChartCommand(collection: vscode.DiagnosticCollection): Promise<void> {
     const doc = vscode.window.activeTextEditor?.document;
     if (doc === undefined) {
         return;
@@ -16,17 +16,16 @@ export async function LintChartCommand(outputChannel: vscode.OutputChannel): Pro
     }
 
     const templates = walkDirectory(chartBasePath + sep + 'templates');
-    let listOfInvalidKeyPaths: string[] = [];
+    let hasErrors = false
     for (let index = 0; index < templates.length; index++) {
         await vscode.workspace.openTextDocument(templates[index]).then(template => {
-            const keys = getAllKeyPathsOfDocument(template);
-            const values = utils.getValuesFromFile(template.fileName);
-
-            listOfInvalidKeyPaths = listOfInvalidKeyPaths.concat(getInvalidKeyPaths(keys, values, template));
+            if (LintCommand(collection, template)) {
+                hasErrors = true
+            }
         });
     }
-    printToOutputChannel(listOfInvalidKeyPaths, outputChannel);
-    if (listOfInvalidKeyPaths.length !== 0) {
+
+    if (hasErrors) {
         return;
     }
     vscode.window.showInformationMessage(`No errors found in chart '${utils.getNameOfChart(doc.fileName)}' :)`);
