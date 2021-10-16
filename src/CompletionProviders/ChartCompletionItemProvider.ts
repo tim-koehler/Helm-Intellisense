@@ -3,6 +3,7 @@ import * as yaml from '../yaml';
 import * as fs from 'fs';
 import * as utils from '../utils';
 import { sep as pathSeperator } from 'path';
+import {Yaml} from "../yaml";
 
 export class ChartCompletionItemProvider implements vscode.CompletionItemProvider {
     /**
@@ -53,7 +54,7 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
     /**
      * Retrieves the values from the `values.yaml`.
      */
-    private getValuesFromChartFile(document: vscode.TextDocument): any {
+    private getValuesFromChartFile(document: vscode.TextDocument): Yaml | undefined {
         const chartBasePath = utils.getChartBasePath(document.fileName);
         if (chartBasePath === undefined) {
             return undefined;
