@@ -1,8 +1,6 @@
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
-
-// @ts-ignore
-import mergeYaml = require('merge-yaml');
+import * as lodash from 'lodash';
 
 export type Yaml = string | number | boolean | null | Yaml[] | { [key: string]: Yaml };
 
@@ -10,7 +8,11 @@ export type Yaml = string | number | boolean | null | Yaml[] | { [key: string]: 
  * Loads and returns the contents of the given file as YAML. The passed file
  * is assumed to be UTF-8 encoded.
  */
-export function load(filename: string): Yaml {
+export function load(filename: string): Yaml | undefined {
+    if (!fs.existsSync(filename)) {
+        console.error(`file ${filename} does not exist.`);
+        return undefined;
+    }
     const fileContents = fs.readFileSync(filename, {encoding: 'utf8'});
     return yaml.safeLoad(fileContents, {filename}) as Yaml;
 }
@@ -21,5 +23,12 @@ export function load(filename: string): Yaml {
  * higher index in the passed array override those with a lower index.
  */
 export function loadMerge(filenames: string[]): Yaml {
-    return mergeYaml(filenames) as Yaml;
+    let mergedValues = {};
+    for (const filename of filenames) {
+        const values = load(filename);
+        if (values !== undefined) {
+            mergedValues = lodash.merge(mergedValues, values);
+        }
+    }
+    return mergedValues;
 }

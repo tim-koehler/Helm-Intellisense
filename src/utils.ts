@@ -131,7 +131,7 @@ export function getChartBasePath(fileName: string): string | undefined {
     return possiblePathToChartDirectory;
 }
 
-export function getNameOfChart(filePath: string): string {
+export function getNameOfChart(filePath: string): string | undefined {
     const chartBasePath = getChartBasePath(filePath);
     if (chartBasePath === undefined) {
         return 'No name found';
@@ -143,6 +143,9 @@ export function getNameOfChart(filePath: string): string {
     }
 
     const chartYaml = yaml.load(pathToChartFile);
+    if (chartYaml === undefined) {
+        return undefined;
+    }
     return String((chartYaml as any).name);
 }
 
