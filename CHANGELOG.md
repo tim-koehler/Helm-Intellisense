@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.13.1] - 2021-10-17
+### Fixed
+- Issue #42
+
 ## [0.13.0] - 2021-10-12
 ### Changed
 - Moved linter output from Output tab to Problems tab and red highlighting of misspelled values
