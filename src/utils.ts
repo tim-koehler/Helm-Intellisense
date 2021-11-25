@@ -56,42 +56,48 @@ export function getValuesFromFile(fileName: string): any {
 }
 
 /**
- * Retrieves the namend-teamplate names from all `*.tpl`.
+ * Retrieves the named-templates names from all files.
  */
 export function getAllNamedTemplatesFromFiles(filePath: string): string[] {
     const startPath = getChartBasePath(filePath) + path.sep + 'templates';
-    const tplFiles: string[] = getAllTplFilesFromDirectoryRecursively(startPath);
+    const files: string[] = getAllFilesFromDirectoryRecursively(startPath);
 
     let content = '';
-    for (const tplFile of tplFiles) {
+    for (const tplFile of files) {
         if (!fs.existsSync(tplFile)) {
             continue;
         }
         try {
             content += fs.readFileSync(tplFile, 'utf8') + '\n\n';
         } catch (e) {
-            vscode.window.showErrorMessage('Error in \'' + tplFile + '\':\n' + e.message);
+            vscode.window.showErrorMessage(`Error in '${tplFile}': ${e.message}`);
         }
     }
     return getListOfNamedTemplates(content);
 }
 
-function getAllTplFilesFromDirectoryRecursively(startPath: string): string[] {
+/**
+ * Recursively gets all files from the given directory and all subdirectories.
+ * Returns an empty array, if the `startPath` does not exist.
+ *
+ * @param startPath The path at which to start.
+ */
+function getAllFilesFromDirectoryRecursively(startPath: string): string[] {
     if (!fs.existsSync(startPath)) {
         return [];
     }
 
-    let tplFiles: string[] = [];
-    const files: string[] = fs.readdirSync(startPath);
+    const out: string[] = [];
+    const files = fs.readdirSync(startPath, {withFileTypes: true});
     for (const file of files) {
-        const filename = path.join(startPath, file);
-        if (fs.lstatSync(filename).isDirectory()) {
-            tplFiles = tplFiles.concat(getAllTplFilesFromDirectoryRecursively(filename));
-        } else if (filename.indexOf('.tpl') >= 0) {
-            tplFiles.push(filename);
+        const filename = path.join(startPath, file.name);
+        if (file.isDirectory()) {
+            out.push(...getAllFilesFromDirectoryRecursively(filename));
+        } else {
+            out.push(filename);
         }
     }
-    return tplFiles;
+    return out;
 }
 
 /**
