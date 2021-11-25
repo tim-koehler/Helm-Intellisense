@@ -70,7 +70,7 @@ export function getAllNamedTemplatesFromFiles(filePath: string): string[] {
         try {
             content += fs.readFileSync(tplFile, 'utf8') + '\n\n';
         } catch (e) {
-            vscode.window.showErrorMessage(`Error in '${tplFile}': ${e.message}`);
+            vscode.window.showErrorMessage(`Error in '${tplFile}': ${(e as Error).message}`);
         }
     }
     return getListOfNamedTemplates(content);
