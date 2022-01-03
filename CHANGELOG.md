@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.13.3] - 2022-01-03
+### Change
+- Using `esbuild` to bundle package
+
 ## [0.13.2] - 2021-11-26
 ### Fixed
 - Issue #46
