@@ -57,6 +57,11 @@
 					"type": "boolean",
 					"default": true,
 					"description": "If set true the current file will be linted"
+				},
+				"helm-intellisense.excludeFromLinting": {
+					"type": "array",
+					"default": [],
+					"description": "List of files ignored by the linter"
 				}
 			}
 		}

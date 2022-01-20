@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.14.0] - 2022-01-20
+### Added
+- Added setting to exlude files from linting
+
 ## [0.13.3] - 2022-01-03
 ### Change
 - Using `esbuild` to bundle package

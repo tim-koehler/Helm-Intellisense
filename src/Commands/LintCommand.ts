@@ -18,10 +18,20 @@ export function LintCommand(collection: vscode.DiagnosticCollection, doc: vscode
         return false;
     }
 
+    const excludes = vscode.workspace.getConfiguration('helm-intellisense').get('excludeFromLinting')
+    if (Array.isArray(excludes)) {
+        for (const exclude of excludes) {
+            if (doc.fileName.endsWith(exclude)) {
+                clearErrors(doc, collection)
+                return false
+            }
+        }    
+    }
+
     if (utils.getChartBasePath(doc.fileName) === undefined) {
         return false;
     }
-
+    
     const keyElements = getAllKeyPathElementsOfDocument(doc);
     const values = utils.getValuesFromFile(doc.fileName);
     const errorKeyPathElements = getInvalidKeyPaths(keyElements, values, doc);
@@ -31,7 +41,7 @@ export function LintCommand(collection: vscode.DiagnosticCollection, doc: vscode
     const errorTplElements = getInvalidTpls(usedTplElements, definedTpls);
 
     const allErrorElementsCombined = errorKeyPathElements.concat(errorTplElements)
-    printErrorsToProblemsTab(allErrorElementsCombined, doc, collection);
+    markErrors(allErrorElementsCombined, doc, collection);
     return allErrorElementsCombined.length > 0
 }
 
@@ -127,7 +137,11 @@ export function isDefaultDefined(lineNumber: number, doc: vscode.TextDocument): 
     return line.includes('| default');
 }
 
-export function printErrorsToProblemsTab(elements: Element[], document: vscode.TextDocument, collection: vscode.DiagnosticCollection): void {
+export function clearErrors(document: vscode.TextDocument, collection: vscode.DiagnosticCollection): void {
+    collection.set(document.uri, []);
+}
+
+export function markErrors(elements: Element[], document: vscode.TextDocument, collection: vscode.DiagnosticCollection): void {
     collection.set(document.uri, createDiagnosticsArray(elements, document.uri));
 }
 
