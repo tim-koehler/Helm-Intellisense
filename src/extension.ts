@@ -20,7 +20,6 @@ const LINT_CHART_COMMAND_STRING = 'extension.LintChart';
  * Activates the extension. Adds completion item providers.
  */
 export function activate(context: vscode.ExtensionContext): void {
-
     updateAndShowRatePopup(context);
 
     for (const lang of ['yaml', 'helm']) {
@@ -35,7 +34,7 @@ export function activate(context: vscode.ExtensionContext): void {
         vscode.languages.registerCompletionItemProvider(lang, new VariableCompletionItemProvider(), '$');
     }
 
-    const collection = vscode.languages.createDiagnosticCollection("Helm-Intellisense")
+    const collection = vscode.languages.createDiagnosticCollection('Helm-Intellisense');
     
     const lintCommand = vscode.commands.registerCommand(LINT_COMMAND_STRING, () => LintCommand(collection));
     context.subscriptions.push(lintCommand);

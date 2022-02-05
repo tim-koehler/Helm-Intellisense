@@ -16,11 +16,11 @@ export async function LintChartCommand(collection: vscode.DiagnosticCollection):
     }
 
     const templates = walkDirectory(chartBasePath + sep + 'templates');
-    let hasErrors = false
-    for (let index = 0; index < templates.length; index++) {
-        await vscode.workspace.openTextDocument(templates[index]).then(template => {
+    let hasErrors = false;
+    for (const template of templates) {
+        await vscode.workspace.openTextDocument(template).then(template => {
             if (LintCommand(collection, template)) {
-                hasErrors = true
+                hasErrors = true;
             }
         });
     }

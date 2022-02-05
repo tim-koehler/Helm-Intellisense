@@ -3,7 +3,7 @@ import * as yaml from '../yaml';
 import * as fs from 'fs';
 import * as utils from '../utils';
 import { sep as pathSeperator } from 'path';
-import {Yaml} from "../yaml";
+import {Yaml} from '../yaml';
 
 export class ChartCompletionItemProvider implements vscode.CompletionItemProvider {
     /**

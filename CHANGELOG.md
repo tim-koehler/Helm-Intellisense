@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.14.1] - 2022-02-05
+### Added
+- Allow wildcards in excludes
+
 ## [0.14.0] - 2022-01-20
 ### Added
 - Added setting to exlude files from linting

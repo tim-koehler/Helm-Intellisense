@@ -4,29 +4,43 @@ import * as utils from '../utils';
 export enum ElementType {
     KEY_PATH,
     TEMPLATE
-  }
+}
 
 export type Element = {
-    name: string
-    line: number
-    range: vscode.Range
-    type: ElementType
-  };
+    name: string;
+    line: number;
+    range: vscode.Range;
+    type: ElementType;
+};
 
-export function LintCommand(collection: vscode.DiagnosticCollection, doc: vscode.TextDocument | undefined = vscode.window.activeTextEditor?.document): Boolean {
+export function LintCommand(collection: vscode.DiagnosticCollection, doc: vscode.TextDocument | undefined = vscode.window.activeTextEditor?.document): boolean {
     if (doc === undefined) {
         return false;
     }
 
-    const excludes = vscode.workspace.getConfiguration('helm-intellisense').get('excludeFromLinting')
-    if (Array.isArray(excludes)) {
-        for (const exclude of excludes) {
-            if (doc.fileName.endsWith(exclude)) {
-                clearErrors(doc, collection)
-                return false
-            }
-        }    
+    const excludes = vscode.workspace.getConfiguration('helm-intellisense').get('excludeFromLinting');
+    if (!Array.isArray(excludes)) {
+        return false;
     }
+    
+    for (const exclude of excludes) {
+        if (typeof exclude !== 'string') {
+            continue;
+        }
+
+        if (exclude.includes('*')) {
+            const splits = exclude.split('*');
+            if (doc.fileName.endsWith(splits[splits.length -1])) {
+                clearErrors(doc, collection);
+                return false;
+            }
+        } else {
+            if (doc.fileName.includes(exclude)) {
+                clearErrors(doc, collection);
+                return false;
+            }
+        }
+    }    
 
     if (utils.getChartBasePath(doc.fileName) === undefined) {
         return false;
@@ -40,9 +54,9 @@ export function LintCommand(collection: vscode.DiagnosticCollection, doc: vscode
     const definedTpls = utils.getAllNamedTemplatesFromFiles(doc.fileName);
     const errorTplElements = getInvalidTpls(usedTplElements, definedTpls);
 
-    const allErrorElementsCombined = errorKeyPathElements.concat(errorTplElements)
+    const allErrorElementsCombined = errorKeyPathElements.concat(errorTplElements);
     markErrors(allErrorElementsCombined, doc, collection);
-    return allErrorElementsCombined.length > 0
+    return allErrorElementsCombined.length > 0;
 }
 
 export function getAllUsedNamedTemplateElementsOfDocument(doc: vscode.TextDocument): Element[] {
@@ -82,8 +96,8 @@ export function getAllKeyPathElementsOfDocument(doc: vscode.TextDocument): Eleme
         }
 
         const words = line.split(' ');
-        for (let wordIndex = 0; wordIndex < words.length; wordIndex++) {
-            let word = words[wordIndex];
+
+        for (let word of words) {
             if (!word.includes('.Values')) {
                 continue;
             }
@@ -108,28 +122,27 @@ export function getInvalidKeyPaths(elements: Element[], values: any, doc: vscode
         parts.shift(); // Remove '.Values'
         
         let current = values;
-        for (let index = 0; index < parts.length; index++) {
-            const tmp = parts[index];
-            current = current[tmp];
+        for (const part of parts) {
+            current = current[part];
             if (current === undefined) {
                 if (isDefaultDefined(element.line, doc)) {
-                    break
+                    break;
                 }
-                errorElements.push(element)
+                errorElements.push(element);
             }
         }
     });
-    return errorElements
+    return errorElements;
 }
 
 export function getInvalidTpls(elements: Element[], definedTpls: string[]): Element[] {
     const errorElements = new Array<Element>();
     elements.forEach(element => {
         if (!definedTpls.includes(element.name)) {
-            errorElements.push(element)
+            errorElements.push(element);
         }
     });
-    return errorElements
+    return errorElements;
 }
 
 export function isDefaultDefined(lineNumber: number, doc: vscode.TextDocument): boolean {
@@ -148,15 +161,14 @@ export function markErrors(elements: Element[], document: vscode.TextDocument, c
 function createDiagnosticsArray(elements: Element[], uri: vscode.Uri): vscode.Diagnostic[] {
     const diagnostics = new Array<vscode.Diagnostic>();
     elements.forEach(element => {
-        let info: vscode.DiagnosticRelatedInformation[] = []
-        let message: string = ""
+        let message = '';
         switch (element.type) {
             case ElementType.KEY_PATH:
-                message = "Value not defined"
+                message = 'Value not defined';
                 break;
             case ElementType.TEMPLATE:
-                message = "Template not defined"
-                break
+                message = 'Template not defined';
+                break;
             default:
                 break;
         }
@@ -168,8 +180,8 @@ function createDiagnosticsArray(elements: Element[], uri: vscode.Uri): vscode.Di
             severity: vscode.DiagnosticSeverity.Error,
             source: 'Helm-Intellisense',
             relatedInformation: [new vscode.DiagnosticRelatedInformation(new vscode.Location(uri, element.range), element.name)]
-        })
+        });
         
-    })
-    return diagnostics
+    });
+    return diagnostics;
 }

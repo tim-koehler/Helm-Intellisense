@@ -34,7 +34,7 @@
 |:------------------------------------------|:----------------------------------------------------------------------------------------
 | `helm-intellisense.customValueFileNames`  | Defines list of possible files containing values<br>(default: `values.yaml`)
 | `helm-intellisense.lintFileOnSave`        | If set to `true` the `Helm-Intellisense: Lint` command will be executed on save (default: `true`)
-| `helm-intellisense.excludeFromLinting`    | Define a list of filenames which should be excluded from linting.
+| `helm-intellisense.excludeFromLinting`    | Define a list of filenames which should be excluded from linting.<br> Wildcards are also possible (Example: `*.gotmpl`)
 
 ## Multiple value files (overriding)
 
