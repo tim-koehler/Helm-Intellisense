@@ -42,10 +42,18 @@ export function LintCommand(collection: vscode.DiagnosticCollection, doc: vscode
         }
     }    
 
-    if (utils.getChartBasePath(doc.fileName) === undefined) {
+    const chartBasePath = utils.getChartBasePath(doc.fileName);
+    if (chartBasePath === undefined) {
         return false;
     }
-    
+
+    // Make sure linted file is a template
+    const regex = `^${chartBasePath}\\.*`;
+    if (!doc.fileName.replace(new RegExp(regex), '').includes('templates')) {
+        return false;
+    }
+        
+
     const keyElements = getAllKeyPathElementsOfDocument(doc);
     const values = utils.getValuesFromFile(doc.fileName);
     const errorKeyPathElements = getInvalidKeyPaths(keyElements, values, doc);
@@ -90,14 +98,27 @@ export function getAllKeyPathElementsOfDocument(doc: vscode.TextDocument): Eleme
             continue;
         }
 
-        const regex = /\{\{-? ?(else )?if .*?\}\}/g;
-        if (regex.exec(line) !== null) {
+        const regexBrackets = /\{\{-? ?(else )?if .*?\}\}/g;
+        if (regexBrackets.exec(line) !== null) {
             continue;
         }
 
         const words = line.split(' ');
 
+        let insideComment = false;
         for (let word of words) {
+            if (word.startsWith('*/')) {
+                insideComment = false;
+                continue;
+            } else if (word.startsWith('/*')) {
+                insideComment = true;
+                continue;
+            }
+
+            if (insideComment) {
+                continue;
+            }
+
             if (!word.includes('.Values')) {
                 continue;
             }

@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.14.2] - 2022-05-18
+### Fixed
+- Linter will ignore comments: #47
+- Linter will ignore files that are not under the /template directory #54
+
 ## [0.14.1] - 2022-02-05
 ### Added
 - Allow wildcards in excludes
