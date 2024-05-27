@@ -16,17 +16,28 @@
 		"plugin:@typescript-eslint/recommended"
 	],
 	"ignorePatterns": [
+		"out",
+		"dist",
+		"**/*.d.ts",
 		"**/test/**/*.ts"
 	],
 	"rules": {
 		"@typescript-eslint/array-type": ["error", { "default": "array" }],
-		"@typescript-eslint/class-name-casing": "error",
 		"@typescript-eslint/comma-spacing": "error",
 		"@typescript-eslint/explicit-function-return-type": "error",
 		"@typescript-eslint/func-call-spacing": "error",
 		"@typescript-eslint/indent": ["error", 4, { "SwitchCase": 1 }],
 		"@typescript-eslint/keyword-spacing": "error",
-		"@typescript-eslint/naming-convention": "error",
+		"@typescript-eslint/naming-convention": [
+			"warn",
+			{
+				"selector": "import",
+				"format": [
+					"camelCase",
+					"PascalCase"
+				]
+			}
+		],
 		"@typescript-eslint/no-explicit-any": "off",
 		"@typescript-eslint/no-unused-vars": ["error", { "args": "none" }],
 		"@typescript-eslint/no-use-before-define": "off",
@@ -46,6 +57,6 @@
 		"quotes": "off",
 		"semi": "off",
 		"space-before-function-paren": "off",
-        "indent": "off"
+		"indent": "off"
 	}
 }

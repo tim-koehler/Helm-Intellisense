@@ -67,14 +67,18 @@
 		}
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run esbuild-base -- --minify",
-		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
-		"test-compile": "tsc -p ./",
-		"compile": "npm run esbuild-base -- --sourcemap",
+		"vscode:prepublish": "npm run package",
+		"compile": "npm run check-types && npm run lint && node esbuild.js",
+		"watch": "npm-run-all -p watch:*",
+		"watch:esbuild": "node esbuild.js --watch",
+		"watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+		"package": "npm run check-types && npm run lint && node esbuild.js --production",
+		"compile-tests": "tsc -p . --outDir out",
+		"watch-tests": "tsc -p . -w --outDir out",
+		"pretest": "npm run compile-tests && npm run compile && npm run lint",
+		"check-types": "tsc --noEmit",
 		"lint": "eslint src --ext ts",
-		"watch": "npm run esbuild-base -- --sourcemap --watch",
-		"pretest": "npm run compile && npm run lint",
-		"test": "node ./out/test/runTest.js"
+		"test": "vscode-test"
 	},
 	"dependencies": {
 		"js-yaml": "^3.13.1",
@@ -84,16 +88,18 @@
 		"@types/glob": "^7.1.3",
 		"@types/js-yaml": "^3.12.5",
 		"@types/lodash": "^4.14.175",
-		"@types/mocha": "^7.0.2",
+		"@types/mocha": "^10.0.6",
 		"@types/node": "^13.13.21",
 		"@types/vscode": "^1.45.0",
-		"@typescript-eslint/eslint-plugin": "^2.30.0",
-		"@typescript-eslint/parser": "^2.30.0",
-		"esbuild": "^0.14.10",
-		"eslint": "^6.8.0",
+		"@typescript-eslint/eslint-plugin": "^7.7.1",
+		"@typescript-eslint/parser": "^7.7.1",
+		"esbuild": "^0.20.2",
+		"eslint": "^8.57.0",
 		"glob": "^7.1.6",
-		"mocha": "^9.1.3",
-		"typescript": "^3.9.7",
-		"vscode-test": "^1.3.0"
+		"mocha": "^10.4.0",
+		"npm-run-all": "^4.1.5",
+		"typescript": "^5.4.5",
+		"@vscode/test-cli": "^0.0.9",
+		"@vscode/test-electron": "^2.3.9"
 	}
 }
