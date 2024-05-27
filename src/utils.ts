@@ -49,7 +49,7 @@ export function getValuesFromFile(fileName: string): any {
 
     const completeFilePaths = [];
     for (const filename of filenames) {
-        completeFilePaths.push(path.join(chartBasePath, filename));
+        completeFilePaths.push(...getAllFilesFromDirectoryRecursively(path.join(chartBasePath, filename)));
     }
 
     return yaml.loadMerge(completeFilePaths);
