@@ -2,9 +2,9 @@ import * as assert from 'assert';
 import * as utils from '../../utils';
 import * as path from 'path';
 
-const TEST_CHART_PATH = path.join(path.resolve(), 'src', 'test', 'Test');
-const DUMMY_PATH = path.join(path.resolve(), 'src', 'test', 'Dummy');
-const SHOULD_VALUES = `{"replicaCount":1,"foo":{"bar":"baz","baz":["foo","bar","baz"]},"image":{"repository":"nginx","tag":"stable","pullPolicy":"IfNotPresent"},"imagePullSecrets":[],"nameOverride":"","fullnameOverride":"","serviceAccount":{"create":true,"name":null},"podSecurityContext":{},"securityContext":{},"service":{"type":"ClusterIP","port":80},"ingress":{"enabled":false,"annotations":{},"hosts":[{"host":"chart-example.local","paths":[]}],"tls":[]},"resources":{},"nodeSelector":{},"tolerations":[],"affinity":{}}`;
+const TEST_CHART_PATH = path.join(__dirname, "..", "..", "..", "src", "test", "Test");
+const DUMMY_PATH = path.join(__dirname, "..", "..", "..", "src", "test", "Dummy");
+const SHOULD_VALUES = `{"replicaCount":1,"foo":{"bar":"baz","baz":["foo","bar","baz"]},"image":{"repository":"nginx","tag":"stable","pullPolicy":"Always"},"imagePullSecrets":[],"nameOverride":"","fullnameOverride":"","serviceAccount":{"create":true,"name":null},"podSecurityContext":{},"securityContext":{},"service":{"type":"ClusterIP","port":80},"ingress":{"enabled":false,"annotations":{},"hosts":[{"host":"chart-example.local","paths":[]}],"tls":[]},"resources":{},"nodeSelector":{},"tolerations":[],"affinity":{}}`;
 
 suite('Test Utils', () => {
     test('isInsideBrackets() outside brackets', () => {
@@ -25,8 +25,8 @@ suite('Test Utils', () => {
     });
     test('getChartBasePath()', () => {
         const testPaths = [path.join(TEST_CHART_PATH, 'templates', 'deployment.yaml'),
-            path.join(TEST_CHART_PATH, 'templates', 'testForRecursiveNamedTemplates', 'foo.tpl'),
-            path.join(TEST_CHART_PATH, 'values.yaml')];
+        path.join(TEST_CHART_PATH, 'templates', 'testForRecursiveNamedTemplates', 'foo.tpl'),
+        path.join(TEST_CHART_PATH, 'values.yaml')];
 
         for (const path of testPaths) {
             let returnedPath = utils.getChartBasePath(path);
@@ -40,6 +40,11 @@ suite('Test Utils', () => {
     test('getNameOfChart()', () => {
         assert.strictEqual(utils.getNameOfChart(path.join(TEST_CHART_PATH, 'templates', 'ingress.yaml')), 'Test');
         assert.strictEqual(utils.getNameOfChart(path.join(DUMMY_PATH, 'DummyDummy', 'bar')), 'No name found');
+    });
+    test('getAllNamedTemplatesFromParentCharts()', () => {
+        const shouldList: string[] = ['TestLibrary.resources'];
+        const namedTemplates: string[] = utils.getAllNamedTemplatesFromParentCharts(path.join(TEST_CHART_PATH, 'templates', 'ingress.yaml'));
+        assert.strictEqual(JSON.stringify(namedTemplates), JSON.stringify(shouldList))
     });
     test('getAllNamedTemplatesFromFiles()', () => {
         const shouldList: string[] = ['Test.name', 'Test.fullname', 'Test.chart', 'Test.labels', 'Test.serviceAccountName', 'Test.recursive'];

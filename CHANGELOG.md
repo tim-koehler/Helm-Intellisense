@@ -1,5 +1,9 @@
 # Change Log
 
+## [0.15.0] - 2025-04-13
+### Added
+- Added support for library charts: #51
+
 ## [0.14.2] - 2022-05-18
 ### Fixed
 - Linter will ignore comments: #47

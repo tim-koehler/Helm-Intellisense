@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as fs from 'fs'; // Add this to work with file system
 
 import { runTests } from 'vscode-test';
 
@@ -13,7 +14,7 @@ async function main(): Promise<void> {
         const extensionTestsPath = path.resolve(__dirname, './suite/Test');
 
         // Download VS Code, unzip it and run the integration test
-        await runTests({extensionDevelopmentPath, extensionTestsPath, launchArgs: ['--disable-extensions']});
+        await runTests({ extensionDevelopmentPath, extensionTestsPath, launchArgs: ['--disable-extensions'] });
     } catch (err) {
         console.error('Failed to run tests');
         process.exit(1);

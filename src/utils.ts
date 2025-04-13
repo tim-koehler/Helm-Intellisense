@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as yaml from './yaml';
 import * as fs from 'fs';
 import * as path from 'path';
+import { log } from 'console';
 
 /**
  * Checks whether the position in the line is in between curly brackets.
@@ -77,6 +78,34 @@ export function getAllNamedTemplatesFromFiles(filePath: string): string[] {
 }
 
 /**
+ * Retrieves the named-template names from all parent charts.
+ */
+export function getAllNamedTemplatesFromParentCharts(filePath: string): string[] {
+    const chartYamlPath = getChartBasePath(filePath) + path.sep + 'Chart.yaml';
+    const relativeDependencyChartPaths = getRelativeDependencyChartPaths(chartYamlPath);
+
+    console.log(relativeDependencyChartPaths);
+
+    const files = [];
+    for (const chartPath of relativeDependencyChartPaths) {
+        files.push(...getAllFilesFromDirectoryRecursively(getChartBasePath(filePath) + path.sep + chartPath));
+    }
+
+    let content = '';
+    for (const tplFile of files) {
+        if (!fs.existsSync(tplFile)) {
+            continue;
+        }
+        try {
+            content += fs.readFileSync(tplFile, 'utf8') + '\n\n';
+        } catch (e) {
+            vscode.window.showErrorMessage(`Error in '${tplFile}': ${(e as Error).message}`);
+        }
+    }
+    return getListOfNamedTemplates(content);
+}
+
+/**
  * Recursively gets all files from the given directory and all subdirectories.
  * Returns an empty array, if the `startPath` does not exist.
  *
@@ -88,7 +117,7 @@ function getAllFilesFromDirectoryRecursively(startPath: string): string[] {
     }
 
     const out: string[] = [];
-    const files = fs.readdirSync(startPath, {withFileTypes: true});
+    const files = fs.readdirSync(startPath, { withFileTypes: true });
     for (const file of files) {
         const filename = path.join(startPath, file.name);
         if (file.isDirectory()) {
@@ -165,4 +194,37 @@ function getValueFileNamesFromConfig(): string[] {
         filenames.push(filename);
     }
     return filenames;
+}
+
+/**
+ * Pulls list of all parent chart dependiency paths from Chart.yaml.
+ */
+function getRelativeDependencyChartPaths(chartYamlPath: string): string[] {
+    if (!fs.existsSync(chartYamlPath)) {
+        return [];
+    }
+
+    const chartYaml = yaml.load(chartYamlPath);
+    if (chartYaml === undefined) {
+        return [];
+    }
+
+    const dependencies = (chartYaml as any).dependencies;
+    if (dependencies === undefined) {
+        return [];
+    }
+
+    const libraryChartDependiencyPaths: string[] = [];
+    for (const dependency of dependencies) {
+        const repository = dependency.repository;
+        if (repository === undefined) {
+            continue;
+        }
+        if (!repository.startsWith('file://')) {
+            continue;
+        }
+        const chartPath = repository.replace('file://', '');
+        libraryChartDependiencyPaths.push(chartPath);
+    }
+    return libraryChartDependiencyPaths;
 }
