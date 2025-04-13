@@ -197,7 +197,7 @@ function getValueFileNamesFromConfig(): string[] {
 }
 
 /**
- * Pulls list of all parent chart dependiency paths from Chart.yaml.
+ * Pulls list of all parent chart dependency paths from Chart.yaml.
  */
 function getRelativeDependencyChartPaths(chartYamlPath: string): string[] {
     if (!fs.existsSync(chartYamlPath)) {
