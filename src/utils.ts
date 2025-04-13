@@ -84,8 +84,6 @@ export function getAllNamedTemplatesFromParentCharts(filePath: string): string[]
     const chartYamlPath = getChartBasePath(filePath) + path.sep + 'Chart.yaml';
     const relativeDependencyChartPaths = getRelativeDependencyChartPaths(chartYamlPath);
 
-    console.log(relativeDependencyChartPaths);
-
     const files = [];
     for (const chartPath of relativeDependencyChartPaths) {
         files.push(...getAllFilesFromDirectoryRecursively(getChartBasePath(filePath) + path.sep + chartPath));
