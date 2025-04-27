@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import * as yaml from './yaml';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as zlib from 'zlib';
+import * as tarStream from 'tar-stream';
 import { log } from 'console';
 
 /**
@@ -59,48 +61,90 @@ export function getValuesFromFile(fileName: string): any {
 /**
  * Retrieves the named-templates names from all files.
  */
-export function getAllNamedTemplatesFromFiles(filePath: string): string[] {
+export function getAllNamedTemplatesFromFiles(filePath: string): Map<string, string> {
     const startPath = getChartBasePath(filePath) + path.sep + 'templates';
     const files: string[] = getAllFilesFromDirectoryRecursively(startPath);
 
-    let content = '';
+    const templates = new Map<string, string>();
     for (const tplFile of files) {
         if (!fs.existsSync(tplFile)) {
             continue;
         }
         try {
-            content += fs.readFileSync(tplFile, 'utf8') + '\n\n';
+            const tpls = getListOfNamedTemplates(fs.readFileSync(tplFile, 'utf8'));
+            for (const tpl of tpls) {
+                templates.set(tpl, tplFile);
+            }
         } catch (e) {
             vscode.window.showErrorMessage(`Error in '${tplFile}': ${(e as Error).message}`);
         }
     }
-    return getListOfNamedTemplates(content);
+    return templates;
 }
 
 /**
  * Retrieves the named-template names from all parent charts.
  */
-export function getAllNamedTemplatesFromParentCharts(filePath: string): string[] {
+export async function getAllNamedTemplatesFromParentCharts(filePath: string): Promise<Map<string, string>> {
+    const templates = new Map<string, string>();
+
     const chartYamlPath = getChartBasePath(filePath) + path.sep + 'Chart.yaml';
-    const relativeDependencyChartPaths = getRelativeDependencyChartPaths(chartYamlPath);
+    if (!fs.existsSync(chartYamlPath)) {
+        return templates;
+    }
 
-    const files = [];
+    const chartYaml = yaml.load(chartYamlPath);
+    if (chartYaml === undefined) {
+        return templates;
+    }
+
+    const relativeDependencyChartPaths = getRelativeDependencyChartPaths(chartYaml);
+
+
     for (const chartPath of relativeDependencyChartPaths) {
-        files.push(...getAllFilesFromDirectoryRecursively(getChartBasePath(filePath) + path.sep + chartPath));
+        const chartTemplatesPath = path.join(getChartBasePath(filePath) + path.sep, chartPath, 'templates');
+        const files = getAllFilesFromDirectoryRecursively(chartTemplatesPath);
+        for (const tplFile of files) {
+            if (!fs.existsSync(tplFile)) {
+                continue;
+            }
+            try {
+                const tpls = getListOfNamedTemplates(fs.readFileSync(tplFile, 'utf8'));
+                for (const tpl of tpls) {
+                    templates.set(tpl, tplFile);
+                }
+            } catch (e) {
+                vscode.window.showErrorMessage(`Error in '${tplFile}': ${(e as Error).message}`);
+            }
+        }
     }
 
-    let content = '';
-    for (const tplFile of files) {
-        if (!fs.existsSync(tplFile)) {
-            continue;
-        }
-        try {
-            content += fs.readFileSync(tplFile, 'utf8') + '\n\n';
-        } catch (e) {
-            vscode.window.showErrorMessage(`Error in '${tplFile}': ${(e as Error).message}`);
+    const chartsDirPath = path.join(getChartBasePath(filePath) + path.sep, 'charts');
+    if (!fs.existsSync(chartsDirPath)) {
+        return templates;
+    }
+
+    const chartFiles = fs.readdirSync(chartsDirPath);
+    const tarGzPromises: Promise<Map<string, string>>[] = [];
+
+    for (const chartFile of chartFiles) {
+        const chartFilePath = path.join(chartsDirPath, chartFile);
+        if (fs.statSync(chartFilePath).isFile() && chartFile.endsWith('.tgz')) {
+            tarGzPromises.push(getTarGzFileContents(chartFilePath));
         }
     }
-    return getListOfNamedTemplates(content);
+
+    const tarGzContents = await Promise.all(tarGzPromises);
+    for (const item of tarGzContents) {
+        for (const [fileName, content] of item.entries()) {
+            const tpls = getListOfNamedTemplates(content.toString());
+            for (const tpl of tpls) {
+                templates.set(tpl, fileName.toString());
+            }
+        }
+    }
+
+    return templates;
 }
 
 /**
@@ -131,14 +175,14 @@ function getAllFilesFromDirectoryRecursively(startPath: string): string[] {
  * Parses named-template names from the _helpers.tpl files content.
  */
 function getListOfNamedTemplates(content: string): string[] {
-    const matchRanges = [];
+    const matchRanges = new Set<string>();
 
     const templatePattern = /{{-? *define +"(.+?)" *-?}}/g;
     let result;
     while ((result = templatePattern.exec(content)) !== null) {
-        matchRanges.push(result[1]);
+        matchRanges.add(result[1]);
     }
-    return matchRanges;
+    return Array.from(matchRanges);
 }
 
 export function getChartBasePath(fileName: string): string | undefined {
@@ -197,22 +241,13 @@ function getValueFileNamesFromConfig(): string[] {
 /**
  * Pulls list of all parent chart dependency paths from Chart.yaml.
  */
-function getRelativeDependencyChartPaths(chartYamlPath: string): string[] {
-    if (!fs.existsSync(chartYamlPath)) {
-        return [];
-    }
-
-    const chartYaml = yaml.load(chartYamlPath);
-    if (chartYaml === undefined) {
-        return [];
-    }
-
+function getRelativeDependencyChartPaths(chartYaml: yaml.Yaml): string[] {
     const dependencies = (chartYaml as any).dependencies;
     if (dependencies === undefined) {
         return [];
     }
 
-    const libraryChartDependiencyPaths: string[] = [];
+    const localChartDependencyPaths: string[] = [];
     for (const dependency of dependencies) {
         const repository = dependency.repository;
         if (repository === undefined) {
@@ -222,7 +257,42 @@ function getRelativeDependencyChartPaths(chartYamlPath: string): string[] {
             continue;
         }
         const chartPath = repository.replace('file://', '');
-        libraryChartDependiencyPaths.push(chartPath);
+        localChartDependencyPaths.push(chartPath);
     }
-    return libraryChartDependiencyPaths;
+    return localChartDependencyPaths;
 }
+
+function getTarGzFileContents(filePath: string): Promise<Map<string, string>> {
+    const extract = tarStream.extract();
+    const fileStream = fs.createReadStream(filePath);
+    const gunzip = zlib.createGunzip();
+
+    const fileContent = new Map<string, string>();
+    extract.on('entry', (header, stream, next) => {
+        if (header.name.endsWith('.tpl') || header.name.endsWith('.yaml') || header.name.endsWith('.yml')) {
+            let data = '';
+            stream.on('data', chunk => data += chunk.toString());
+            stream.on('end', () => {
+                fileContent.set(header.name, data);
+                next();
+            });
+            stream.resume();
+        } else {
+            stream.resume();
+            next();
+        }
+    });
+
+    return new Promise((resolve, reject) => {
+        fileStream
+            .pipe(gunzip)
+            .pipe(extract)
+            .on('finish', () => {
+                resolve(fileContent);
+            })
+            .on('error', (err: any) => {
+                reject(err);
+            });
+    });
+}
+

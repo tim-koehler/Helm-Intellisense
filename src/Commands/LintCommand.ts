@@ -59,12 +59,18 @@ export function LintCommand(collection: vscode.DiagnosticCollection, doc: vscode
     const errorKeyPathElements = getInvalidKeyPaths(keyElements, values, doc);
 
     const usedTplElements = getAllUsedNamedTemplateElementsOfDocument(doc);
-    const definedTpls = utils.getAllNamedTemplatesFromFiles(doc.fileName).concat(utils.getAllNamedTemplatesFromParentCharts(doc.fileName));
-    const errorTplElements = getInvalidTpls(usedTplElements, definedTpls);
+    utils.getAllNamedTemplatesFromParentCharts(doc.fileName).then((tpls) => {
+        const definedTpls = new Map<string, string>([...utils.getAllNamedTemplatesFromFiles(doc.fileName), ...tpls]);
+        const errorTplElements = getInvalidTpls(usedTplElements, Array.from(definedTpls.keys()));
 
-    const allErrorElementsCombined = errorKeyPathElements.concat(errorTplElements);
-    markErrors(allErrorElementsCombined, doc, collection);
-    return allErrorElementsCombined.length > 0;
+        const allErrorElementsCombined = errorKeyPathElements.concat(errorTplElements);
+        markErrors(allErrorElementsCombined, doc, collection);
+        return allErrorElementsCombined.length > 0;
+    }
+    ).catch((error) => {
+        console.error('Error fetching named templates:', error);
+    });
+    return false;
 }
 
 export function getAllUsedNamedTemplateElementsOfDocument(doc: vscode.TextDocument): Element[] {
