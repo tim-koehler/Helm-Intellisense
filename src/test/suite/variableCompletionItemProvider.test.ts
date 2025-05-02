@@ -3,9 +3,9 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { VariableCompletionItemProvider } from "../../CompletionProviders/VariableCompletionItemProvider";
 
-const TEST_CHART_PATH = path.join(path.resolve(), 'src', 'test', 'Test');
+const TEST_CHART_PATH = path.join(__dirname, "..", "..", "..", "src", "test", "Test");
 const SHOULD_VALUES_BEFORE = `[]`;
-const SHOULD_VALUES_AFTER= `[{"label":"variable","kind":"Variable","detail":"{{ .Values.service.type"}]`;
+const SHOULD_VALUES_AFTER = `[{"label":"variable","kind":"Variable","detail":"{{ .Values.service.type"}]`;
 suite('Test VariableCompletionItemProvider', () => {
     test('provideCompletionItems() without variable', async () => {
         const document = await vscode.workspace.openTextDocument(path.join(TEST_CHART_PATH, 'templates', 'service.yaml'));

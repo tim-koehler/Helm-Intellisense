@@ -3,3 +3,13 @@ appVersion: "1.0"
 description: A Helm chart for Kubernetes
 name: Test
 version: 0.1.0
+dependencies:
+  - name: Library
+    version: 0.1.0
+    repository: file://../TestLibrary
+  - name: memcached
+    version: 7.6.0
+    repository: oci://registry-1.docker.io/bitnamicharts
+  - name: helm-library
+    version: 1.0.0
+    repository: https://helm.lynxmagnus.com

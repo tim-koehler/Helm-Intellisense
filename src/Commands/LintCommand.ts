@@ -22,7 +22,7 @@ export function LintCommand(collection: vscode.DiagnosticCollection, doc: vscode
     if (!Array.isArray(excludes)) {
         return false;
     }
-    
+
     for (const exclude of excludes) {
         if (typeof exclude !== 'string') {
             continue;
@@ -30,7 +30,7 @@ export function LintCommand(collection: vscode.DiagnosticCollection, doc: vscode
 
         if (exclude.includes('*')) {
             const splits = exclude.split('*');
-            if (doc.fileName.endsWith(splits[splits.length -1])) {
+            if (doc.fileName.endsWith(splits[splits.length - 1])) {
                 clearErrors(doc, collection);
                 return false;
             }
@@ -40,7 +40,7 @@ export function LintCommand(collection: vscode.DiagnosticCollection, doc: vscode
                 return false;
             }
         }
-    }    
+    }
 
     const chartBasePath = utils.getChartBasePath(doc.fileName);
     if (chartBasePath === undefined) {
@@ -52,19 +52,25 @@ export function LintCommand(collection: vscode.DiagnosticCollection, doc: vscode
     if (!doc.fileName.replace(new RegExp(regex), '').includes('templates')) {
         return false;
     }
-        
+
 
     const keyElements = getAllKeyPathElementsOfDocument(doc);
     const values = utils.getValuesFromFile(doc.fileName);
     const errorKeyPathElements = getInvalidKeyPaths(keyElements, values, doc);
 
     const usedTplElements = getAllUsedNamedTemplateElementsOfDocument(doc);
-    const definedTpls = utils.getAllNamedTemplatesFromFiles(doc.fileName);
-    const errorTplElements = getInvalidTpls(usedTplElements, definedTpls);
+    utils.getAllNamedTemplatesFromParentCharts(doc.fileName).then((tpls) => {
+        const definedTpls = new Map<string, string>([...utils.getAllNamedTemplatesFromFiles(doc.fileName), ...tpls]);
+        const errorTplElements = getInvalidTpls(usedTplElements, Array.from(definedTpls.keys()));
 
-    const allErrorElementsCombined = errorKeyPathElements.concat(errorTplElements);
-    markErrors(allErrorElementsCombined, doc, collection);
-    return allErrorElementsCombined.length > 0;
+        const allErrorElementsCombined = errorKeyPathElements.concat(errorTplElements);
+        markErrors(allErrorElementsCombined, doc, collection);
+        return allErrorElementsCombined.length > 0;
+    }
+    ).catch((error) => {
+        console.error('Error fetching named templates:', error);
+    });
+    return false;
 }
 
 export function getAllUsedNamedTemplateElementsOfDocument(doc: vscode.TextDocument): Element[] {
@@ -141,7 +147,7 @@ export function getInvalidKeyPaths(elements: Element[], values: any, doc: vscode
         const parts = element.name.split('.');
         parts.shift(); // Remove empty
         parts.shift(); // Remove '.Values'
-        
+
         let current = values;
         for (const part of parts) {
             current = current[part];
@@ -202,7 +208,7 @@ function createDiagnosticsArray(elements: Element[], uri: vscode.Uri): vscode.Di
             source: 'Helm-Intellisense',
             relatedInformation: [new vscode.DiagnosticRelatedInformation(new vscode.Location(uri, element.range), element.name)]
         });
-        
+
     });
     return diagnostics;
 }

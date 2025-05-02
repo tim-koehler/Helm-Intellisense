@@ -1,0 +1,12 @@
+dependencies:
+- name: Library
+  repository: file://../TestLibrary
+  version: 0.1.0
+- name: memcached
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 7.6.0
+- name: helm-library
+  repository: https://helm.lynxmagnus.com
+  version: 1.0.0
+digest: sha256:bcd145bfc0575779e6cb38c27b7c9c02506204b80364868bba2586893d48a473
+generated: "2025-04-16T01:44:59.105789+02:00"
