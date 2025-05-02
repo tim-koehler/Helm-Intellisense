@@ -1,6 +1,6 @@
 # Change Log
 
-## [0.15.0] - 2025-04-13
+## [0.15.0] - 2025-05-02
 ### Added
 - Added support for library charts: #51
 
