@@ -22,15 +22,9 @@
 			"name": "Extension Tests",
 			"type": "extensionHost",
 			"request": "launch",
-			"runtimeExecutable": "${execPath}",
+			"testConfiguration": "${workspaceFolder}/.vscode-test.cjs",
 			"args": [
-				"${workspaceFolder}/src/test/Test",
-				"--disable-extensions",
-				"--extensionDevelopmentPath=${workspaceFolder}",
-				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
-			],
-			"outFiles": [
-				"${workspaceFolder}/out/test/**/*.js"
+				"--extensionDevelopmentPath=${workspaceFolder}"
 			],
 			"preLaunchTask": "npm: test-compile"
 		}
