@@ -82,12 +82,12 @@ suite('Test Utils', () => {
     });
     test('getAllNamedTemplatesFromFiles()', () => {
         const shouldList: Map<string, string> = new Map([
-            ['Test.name', '/src/test/Test/templates/_helpers.tpl'],
-            ['Test.fullname', '/src/test/Test/templates/_helpers.tpl'],
-            ['Test.chart', '/src/test/Test/templates/_helpers.tpl'],
-            ['Test.labels', '/src/test/Test/templates/_helpers.tpl'],
-            ['Test.serviceAccountName', '/src/test/Test/templates/_helpers.tpl'],
-            ['Test.recursive', '/src/test/Test/templates/testForRecursiveNamedTemplates/foo.tpl'],
+            ['Test.name', path.join('src', 'test', 'Test', 'templates', '_helpers.tpl')],
+            ['Test.fullname', path.join('src', 'test', 'Test', 'templates', '_helpers.tpl')],
+            ['Test.chart', path.join('src', 'test', 'Test', 'templates', '_helpers.tpl')],
+            ['Test.labels', path.join('src', 'test', 'Test', 'templates', '_helpers.tpl')],
+            ['Test.serviceAccountName', path.join('src', 'test', 'Test', 'templates', '_helpers.tpl')],
+            ['Test.recursive', path.join('src', 'test', 'Test', 'templates', 'testForRecursiveNamedTemplates', 'foo.tpl')],
         ]);
         const namedTemplates = utils.getAllNamedTemplatesFromFiles(path.join(TEST_CHART_PATH, 'values.yaml'));
         assert.strictEqual(shouldList.size, namedTemplates.size);
