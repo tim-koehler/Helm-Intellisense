@@ -4,7 +4,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as zlib from 'zlib';
 import * as tarStream from 'tar-stream';
-import { log } from 'console';
 
 /**
  * Checks whether the position in the line is in between curly brackets.
