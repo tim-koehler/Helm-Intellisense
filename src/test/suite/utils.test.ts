@@ -1,4 +1,5 @@
 import * as assert from 'assert';
+import * as fs from 'fs';
 import * as utils from '../../utils';
 import * as path from 'path';
 
@@ -28,10 +29,10 @@ suite('Test Utils', () => {
         path.join(TEST_CHART_PATH, 'templates', 'testForRecursiveNamedTemplates', 'foo.tpl'),
         path.join(TEST_CHART_PATH, 'values.yaml')];
 
-        for (const path of testPaths) {
-            let returnedPath = utils.getChartBasePath(path);
+        for (const testPath of testPaths) {
+            let returnedPath = utils.getChartBasePath(testPath);
             assert.notStrictEqual(returnedPath, undefined);
-            assert.strictEqual(returnedPath?.endsWith('/Test'), true);
+            assert.strictEqual(returnedPath?.endsWith(path.sep + 'Test'), true);
         }
 
         let returnedPath = utils.getChartBasePath(DUMMY_PATH + path.sep + 'foo');
