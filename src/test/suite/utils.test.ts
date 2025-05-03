@@ -1,10 +1,11 @@
 import * as assert from 'assert';
+import * as fs from 'fs';
 import * as utils from '../../utils';
 import * as path from 'path';
 
 const TEST_CHART_PATH = path.join(__dirname, "..", "..", "..", "src", "test", "Test");
 const DUMMY_PATH = path.join(__dirname, "..", "..", "..", "src", "test", "Dummy");
-const SHOULD_VALUES = `{"replicaCount":1,"foo":{"bar":"baz","baz":["foo","bar","baz"]},"image":{"repository":"nginx","tag":"stable","pullPolicy":"Always"},"imagePullSecrets":[],"nameOverride":"","fullnameOverride":"","serviceAccount":{"create":true,"name":null},"podSecurityContext":{},"securityContext":{},"service":{"type":"ClusterIP","port":80},"ingress":{"enabled":false,"annotations":{},"hosts":[{"host":"chart-example.local","paths":[]}],"tls":[]},"resources":{},"nodeSelector":{},"tolerations":[],"affinity":{}}`;
+const SHOULD_VALUES = `{"replicaCount":1,"foo":{"bar":"baz","baz":["foo","bar","baz"]},"image":{"repository":"nginx","tag":"stable","pullPolicy":"IfNotPresent"},"imagePullSecrets":[],"nameOverride":"","fullnameOverride":"","serviceAccount":{"create":true,"name":null},"podSecurityContext":{},"securityContext":{},"service":{"type":"ClusterIP","port":80},"ingress":{"enabled":false,"annotations":{},"hosts":[{"host":"chart-example.local","paths":[]}],"tls":[]},"resources":{},"nodeSelector":{},"tolerations":[],"affinity":{}}`;
 
 suite('Test Utils', () => {
     test('isInsideBrackets() outside brackets', () => {
@@ -28,10 +29,10 @@ suite('Test Utils', () => {
         path.join(TEST_CHART_PATH, 'templates', 'testForRecursiveNamedTemplates', 'foo.tpl'),
         path.join(TEST_CHART_PATH, 'values.yaml')];
 
-        for (const path of testPaths) {
-            let returnedPath = utils.getChartBasePath(path);
+        for (const testPath of testPaths) {
+            let returnedPath = utils.getChartBasePath(testPath);
             assert.notStrictEqual(returnedPath, undefined);
-            assert.strictEqual(returnedPath?.endsWith('/Test'), true);
+            assert.strictEqual(returnedPath?.endsWith(path.sep + 'Test'), true);
         }
 
         let returnedPath = utils.getChartBasePath(DUMMY_PATH + path.sep + 'foo');
@@ -82,12 +83,12 @@ suite('Test Utils', () => {
     });
     test('getAllNamedTemplatesFromFiles()', () => {
         const shouldList: Map<string, string> = new Map([
-            ['Test.name', '/src/test/Test/templates/_helpers.tpl'],
-            ['Test.fullname', '/src/test/Test/templates/_helpers.tpl'],
-            ['Test.chart', '/src/test/Test/templates/_helpers.tpl'],
-            ['Test.labels', '/src/test/Test/templates/_helpers.tpl'],
-            ['Test.serviceAccountName', '/src/test/Test/templates/_helpers.tpl'],
-            ['Test.recursive', '/src/test/Test/templates/testForRecursiveNamedTemplates/foo.tpl'],
+            ['Test.name', path.join('src', 'test', 'Test', 'templates', '_helpers.tpl')],
+            ['Test.fullname', path.join('src', 'test', 'Test', 'templates', '_helpers.tpl')],
+            ['Test.chart', path.join('src', 'test', 'Test', 'templates', '_helpers.tpl')],
+            ['Test.labels', path.join('src', 'test', 'Test', 'templates', '_helpers.tpl')],
+            ['Test.serviceAccountName', path.join('src', 'test', 'Test', 'templates', '_helpers.tpl')],
+            ['Test.recursive', path.join('src', 'test', 'Test', 'templates', 'testForRecursiveNamedTemplates', 'foo.tpl')],
         ]);
         const namedTemplates = utils.getAllNamedTemplatesFromFiles(path.join(TEST_CHART_PATH, 'values.yaml'));
         assert.strictEqual(shouldList.size, namedTemplates.size);

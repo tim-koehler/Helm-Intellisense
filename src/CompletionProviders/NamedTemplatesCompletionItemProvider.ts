@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as utils from '../utils';
-import { copyFileSync } from 'fs';
 
 export class NamedTemplatesCompletionItemProvider implements vscode.CompletionItemProvider {
     /**
@@ -36,7 +35,7 @@ export class NamedTemplatesCompletionItemProvider implements vscode.CompletionIt
         const listOfCompletionItems: vscode.CompletionItem[] = [];
         for (const [namedTemplate, file] of namedTemplates) {
             const item = new vscode.CompletionItem(namedTemplate, vscode.CompletionItemKind.Field);
-            item.detail = file
+            item.detail = file;
             const startPos = new vscode.Position(position.line, position.character - currentString.replace('"', '').length);
             const endPos = position;
             item.range = new vscode.Range(startPos, endPos);
