@@ -95,7 +95,9 @@ export class ChartCompletionItemProvider implements vscode.CompletionItemProvide
                 case 'string':
                 case 'boolean':
                 case 'number':
-                    const valueItem = new vscode.CompletionItem(key.charAt(0).toUpperCase() + key.slice(1), vscode.CompletionItemKind.Field);
+                    // NOTE: APIVersion is a special case, as it is not camelCase for `{{ .Chart.APIVersion }}`.
+                    const completionText = key === 'apiVersion' ? 'APIVersion' : key.charAt(0).toUpperCase() + key.slice(1);
+                    const valueItem = new vscode.CompletionItem(completionText, vscode.CompletionItemKind.Field);
                     valueItem.detail = currentKey[key].toString();
                     keys.push(valueItem);
                     break;
