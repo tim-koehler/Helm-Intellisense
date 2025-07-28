@@ -10,6 +10,7 @@ import { LintCommand } from './Commands/LintCommand';
 import { LintChartCommand } from './Commands/LintChartCommand';
 import { NamedTemplatesCompletionItemProvider } from './CompletionProviders/NamedTemplatesCompletionItemProvider';
 import { VariableCompletionItemProvider } from './CompletionProviders/VariableCompletionItemProvider';
+import { ChartExpansionService } from './Services/ChartExpansionService';
 
 
 const GITHUB_URL = 'https://github.com/tim-koehler/Helm-Intellisense';
@@ -41,6 +42,10 @@ export function activate(context: vscode.ExtensionContext): void {
 
     const lintChartCommand = vscode.commands.registerCommand(LINT_CHART_COMMAND_STRING, () => LintChartCommand(collection));
     context.subscriptions.push(lintChartCommand);
+
+    const chartExpansionService = new ChartExpansionService();
+    chartExpansionService.activate(context);
+    context.subscriptions.push(chartExpansionService);
 
     vscode.workspace.onDidSaveTextDocument(() => {
         if (vscode.workspace.getConfiguration('helm-intellisense').get('lintFileOnSave') === false) {

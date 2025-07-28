@@ -62,6 +62,16 @@
 					"type": "array",
 					"default": [],
 					"description": "List of files ignored by the linter"
+				},
+				"helm-intellisense.autoExpandChartDependencies": {
+					"type": "boolean",
+					"default": true,
+					"description": "Automatically expand .tgz chart dependencies when they appear in the charts folder"
+				},
+				"helm-intellisense.overwriteExpandedCharts": {
+					"type": "boolean",
+					"default": false,
+					"description": "Overwrite existing expanded chart directories when expanding .tgz files"
 				}
 			}
 		}
