@@ -77,7 +77,7 @@
 		"test": "vscode-test"
 	},
 	"dependencies": {
-		"js-yaml": "^3.13.1",
+		"js-yaml": "^4.1.1",
 		"lodash": "^4.17.21",
 		"tar-stream": "^3.1.7"
 	},
