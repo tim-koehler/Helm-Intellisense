@@ -29,7 +29,11 @@
 		"yaml"
 	],
 	"activationEvents": [
-		"onStartupFinished"
+		"onStartupFinished",
+		"onLanguage:yaml",
+		"onLanguage:helm",
+		"workspaceContains:**/Chart.yaml",
+		"workspaceContains:**/*.tgz"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -41,8 +45,32 @@
 			{
 				"command": "extension.LintChart",
 				"title": "Helm-Intellisense: Lint Chart"
+			},
+			{
+				"command": "extension.TestChartExpansion",
+				"title": "Helm-Intellisense: Test Chart Expansion"
+			},
+			{
+				"command": "extension.ExpandChartDependencies",
+				"title": "Helm-Intellisense: Expand Chart Dependencies"
+			},
+			{
+				"command": "extension.RefreshValueHierarchy",
+				"title": "Helm-Intellisense: Refresh Value Hierarchy"
+			},
+			{
+				"command": "extension.ShowValueHierarchy",
+				"title": "Helm-Intellisense: Show Value Hierarchy for Current File"
 			}
 		],
+		"views": {
+			"explorer": [
+				{
+					"id": "helmChartDependencies",
+					"name": "Helm Chart Dependencies"
+				}
+			]
+		},
 		"configuration": {
 			"title": "Helm-Intellisense",
 			"properties": {
@@ -62,6 +90,21 @@
 					"type": "array",
 					"default": [],
 					"description": "List of files ignored by the linter"
+				},
+				"helm-intellisense.autoExpandChartDependencies": {
+					"type": "boolean",
+					"default": true,
+					"description": "Automatically expand .tgz chart dependencies when they appear in the charts folder"
+				},
+				"helm-intellisense.overwriteExpandedCharts": {
+					"type": "boolean",
+					"default": false,
+					"description": "Overwrite existing expanded chart directories when expanding .tgz files"
+				},
+				"helm-intellisense.enhancedValueCompletion": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable enhanced value completion with subchart awareness and value hierarchy"
 				}
 			}
 		}
